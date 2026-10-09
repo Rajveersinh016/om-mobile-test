@@ -7,7 +7,7 @@
                     "build:css":  "tailwindcss -i ./shared/css/input.css -o ./shared/css/styles.css",
                     "dev":  "tailwindcss -i ./shared/css/input.css -o ./shared/css/styles.css --watch",
                     "serve":  "npx serve -p 8080",
-                    "build":  "tailwindcss -i ./shared/css/input.css -o ./shared/css/styles.css"
+                    "build":  "npm run build:css \u0026\u0026 mkdir -p public \u0026\u0026 cp -r admin assets data shared shop *.html *.png *.ico public/ 2\u003e/dev/null || true"
                 },
     "keywords":  [
 
