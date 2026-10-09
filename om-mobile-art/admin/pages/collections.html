@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Collections - Admin - OM Mobile Art</title>
+  <link rel="icon" type="image/png" href="../../assets/logos/favicon.png"/>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+  <script src="../../shared/js/tailwind-config-admin.js"></script>
+  <link rel="stylesheet" href="../../shared/css/admin-scrollbar.css?v=1.1"/>
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #F8FBFF; }
+  </style>
+</head>
+<body class="text-gray-900 antialiased min-h-screen overflow-x-hidden">
+  <aside></aside>
+
+  <div class="ml-[220px] transition-all duration-300 min-h-screen flex flex-col">
+    <header class="h-16 bg-white border-b border-[#E5EEF8] px-6 flex items-center justify-between sticky top-0 z-40 shadow-xs"></header>
+
+    <main class="flex-1 p-6 space-y-6">
+      <!-- Top Title & Action Header -->
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div>
+          <div class="flex items-center gap-2 text-xs font-bold text-gray-500 mb-1">
+            <a href="dashboard.html" class="hover:text-[#0077B6] transition-colors">Dashboard</a>
+            <span class="text-gray-300">/</span>
+            <span class="text-gray-500">Catalog</span>
+            <span class="text-gray-300">/</span>
+            <span class="text-[#03045E] font-black">Collections</span>
+          </div>
+          <h1 class="text-2xl font-black text-[#03045E]">Collections</h1>
+          <p class="text-xs text-gray-500 font-medium">Manage all storefront collections and organize products.</p>
+        </div>
+        <button onclick="openColModal()" class="px-4 py-2.5 bg-[#0077B6] hover:bg-[#03045E] text-white text-xs font-extrabold rounded-xl transition-all shadow-sm hover:shadow-md flex items-center gap-2 cursor-pointer">
+          <span class="material-symbols-outlined text-sm">add</span> Add Collection
+        </button>
+      </div>
+
+      <!-- KPI Statistics Summary (5 Cards) -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5">
+        <div class="p-3.5 bg-white border border-[#E5EEF8] rounded-2xl shadow-xs">
+          <p class="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Total Collections</p>
+          <p class="text-xl font-black text-[#03045E] mt-1" id="kpi-total-cols">0</p>
+        </div>
+        <div class="p-3.5 bg-white border border-[#E5EEF8] rounded-2xl shadow-xs">
+          <p class="text-[10px] font-bold text-purple-600 uppercase tracking-wider">Products Assigned</p>
+          <p class="text-xl font-black text-purple-700 mt-1" id="kpi-total-prods">0</p>
+        </div>
+        <div class="p-3.5 bg-white border border-[#E5EEF8] rounded-2xl shadow-xs">
+          <p class="text-[10px] font-bold text-emerald-600 uppercase tracking-wider">Active</p>
+          <p class="text-xl font-black text-emerald-700 mt-1" id="kpi-active-cols">0</p>
+        </div>
+        <div class="p-3.5 bg-white border border-[#E5EEF8] rounded-2xl shadow-xs">
+          <p class="text-[10px] font-bold text-amber-600 uppercase tracking-wider">Draft</p>
+          <p class="text-xl font-black text-amber-700 mt-1" id="kpi-draft-cols">0</p>
+        </div>
+        <div class="p-3.5 bg-white border border-[#E5EEF8] rounded-2xl shadow-xs">
+          <p class="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Hidden / Archived</p>
+          <p class="text-xl font-black text-gray-600 mt-1" id="kpi-hidden-cols">0</p>
+        </div>
+      </div>
+
+      <!-- Search, Filters & View Toggle Row -->
+      <div class="p-4 bg-white border border-[#E5EEF8] rounded-2xl shadow-xs flex flex-wrap items-center justify-between gap-3">
+        <div class="relative flex-1 min-w-[240px]">
+          <span class="material-symbols-outlined absolute left-3 top-2.5 text-gray-400 text-sm">search</span>
+          <input type="text" id="col-search-input" placeholder="Search collection name, slug, description..." oninput="renderCollections()" class="w-full h-9 pl-9 pr-3 border border-gray-300 rounded-xl text-xs font-bold text-gray-900 focus:border-[#0077B6] focus:outline-none"/>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2.5">
+          <select id="filter-status" onchange="renderCollections()" class="h-9 px-3 border border-gray-300 rounded-xl text-xs font-bold text-gray-800 focus:border-[#0077B6] focus:outline-none bg-white">
+            <option value="all">All Statuses</option>
+            <option value="active">Active Only</option>
+            <option value="draft">Draft Only</option>
+            <option value="hidden">Hidden Only</option>
+            <option value="archived">Archived Only</option>
+          </select>
+
+          <select id="filter-sort" onchange="renderCollections()" class="h-9 px-3 border border-gray-300 rounded-xl text-xs font-bold text-gray-800 focus:border-[#0077B6] focus:outline-none bg-white">
+            <option value="newest">Sort: Newest First</option>
+            <option value="oldest">Sort: Oldest First</option>
+            <option value="name">Sort: Alphabetical (A-Z)</option>
+            <option value="productsCount">Sort: Product Count</option>
+          </select>
+
+          <!-- Grid vs Table View Mode Switcher -->
+          <div class="flex items-center bg-gray-100 p-1 rounded-xl border border-gray-200">
+            <button type="button" onclick="setViewMode('grid')" id="btn-view-grid" class="p-1.5 rounded-lg transition-all cursor-pointer" title="Grid View">
+              <span class="material-symbols-outlined text-[18px]">grid_view</span>
+            </button>
+            <button type="button" onclick="setViewMode('table')" id="btn-view-table" class="p-1.5 rounded-lg transition-all cursor-pointer" title="Table View">
+              <span class="material-symbols-outlined text-[18px]">format_list_bulleted</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- GRID VIEW CONTAINER (4-col desktop, 3 laptop, 2 tablet, 1 mobile) -->
+      <div id="container-grid-view" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <!-- Rendered dynamically -->
+      </div>
+
+      <!-- TABLE VIEW CONTAINER -->
+      <div id="container-table-view" class="bg-white border border-[#E5EEF8] rounded-2xl shadow-xs overflow-hidden hidden">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="bg-gray-50 border-b border-gray-100 text-[10px] font-black uppercase tracking-wider text-gray-500">
+                <th class="p-3.5 pl-5">Image</th>
+                <th class="p-3.5">Collection Name</th>
+                <th class="p-3.5">Status</th>
+                <th class="p-3.5">Products</th>
+                <th class="p-3.5">Sort Order</th>
+                <th class="p-3.5">Last Updated</th>
+                <th class="p-3.5 pr-5 text-right">Quick Actions</th>
+              </tr>
+            </thead>
+            <tbody id="collections-table-tbody" class="divide-y divide-gray-100 text-xs font-bold text-gray-800">
+              <!-- Rendered dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- EMPTY STATE -->
+      <div id="empty-state-container" class="hidden p-12 bg-white border border-[#E5EEF8] rounded-2xl text-center space-y-3">
+        <div class="w-16 h-16 rounded-2xl bg-[#CAF0F8]/50 text-[#0077B6] flex items-center justify-center mx-auto">
+          <span class="material-symbols-outlined text-3xl">category</span>
+        </div>
+        <h3 class="text-base font-black text-[#03045E]">No collections created yet</h3>
+        <p class="text-xs text-gray-500 max-w-sm mx-auto font-medium">Create your first collection to group and showcase products on the storefront.</p>
+        <button onclick="openColModal()" class="px-5 py-2.5 bg-[#0077B6] hover:bg-[#03045E] text-white text-xs font-extrabold rounded-xl transition-all shadow-sm flex items-center gap-2 mx-auto cursor-pointer">
+          <span class="material-symbols-outlined text-sm">add</span> Create Collection
+        </button>
+      </div>
+    </main>
+  </div>
+
+  <!-- ADD / EDIT COLLECTION MODAL -->
+  <div id="col-modal" class="fixed inset-0 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4 z-50 opacity-0 pointer-events-none transition-all duration-200">
+    <div class="bg-white rounded-2xl w-full max-w-xl p-6 shadow-2xl space-y-4 border border-[#E5EEF8] max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between border-b border-gray-100 pb-3">
+        <div>
+          <h3 class="text-base font-black text-[#03045E]" id="modal-col-title">Add Collection</h3>
+          <p class="text-xs text-gray-500 font-medium">Configure collection details, banner images, and assigned products.</p>
+        </div>
+        <button onclick="closeColModal()" class="text-gray-400 hover:text-gray-600 cursor-pointer"><span class="material-symbols-outlined text-sm">close</span></button>
+      </div>
+
+      <!-- Tab Navigation -->
+      <div class="border-b border-gray-100">
+        <nav class="flex space-x-6" aria-label="Tabs">
+          <button type="button" onclick="switchModalTab('general')" id="modal-tab-btn-general" class="border-b-2 border-[#0077B6] py-2 px-1 text-xs font-bold text-[#0077B6] cursor-pointer">General</button>
+          <button type="button" onclick="switchModalTab('seo')" id="modal-tab-btn-seo" class="border-b-2 border-transparent py-2 px-1 text-xs font-bold text-gray-500 hover:text-gray-700 cursor-pointer">SEO Settings</button>
+          <button type="button" onclick="switchModalTab('products')" id="modal-tab-btn-products" class="border-b-2 border-transparent py-2 px-1 text-xs font-bold text-gray-500 hover:text-gray-700 cursor-pointer">Products (<span id="modal-assigned-count">0</span>)</button>
+        </nav>
+      </div>
+
+      <form id="col-form" onsubmit="handleSaveCollection(event)" class="space-y-4">
+        <input type="hidden" id="col-id"/>
+
+        <!-- TAB 1: GENERAL INFO -->
+        <div id="modal-sec-general" class="space-y-4">
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-extrabold uppercase tracking-wider text-gray-600 mb-1">Collection Name *</label>
+              <input type="text" id="col-name" required placeholder="e.g. Anime Collection" oninput="autoGenerateSlug(this.value)" class="w-full h-10 px-3 border border-gray-300 rounded-xl text-xs font-bold text-gray-900 focus:border-[#0077B6] focus:outline-none"/>
+            </div>
+            <div>
+              <label class="block text-xs font-extrabold uppercase tracking-wider text-gray-600 mb-1">Slug URL</label>
+              <input type="text" id="col-slug" placeholder="anime-collection" oninput="this.dataset.userEdited='true'" class="w-full h-10 px-3 border border-gray-300 rounded-xl text-xs font-bold text-gray-900 focus:border-[#0077B6] focus:outline-none"/>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-extrabold uppercase tracking-wider text-gray-600 mb-1">Short Description</label>
+              <input type="text" id="col-short-desc" placeholder="One-line storefront hook..." class="w-full h-10 px-3 border border-gray-300 rounded-xl text-xs font-medium text-gray-900 focus:border-[#0077B6] focus:outline-none"/>
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label class="block text-xs font-extrabold uppercase tracking-wider text-gray-600 mb-1">Status</label>
+                <select id="col-status" class="w-full h-10 px-3 border border-gray-300 rounded-xl text-xs font-bold text-gray-900 focus:border-[#0077B6] focus:outline-none bg-white">
+                  <option value="DRAFT">Draft</option>
+                  <option value="PUBLISHED">Published</option>
+                  <option value="HIDDEN">Hidden</option>
+                  <option value="ARCHIVED">Archived</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs font-extrabold uppercase tracking-wider text-gray-600 mb-1">Sort Order</label>
+                <input type="number" id="col-sort" value="0" class="w-full h-10 px-3 border border-gray-300 rounded-xl text-xs font-bold text-gray-900 focus:border-[#0077B6] focus:outline-none"/>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-extrabold uppercase tracking-wider text-gray-600 mb-1">Full Description</label>
+            <textarea id="col-desc" rows="2" placeholder="Full summary for catalog header..." class="w-full p-3 border border-gray-300 rounded-xl text-xs font-medium text-gray-900 focus:border-[#0077B6] focus:outline-none resize-none"></textarea>
+          </div>
+
+          <!-- Cloudinary Uploaders -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div id="col-thumbnail-uploader-container">
+              <input type="hidden" id="col-image"/>
+              <input type="hidden" id="col-thumbnail-public-id"/>
+            </div>
+            <div id="col-banner-uploader-container">
+              <input type="hidden" id="col-banner"/>
+              <input type="hidden" id="col-banner-public-id"/>
+            </div>
+          </div>
+
+          <!-- Featured & Display Toggles -->
+          <div class="p-3 bg-gray-50 border border-gray-100 rounded-xl space-y-2">
+            <p class="text-[10px] font-black uppercase tracking-wider text-gray-500 mb-1">Storefront Badges & Display Mappings</p>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+              <label class="flex items-center gap-2 text-xs font-bold text-gray-700 cursor-pointer">
+                <input type="checkbox" id="col-is-featured" class="w-4 h-4 text-[#0077B6] border-gray-300 rounded focus:ring-[#0077B6] cursor-pointer"/>
+                <span>Featured</span>
+              </label>
+              <label class="flex items-center gap-2 text-xs font-bold text-gray-700 cursor-pointer">
+                <input type="checkbox" id="col-is-homepage" class="w-4 h-4 text-[#0077B6] border-gray-300 rounded focus:ring-[#0077B6] cursor-pointer"/>
+                <span>Homepage</span>
+              </label>
+              <label class="flex items-center gap-2 text-xs font-bold text-gray-700 cursor-pointer">
+                <input type="checkbox" id="col-is-trending" class="w-4 h-4 text-[#0077B6] border-gray-300 rounded focus:ring-[#0077B6] cursor-pointer"/>
+                <span>Trending</span>
+              </label>
+              <label class="flex items-center gap-2 text-xs font-bold text-gray-700 cursor-pointer">
+                <input type="checkbox" id="col-is-seasonal" class="w-4 h-4 text-[#0077B6] border-gray-300 rounded focus:ring-[#0077B6] cursor-pointer"/>
+                <span>Seasonal</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 2: SEO SETTINGS -->
+        <div id="modal-sec-seo" class="space-y-4 hidden">
+          <div>
+            <label class="block text-xs font-extrabold uppercase tracking-wider text-gray-600 mb-1">SEO Title</label>
+            <input type="text" id="col-seo-title" placeholder="Meta title..." class="w-full h-10 px-3 border border-gray-300 rounded-xl text-xs font-bold text-gray-900 focus:border-[#0077B6] focus:outline-none"/>
+          </div>
+          <div>
+            <label class="block text-xs font-extrabold uppercase tracking-wider text-gray-600 mb-1">SEO Keywords</label>
+            <input type="text" id="col-seo-keywords" placeholder="comma-separated tags..." class="w-full h-10 px-3 border border-gray-300 rounded-xl text-xs font-bold text-gray-900 focus:border-[#0077B6] focus:outline-none"/>
+          </div>
+          <div>
+            <label class="block text-xs font-extrabold uppercase tracking-wider text-gray-600 mb-1">SEO Meta Description</label>
+            <textarea id="col-seo-desc" rows="3" placeholder="Meta description snippet for search engines..." class="w-full p-3 border border-gray-300 rounded-xl text-xs font-medium text-gray-900 focus:border-[#0077B6] focus:outline-none resize-none"></textarea>
+          </div>
+        </div>
+
+        <!-- TAB 3: PRODUCT ASSIGNMENT -->
+        <div id="modal-sec-products" class="space-y-4 hidden">
+          <div class="flex items-center justify-between gap-2">
+            <div class="relative flex-1">
+              <span class="material-symbols-outlined absolute left-3 top-2.5 text-gray-400 text-sm">search</span>
+              <input type="text" id="assign-prod-search" placeholder="Search catalog by name or SKU..." oninput="renderAssignProductsList()" class="w-full h-9 pl-9 pr-3 border border-gray-300 rounded-xl text-xs font-bold text-gray-900 focus:border-[#0077B6] focus:outline-none bg-white"/>
+            </div>
+            <div class="flex items-center gap-1.5 flex-shrink-0">
+              <button type="button" onclick="bulkSelectAssignProducts(true)" class="px-2.5 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 text-[10px] font-black uppercase tracking-wider rounded-lg transition-all cursor-pointer">Select All</button>
+              <button type="button" onclick="bulkSelectAssignProducts(false)" class="px-2.5 py-1.5 bg-red-50 hover:bg-red-100 text-red-600 text-[10px] font-black uppercase tracking-wider rounded-lg transition-all cursor-pointer">Deselect All</button>
+            </div>
+          </div>
+
+          <div class="border border-gray-200 rounded-xl max-h-60 overflow-y-auto divide-y divide-gray-100 bg-white" id="assign-products-list">
+            <!-- Filled dynamically -->
+          </div>
+        </div>
+
+        <div class="flex items-center justify-end gap-3 pt-3 border-t border-gray-100">
+          <button type="button" onclick="closeColModal()" class="px-4 py-2 border border-gray-300 rounded-xl text-xs font-bold text-gray-700 hover:bg-gray-50 cursor-pointer">Cancel</button>
+          <button type="submit" class="px-4 py-2 bg-[#0077B6] hover:bg-[#03045E] text-white rounded-xl text-xs font-bold transition-all shadow-xs cursor-pointer">Save Collection</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- DELETE CONFIRMATION MODAL -->
+  <div id="delete-modal" class="fixed inset-0 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4 z-50 opacity-0 pointer-events-none transition-all duration-200">
+    <div class="bg-white rounded-2xl w-full max-w-md p-6 shadow-2xl space-y-4 border border-[#E5EEF8]">
+      <div class="flex items-center gap-3 text-red-600">
+        <div class="w-10 h-10 rounded-xl bg-red-50 flex items-center justify-center">
+          <span class="material-symbols-outlined text-xl">warning</span>
+        </div>
+        <h3 class="text-base font-black text-gray-900">Delete Collection</h3>
+      </div>
+      <p class="text-xs text-gray-600">Are you sure you want to delete <strong id="delete-col-name" class="text-gray-900">this collection</strong>?</p>
+      <div class="p-3 bg-amber-50 border border-amber-200 rounded-xl text-[11px] font-bold text-amber-800">
+        Notice: <span id="delete-col-count">0</span> products assigned to this collection will remain safe but unassigned.
+      </div>
+      <div class="flex items-center justify-end gap-3 pt-2">
+        <button type="button" onclick="closeDeleteModal()" class="px-4 py-2 border border-gray-300 rounded-xl text-xs font-bold text-gray-700 hover:bg-gray-50 cursor-pointer">Cancel</button>
+        <button type="button" id="confirm-delete-btn" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-bold transition-all shadow-xs cursor-pointer">Delete Collection</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="../../shared/js/storage.js"></script>
+  <script src="../../shared/js/api.js"></script>
+  <script src="../../admin/js/sidebar.js"></script>
+  <script src="../../admin/js/header.js"></script>
+  <script src="../../admin/js/uploader.js"></script>
+
+  <script>
+    let collectionsCache = [];
+    let productsCache = [];
+    let assignedProductIds = new Set();
+    let currentViewMode = localStorage.getItem('admin_collections_view') || 'grid';
+    let pendingDeleteId = null;
+
+    let thumbUploader = null;
+    let bannerUploader = null;
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      if (window.AdminSidebar) window.AdminSidebar.init();
+      if (window.AdminHeader) window.AdminHeader.init();
+
+      thumbUploader = window.AdminUploader.create({
+        container: 'col-thumbnail-uploader-container',
+        input: 'col-image',
+        label: 'Thumbnail Image',
+        folder: 'collections',
+        onChange: (url, data) => {
+          const pubEl = document.getElementById('col-thumbnail-public-id');
+          if (pubEl) pubEl.value = data ? (data.publicId || '') : '';
+        }
+      });
+
+      bannerUploader = window.AdminUploader.create({
+        container: 'col-banner-uploader-container',
+        input: 'col-banner',
+        label: 'Desktop Banner Image',
+        folder: 'collections',
+        onChange: (url, data) => {
+          const pubEl = document.getElementById('col-banner-public-id');
+          if (pubEl) pubEl.value = data ? (data.publicId || '') : '';
+        }
+      });
+
+      // Load products cache to use in assignments
+      try {
+        productsCache = await window.API.getProducts({ limit: 500 }) || [];
+      } catch (err) {
+        console.error('Failed to load products list', err);
+      }
+
+      await renderCollections();
+    });
+
+    function setViewMode(mode) {
+      currentViewMode = mode;
+      localStorage.setItem('admin_collections_view', mode);
+
+      const gridView = document.getElementById('container-grid-view');
+      const tableView = document.getElementById('container-table-view');
+      const btnGrid = document.getElementById('btn-view-grid');
+      const btnTable = document.getElementById('btn-view-table');
+
+      if (mode === 'grid') {
+        gridView.classList.remove('hidden');
+        tableView.classList.add('hidden');
+        btnGrid.className = 'p-1.5 rounded-lg bg-white shadow-xs text-[#0077B6] font-bold cursor-pointer';
+        btnTable.className = 'p-1.5 rounded-lg text-gray-400 hover:text-gray-600 cursor-pointer';
+      } else {
+        gridView.classList.add('hidden');
+        tableView.classList.remove('hidden');
+        btnGrid.className = 'p-1.5 rounded-lg text-gray-400 hover:text-gray-600 cursor-pointer';
+        btnTable.className = 'p-1.5 rounded-lg bg-white shadow-xs text-[#0077B6] font-bold cursor-pointer';
+      }
+    }
+
+    async function renderCollections() {
+      const statusFilter = document.getElementById('filter-status').value;
+      const includeDeleted = statusFilter === 'deleted';
+      
+      collectionsCache = await window.API.getCollections({ includeDeleted });
+
+      // Update KPI Statistics
+      document.getElementById('kpi-total-cols').textContent = collectionsCache.length;
+      document.getElementById('kpi-total-prods').textContent = productsCache.length;
+      document.getElementById('kpi-active-cols').textContent = collectionsCache.filter(c => c.status === 'PUBLISHED' && !c.deletedAt).length;
+      document.getElementById('kpi-draft-cols').textContent = collectionsCache.filter(c => c.status === 'DRAFT' && !c.deletedAt).length;
+      document.getElementById('kpi-hidden-cols').textContent = collectionsCache.filter(c => c.deletedAt || c.status === 'HIDDEN' || c.status === 'ARCHIVED').length;
+
+      const q = document.getElementById('col-search-input').value.toLowerCase().trim();
+      const sortFilter = document.getElementById('filter-sort').value;
+
+      let filtered = collectionsCache.filter(c => {
+        const matchesQ = c.name.toLowerCase().includes(q) || (c.slug && c.slug.toLowerCase().includes(q)) || (c.description && c.description.toLowerCase().includes(q));
+        if (includeDeleted) return matchesQ; // Repo already returns deleted-only if includeDeleted is requested
+        
+        const matchesStatus = statusFilter === 'all' || (c.status || '').toLowerCase() === statusFilter.toLowerCase();
+        return matchesQ && matchesStatus;
+      });
+
+      // Sort Collections
+      filtered.sort((a, b) => {
+        if (sortFilter === 'newest') return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
+        if (sortFilter === 'oldest') return new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime();
+        if (sortFilter === 'name') return a.name.localeCompare(b.name);
+        if (sortFilter === 'productsCount') {
+          const countA = a.products ? a.products.length : 0;
+          const countB = b.products ? b.products.length : 0;
+          return countB - countA;
+        }
+        return 0;
+      });
+
+      const gridView = document.getElementById('container-grid-view');
+      const tableTbody = document.getElementById('collections-table-tbody');
+      const emptyState = document.getElementById('empty-state-container');
+
+      if (filtered.length === 0) {
+        gridView.classList.add('hidden');
+        document.getElementById('container-table-view').classList.add('hidden');
+        emptyState.classList.remove('hidden');
+        return;
+      }
+
+      emptyState.classList.add('hidden');
+      setViewMode(currentViewMode);
+
+      // Render Grid View
+      gridView.innerHTML = filtered.map(c => {
+        const pCount = c.products ? c.products.length : 0;
+        const status = c.status || 'PUBLISHED';
+        const img = c.thumbnail || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=400&q=80';
+
+        let actionsHTML = '';
+        if (includeDeleted) {
+          actionsHTML = `
+            <button onclick="restoreCollection('${c.id}')" title="Restore Collection" class="p-1.5 text-emerald-600 hover:bg-emerald-50 rounded-lg cursor-pointer"><span class="material-symbols-outlined text-sm">settings_backup_restore</span></button>
+            <button onclick="openPermanentDeleteModal('${c.id}')" title="Permanently Delete" class="p-1.5 text-red-600 hover:bg-red-50 rounded-lg cursor-pointer"><span class="material-symbols-outlined text-sm">delete_forever</span></button>
+          `;
+        } else {
+          actionsHTML = `
+            <button onclick="editCollection('${c.id}')" title="Edit Collection" class="p-1.5 text-gray-500 hover:text-[#0077B6] hover:bg-gray-100 rounded-lg cursor-pointer"><span class="material-symbols-outlined text-sm">edit</span></button>
+            <button onclick="duplicateCollection('${c.id}')" title="Duplicate Collection" class="p-1.5 text-gray-500 hover:text-purple-600 hover:bg-gray-100 rounded-lg cursor-pointer"><span class="material-symbols-outlined text-sm">content_copy</span></button>
+            <button onclick="openDeleteModal('${c.id}')" title="Delete Collection" class="p-1.5 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg cursor-pointer"><span class="material-symbols-outlined text-sm">delete</span></button>
+          `;
+        }
+
+        const dateStr = new Date(c.updatedAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+
+        return `
+          <div class="h-[210px] p-3.5 bg-white border border-[#E5EEF8] rounded-2xl shadow-xs hover:shadow-md hover:-translate-y-1 transition-all flex flex-col justify-between">
+            <div class="space-y-2.5">
+              <div class="flex items-center gap-3">
+                <div class="w-14 h-14 rounded-xl bg-gray-100 border border-gray-200 overflow-hidden flex-shrink-0">
+                  <img src="${img}" alt="${c.name}" loading="lazy" class="w-full h-full object-cover"/>
+                </div>
+                <div class="min-w-0 flex-1">
+                  <h3 class="font-black text-sm text-[#03045E] truncate">${c.name}</h3>
+                  <p class="text-[10px] font-mono text-gray-400 truncate">/${c.slug}</p>
+                  <div class="mt-1">
+                    ${includeDeleted ? '<span class="px-2 py-0.5 rounded-full text-[10px] font-black uppercase bg-red-50 text-red-700 border border-red-200">Deleted</span>' : getStatusDropdown(c.id, status)}
+                  </div>
+                </div>
+              </div>
+              <p class="text-[11px] text-gray-500 font-medium line-clamp-2">${c.shortDescription || c.description || 'No description provided.'}</p>
+            </div>
+
+            <div class="pt-2.5 border-t border-gray-100 flex items-center justify-between text-[11px] font-bold text-gray-600">
+              <div class="flex items-center gap-2">
+                <span><strong class="text-[#0077B6]">${pCount}</strong> Prods</span>
+                <span class="text-gray-300">|</span>
+                <span>#${c.sortOrder || 0}</span>
+              </div>
+              <div class="flex items-center gap-1">
+                ${actionsHTML}
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      // Render Table View
+      tableTbody.innerHTML = filtered.map(c => {
+        const pCount = c.products ? c.products.length : 0;
+        const status = c.status || 'PUBLISHED';
+        const img = c.thumbnail || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=300&q=80';
+        const dateStr = new Date(c.updatedAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+
+        let actionsHTML = '';
+        if (includeDeleted) {
+          actionsHTML = `
+            <button onclick="restoreCollection('${c.id}')" title="Restore" class="p-1.5 text-emerald-600 hover:bg-emerald-50 rounded-lg cursor-pointer"><span class="material-symbols-outlined text-sm">settings_backup_restore</span></button>
+            <button onclick="openPermanentDeleteModal('${c.id}')" title="Permanently Delete" class="p-1.5 text-red-600 hover:bg-red-50 rounded-lg cursor-pointer"><span class="material-symbols-outlined text-sm">delete_forever</span></button>
+          `;
+        } else {
+          actionsHTML = `
+            <button onclick="editCollection('${c.id}')" title="Edit" class="p-1.5 text-gray-500 hover:text-[#0077B6] hover:bg-gray-100 rounded-lg cursor-pointer"><span class="material-symbols-outlined text-sm">edit</span></button>
+            <button onclick="duplicateCollection('${c.id}')" title="Duplicate" class="p-1.5 text-gray-500 hover:text-purple-600 hover:bg-gray-100 rounded-lg cursor-pointer"><span class="material-symbols-outlined text-sm">content_copy</span></button>
+            <button onclick="openDeleteModal('${c.id}')" title="Delete" class="p-1.5 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg cursor-pointer"><span class="material-symbols-outlined text-sm">delete</span></button>
+          `;
+        }
+
+        return `
+          <tr class="hover:bg-gray-50/70 transition-colors">
+            <td class="p-3.5 pl-5">
+              <div class="w-10 h-10 rounded-xl bg-gray-100 border border-gray-200 overflow-hidden">
+                <img src="${img}" alt="${c.name}" loading="lazy" class="w-full h-full object-cover"/>
+              </div>
+            </td>
+            <td class="p-3.5">
+              <p class="font-extrabold text-sm text-[#03045E]">${c.name}</p>
+              <p class="text-[10px] font-mono text-gray-400">/${c.slug}</p>
+            </td>
+            <td class="p-3.5">
+              ${includeDeleted ? '<span class="px-2 py-0.5 rounded-full text-[10px] font-black uppercase bg-red-50 text-red-700 border border-red-200">Deleted</span>' : getStatusDropdown(c.id, status)}
+            </td>
+            <td class="p-3.5 font-extrabold text-[#0077B6]">${pCount} Products</td>
+            <td class="p-3.5 font-mono text-gray-500">#${c.sortOrder || 0}</td>
+            <td class="p-3.5 text-gray-400 text-[11px] font-medium">${dateStr}</td>
+            <td class="p-3.5 pr-5 text-right space-x-1">
+              ${actionsHTML}
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function getStatusDropdown(collectionId, currentStatus) {
+      const statusUpper = (currentStatus || 'PUBLISHED').toUpperCase();
+      return `
+        <select onchange="updateCollectionStatus('${collectionId}', this.value)" class="px-2 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-wider bg-white border border-gray-300 focus:border-[#0077B6] focus:outline-none cursor-pointer">
+          <option value="DRAFT" ${statusUpper === 'DRAFT' ? 'selected' : ''}>Draft</option>
+          <option value="PUBLISHED" ${statusUpper === 'PUBLISHED' ? 'selected' : ''}>Published</option>
+          <option value="HIDDEN" ${statusUpper === 'HIDDEN' ? 'selected' : ''}>Hidden</option>
+          <option value="ARCHIVED" ${statusUpper === 'ARCHIVED' ? 'selected' : ''}>Archived</option>
+        </select>
+      `;
+    }
+
+    async function updateCollectionStatus(id, newStatus) {
+      const item = collectionsCache.find(c => String(c.id) === String(id));
+      if (item) {
+        const payload = {
+          id: item.id,
+          name: item.name,
+          slug: item.slug,
+          status: newStatus,
+          isActive: newStatus === 'PUBLISHED',
+          isVisible: newStatus === 'PUBLISHED' || newStatus === 'DRAFT'
+        };
+        await window.API.saveCollection(payload);
+        if (window.showToast) window.showToast("Status updated inline!", "success");
+        renderCollections();
+      }
+    }
+
+    function autoGenerateSlug(name) {
+      const slugInput = document.getElementById('col-slug');
+      if (slugInput && !slugInput.dataset.userEdited) {
+        slugInput.value = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+      }
+    }
+
+    function switchModalTab(tab) {
+      const tabs = ['general', 'seo', 'products'];
+      tabs.forEach(t => {
+        const btn = document.getElementById(`modal-tab-btn-${t}`);
+        const sec = document.getElementById(`modal-sec-${t}`);
+        if (t === tab) {
+          btn.className = 'border-b-2 border-[#0077B6] py-2 px-1 text-xs font-bold text-[#0077B6] cursor-pointer';
+          sec.classList.remove('hidden');
+        } else {
+          btn.className = 'border-b-2 border-transparent py-2 px-1 text-xs font-bold text-gray-500 hover:text-gray-700 cursor-pointer';
+          sec.classList.add('hidden');
+        }
+      });
+    }
+
+    function openColModal(id) {
+      const modal = document.getElementById('col-modal');
+      modal.classList.remove('opacity-0', 'pointer-events-none');
+      switchModalTab('general');
+
+      if (id) {
+        const item = collectionsCache.find(c => String(c.id) === String(id));
+        if (item) {
+          document.getElementById('modal-col-title').textContent = "Edit Collection";
+          document.getElementById('col-id').value = item.id;
+          document.getElementById('col-name').value = item.name;
+          document.getElementById('col-slug').value = item.slug || '';
+          document.getElementById('col-slug').dataset.userEdited = "true";
+          document.getElementById('col-desc').value = item.description || '';
+          document.getElementById('col-short-desc').value = item.shortDescription || '';
+          document.getElementById('col-status').value = item.status || 'PUBLISHED';
+          document.getElementById('col-sort').value = item.sortOrder || 0;
+
+          document.getElementById('col-is-featured').checked = !!item.isFeatured;
+          document.getElementById('col-is-homepage').checked = !!item.isHomepage;
+          document.getElementById('col-is-trending').checked = !!item.isTrending;
+          document.getElementById('col-is-seasonal').checked = !!item.isSeasonal;
+
+          document.getElementById('col-seo-title').value = item.seoTitle || '';
+          document.getElementById('col-seo-desc').value = item.seoDescription || '';
+          document.getElementById('col-seo-keywords').value = item.seoKeywords || '';
+
+          document.getElementById('col-thumbnail-public-id').value = item.thumbnailPublicId || '';
+          document.getElementById('col-banner-public-id').value = item.desktopBannerPublicId || '';
+
+          if (thumbUploader) thumbUploader.setValue({ url: item.thumbnail || '', publicId: item.thumbnailPublicId || '' });
+          if (bannerUploader) bannerUploader.setValue({ url: item.desktopBanner || '', publicId: item.desktopBannerPublicId || '' });
+
+          assignedProductIds = new Set((item.products || []).map(p => p.id));
+        }
+      } else {
+        document.getElementById('modal-col-title').textContent = "Add Collection";
+        document.getElementById('col-form').reset();
+        document.getElementById('col-id').value = '';
+        document.getElementById('col-slug').dataset.userEdited = "";
+        
+        document.getElementById('col-is-featured').checked = false;
+        document.getElementById('col-is-homepage').checked = false;
+        document.getElementById('col-is-trending').checked = false;
+        document.getElementById('col-is-seasonal').checked = false;
+
+        document.getElementById('col-thumbnail-public-id').value = '';
+        document.getElementById('col-banner-public-id').value = '';
+
+        if (thumbUploader) thumbUploader.setValue('');
+        if (bannerUploader) bannerUploader.setValue('');
+
+        assignedProductIds = new Set();
+      }
+
+      updateAssignedCountBadge();
+      renderAssignProductsList();
+    }
+
+    function closeColModal() {
+      document.getElementById('col-modal').classList.add('opacity-0', 'pointer-events-none');
+    }
+
+    function renderAssignProductsList() {
+      const container = document.getElementById('assign-products-list');
+      if (!container) return;
+
+      const q = document.getElementById('assign-prod-search').value.toLowerCase().trim();
+
+      const filteredProds = productsCache.filter(p => {
+        return p.name.toLowerCase().includes(q) || (p.sku && p.sku.toLowerCase().includes(q));
+      });
+
+      if (filteredProds.length === 0) {
+        container.innerHTML = `<div class="p-6 text-center text-xs text-gray-400 font-medium">No products found in catalog.</div>`;
+        return;
+      }
+
+      container.innerHTML = filteredProds.map(p => {
+        const isChecked = assignedProductIds.has(p.id);
+        const img = p.image || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=100&q=80';
+        return `
+          <label class="flex items-center justify-between p-2.5 hover:bg-gray-50/70 transition-colors cursor-pointer">
+            <div class="flex items-center gap-3">
+              <input type="checkbox" class="w-4 h-4 text-[#0077B6] border-gray-300 rounded focus:ring-[#0077B6] cursor-pointer" 
+                onchange="toggleProductAssignment('${p.id}', this.checked)" ${isChecked ? 'checked' : ''}/>
+              <div class="w-8 h-8 rounded-lg overflow-hidden border border-gray-200 bg-gray-50 flex-shrink-0">
+                <img src="${img}" alt="${p.name}" class="w-full h-full object-cover"/>
+              </div>
+              <div class="min-w-0">
+                <p class="text-xs font-bold text-gray-800 truncate">${p.name}</p>
+                <p class="text-[9px] font-mono text-gray-400 truncate">${p.sku || 'No SKU'}</p>
+              </div>
+            </div>
+          </label>
+        `;
+      }).join('');
+    }
+
+    function toggleProductAssignment(prodId, isChecked) {
+      if (isChecked) {
+        assignedProductIds.add(prodId);
+      } else {
+        assignedProductIds.delete(prodId);
+      }
+      updateAssignedCountBadge();
+    }
+
+    function bulkSelectAssignProducts(select) {
+      const q = document.getElementById('assign-prod-search').value.toLowerCase().trim();
+      productsCache.forEach(p => {
+        const matches = p.name.toLowerCase().includes(q) || (p.sku && p.sku.toLowerCase().includes(q));
+        if (matches) {
+          if (select) {
+            assignedProductIds.add(p.id);
+          } else {
+            assignedProductIds.delete(p.id);
+          }
+        }
+      });
+      renderAssignProductsList();
+      updateAssignedCountBadge();
+    }
+
+    function updateAssignedCountBadge() {
+      const badge = document.getElementById('modal-assigned-count');
+      if (badge) badge.textContent = assignedProductIds.size;
+    }
+
+    async function handleSaveCollection(e) {
+      e.preventDefault();
+      const id = document.getElementById('col-id').value;
+      const name = document.getElementById('col-name').value.trim();
+      const slug = document.getElementById('col-slug').value.trim() || name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+      const description = document.getElementById('col-desc').value.trim();
+      const shortDescription = document.getElementById('col-short-desc').value.trim();
+      const thumbnail = document.getElementById('col-image').value.trim();
+      const thumbnailPublicId = document.getElementById('col-thumbnail-public-id').value.trim();
+      const desktopBanner = document.getElementById('col-banner').value.trim();
+      const desktopBannerPublicId = document.getElementById('col-banner-public-id').value.trim();
+      const status = document.getElementById('col-status').value;
+      const sortOrder = parseInt(document.getElementById('col-sort').value) || 0;
+
+      const isFeatured = document.getElementById('col-is-featured').checked;
+      const isHomepage = document.getElementById('col-is-homepage').checked;
+      const isTrending = document.getElementById('col-is-trending').checked;
+      const isSeasonal = document.getElementById('col-is-seasonal').checked;
+
+      const seoTitle = document.getElementById('col-seo-title').value.trim();
+      const seoDescription = document.getElementById('col-seo-desc').value.trim();
+      const seoKeywords = document.getElementById('col-seo-keywords').value.trim();
+
+      const payload = {
+        id: id || undefined,
+        name,
+        slug,
+        description,
+        shortDescription,
+        thumbnail,
+        thumbnailPublicId,
+        desktopBanner,
+        desktopBannerPublicId,
+        mobileBanner: desktopBanner, // Fallback
+        status,
+        isActive: status === 'PUBLISHED',
+        isVisible: status !== 'HIDDEN' && status !== 'ARCHIVED',
+        sortOrder,
+        isFeatured,
+        isHomepage,
+        isTrending,
+        isSeasonal,
+        seoTitle,
+        seoDescription,
+        seoKeywords,
+        productIds: Array.from(assignedProductIds)
+      };
+
+      try {
+        await window.API.saveCollection(payload);
+        if (window.showToast) window.showToast("Collection saved successfully!", "success");
+        closeColModal();
+        renderCollections();
+      } catch (err) {
+        console.error("Failed to save collection:", err);
+        if (window.showToast) window.showToast("Failed to save collection: " + (err.message || err), "error");
+      }
+    }
+
+    async function duplicateCollection(id) {
+      if (confirm("Duplicate this collection including assigned products?")) {
+        const res = await window.API.duplicateCollection(id);
+        if (res) {
+          if (window.showToast) window.showToast("Collection duplicated successfully!", "success");
+          renderCollections();
+        } else {
+          if (window.showToast) window.showToast("Duplication failed.", "error");
+        }
+      }
+    }
+
+    async function restoreCollection(id) {
+      if (confirm("Restore this collection to active list?")) {
+        const res = await window.API.restoreCollection(id);
+        if (res) {
+          if (window.showToast) window.showToast("Collection restored successfully!", "success");
+          renderCollections();
+        } else {
+          if (window.showToast) window.showToast("Restore failed.", "error");
+        }
+      }
+    }
+
+    function openDeleteModal(id) {
+      const item = collectionsCache.find(c => String(c.id) === String(id));
+      if (!item) return;
+      pendingDeleteId = id;
+      const pCount = item.products ? item.products.length : 0;
+
+      document.getElementById('delete-col-name').textContent = item.name;
+      document.getElementById('delete-col-count').textContent = pCount;
+
+      const modal = document.getElementById('delete-modal');
+      modal.classList.remove('opacity-0', 'pointer-events-none');
+
+      document.getElementById('confirm-delete-btn').onclick = async () => {
+        if (pendingDeleteId) {
+          try {
+            await window.API.deleteCollection(pendingDeleteId);
+            if (window.showToast) window.showToast("Collection soft-deleted. Find it under 'Deleted (Trash)' filter.", "info");
+            closeDeleteModal();
+            renderCollections();
+          } catch (err) {
+            console.error("Failed to delete collection:", err);
+            if (window.showToast) window.showToast("Failed to delete collection: " + (err.message || err), "error");
+          }
+        }
+      };
+    }
+
+    function closeDeleteModal() {
+      document.getElementById('delete-modal').classList.add('opacity-0', 'pointer-events-none');
+      pendingDeleteId = null;
+    }
+
+    function editCollection(id) {
+      openColModal(id);
+    }
+
+    function openPermanentDeleteModal(id) {
+      const item = collectionsCache.find(c => String(c.id) === String(id));
+      if (!item) return;
+      if (confirm(`Are you absolutely sure you want to PERMANENTLY delete "${item.name}"? This action cannot be undone.`)) {
+        (async () => {
+          const success = await window.API.permanentlyDeleteCollection(id);
+          if (success) {
+            if (window.showToast) window.showToast("Collection permanently deleted from database.", "info");
+            renderCollections();
+          } else {
+            if (window.showToast) window.showToast("Failed to permanently delete collection.", "error");
+          }
+        })();
+      }
+    }
+  </script>
+</body>
+</html>

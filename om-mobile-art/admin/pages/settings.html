@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width,initial-scale=1.0" name="viewport"/>
+  <title>Website Settings | OM Mobile Art Admin</title>
+  <meta name="description" content="Configure global store settings, branding, SEO, legal pages, and feature toggles."/>
+  
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  
+  <script src="../../shared/js/tailwind-config-admin.js"></script>
+  <link rel="stylesheet" href="../../shared/css/admin-scrollbar.css?v=1.1"/>
+  <style>
+    body { font-family: 'DM Sans', sans-serif; background-color: #F8FAFC; }
+    .nav-tab-active { background-color: #0077B6; color: #FFFFFF; font-weight: 700; }
+    .nav-tab-inactive { background-color: #FFFFFF; color: #4B5563; font-weight: 600; border: 1px solid #E5E7EB; }
+    .nav-tab-inactive:hover { background-color: #F3F4F6; color: #03045E; }
+  </style>
+</head>
+<body class="bg-[#F8FAFC] font-body-default text-[#111827] overflow-x-hidden">
+  <!-- SideNavBar Placeholder -->
+  <aside></aside>
+  
+  <!-- Main Content Shell -->
+  <div class="ml-[240px] min-h-screen flex flex-col pb-16">
+    <!-- TopNavBar Placeholder -->
+    <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-gray-200 h-[64px] flex items-center justify-between px-8 shadow-sm"></header>
+    
+    <!-- Main Canvas -->
+    <main class="pt-6 px-8 space-y-6">
+      
+      <!-- Top Action Row -->
+      <div class="flex flex-wrap items-center justify-between gap-4 bg-white p-6 rounded-2xl border border-gray-200 shadow-sm">
+        <div>
+          <h2 class="text-2xl font-extrabold text-[#03045E] flex items-center gap-3">
+            Store Settings & Configuration
+          </h2>
+          <p class="text-xs text-gray-500 mt-1 font-medium">Manage global business info, Cloudinary logos, SEO tags, legal pages, SMTP, and feature flags.</p>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <button onclick="saveActiveSettingsTab()" class="px-5 py-2.5 bg-[#0077B6] hover:bg-[#03045E] text-white text-xs font-bold rounded-xl shadow-md transition-all flex items-center gap-2 cursor-pointer active:scale-95">
+            <span class="material-symbols-outlined text-[18px]">save</span> Save Changes
+          </button>
+        </div>
+      </div>
+
+      <!-- Settings Navigation Tabs -->
+      <div class="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none" id="settings-tabs-nav">
+        <button onclick="switchTab('general')" id="tab-btn-general" class="nav-tab-active px-4 py-2.5 rounded-xl text-xs flex items-center gap-2 transition-all cursor-pointer">
+          <span class="material-symbols-outlined text-[18px]">store</span> General
+        </button>
+        <button onclick="switchTab('branding')" id="tab-btn-branding" class="nav-tab-inactive px-4 py-2.5 rounded-xl text-xs flex items-center gap-2 transition-all cursor-pointer">
+          <span class="material-symbols-outlined text-[18px]">palette</span> Branding Assets
+        </button>
+        <button onclick="switchTab('social')" id="tab-btn-social" class="nav-tab-inactive px-4 py-2.5 rounded-xl text-xs flex items-center gap-2 transition-all cursor-pointer">
+          <span class="material-symbols-outlined text-[18px]">share</span> Contact & Social
+        </button>
+        <button onclick="switchTab('seo')" id="tab-btn-seo" class="nav-tab-inactive px-4 py-2.5 rounded-xl text-xs flex items-center gap-2 transition-all cursor-pointer">
+          <span class="material-symbols-outlined text-[18px]">travel_explore</span> Global SEO
+        </button>
+        <button onclick="switchTab('legal')" id="tab-btn-legal" class="nav-tab-inactive px-4 py-2.5 rounded-xl text-xs flex items-center gap-2 transition-all cursor-pointer">
+          <span class="material-symbols-outlined text-[18px]">policy</span> Legal Pages
+        </button>
+        <button onclick="switchTab('smtp')" id="tab-btn-smtp" class="nav-tab-inactive px-4 py-2.5 rounded-xl text-xs flex items-center gap-2 transition-all cursor-pointer">
+          <span class="material-symbols-outlined text-[18px]">mail</span> Email & SMTP
+        </button>
+        <button onclick="switchTab('features')" id="tab-btn-features" class="nav-tab-inactive px-4 py-2.5 rounded-xl text-xs flex items-center gap-2 transition-all cursor-pointer">
+          <span class="material-symbols-outlined text-[18px]">toggle_on</span> Feature Flags
+        </button>
+        <button onclick="switchTab('maintenance')" id="tab-btn-maintenance" class="nav-tab-inactive px-4 py-2.5 rounded-xl text-xs flex items-center gap-2 transition-all cursor-pointer">
+          <span class="material-symbols-outlined text-[18px]">build</span> Maintenance & Security
+        </button>
+      </div>
+
+      <!-- Main Form Canvas -->
+      <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm min-h-[500px]" id="tab-content-container">
+        <div class="p-8 text-center text-gray-400">
+          <div class="animate-spin w-8 h-8 border-4 border-[#0077B6] border-t-transparent rounded-full mx-auto mb-3"></div>
+          Loading settings...
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <script src="../../shared/js/storage.js"></script>
+  <script src="../../shared/js/api.js"></script>
+  <script src="../../admin/js/sidebar.js"></script>
+  <script src="../../admin/js/header.js"></script>
+  <script src="../../admin/js/uploader.js"></script>
+  <script src="../../shared/js/utils.js" defer></script>
+  <script src="../../admin/js/admin.js" defer></script>
+  <script src="../../admin/js/settings.js" defer></script>
+</body>
+</html>

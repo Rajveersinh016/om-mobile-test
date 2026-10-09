@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <meta name="description" content="Verify your email address for OM Mobile Art."/>
+    <title>Verify Email | OM Mobile Art</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .otp-box:focus {
+            border-color: #03045E;
+            box-shadow: 0 0 0 3px rgba(3, 4, 94, 0.15);
+        }
+    </style>
+    <script src="../../shared/js/tailwind-config-shop.js"></script>
+    <link rel="stylesheet" href="../../shared/css/shop-scrollbar.css?v=1.1"/>
+</head>
+<body class="bg-background font-body-main text-on-surface">
+    <!-- TopNavBar -->
+    <header></header>
+
+    <main class="store-container py-16 flex justify-center items-center min-h-[65vh]" id="verify-email-mount">
+    </main>
+
+    <!-- Footer -->
+    <footer></footer>
+
+    <script src="../../shared/js/storage.js"></script>
+    <script src="../../shared/js/settings-manager.js"></script>
+    <script src="../../shared/js/utils.js" defer></script>
+    <script src="../../shared/js/notifications.js" defer></script>
+    <script src="../../shared/components/navbar.js" defer></script>
+    <script src="../../shared/components/otpComponent.js"></script>
+
+    <script>
+        function formatAuthError(body) {
+            if (!body) return 'An unexpected error occurred. Please try again.';
+            const code = body.error?.code || body.code || '';
+            const rawMsg = body.error?.message || (body.error?.details && body.error.details[0]?.issue) || body.message || '';
+
+            if (code === 'EMAIL_NOT_VERIFIED' || rawMsg.includes('verify your email')) {
+                return "Your email hasn't been verified yet. Please check your inbox for the verification code.";
+            }
+            if (code === 'UNAUTHENTICATED' || rawMsg.includes('Invalid email address or password')) {
+                return "Invalid email or password.";
+            }
+            if (rawMsg.includes('Invalid OTP') || rawMsg.includes('Invalid verification code')) {
+                return "Invalid verification code. Please try again.";
+            }
+            if (rawMsg.includes('OTP has expired') || rawMsg.includes('code expired')) {
+                return "This verification code has expired. Please request a new code.";
+            }
+            if (rawMsg.includes('Too many failed attempts') || rawMsg.includes('Too many incorrect attempts')) {
+                return "Too many incorrect attempts. Please request a new verification code.";
+            }
+            if (code === 'RATE_LIMIT_EXCEEDED' || rawMsg.includes('Please wait')) {
+                return rawMsg || "Please wait before requesting another code.";
+            }
+            if (code === 'CONFLICT' || rawMsg.includes('already exists')) {
+                return "An account with this email already exists. Please log in.";
+            }
+            return rawMsg || 'Authentication failed. Please check your details.';
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const targetEmail = urlParams.get('email') || localStorage.getItem('om_pending_verify_email') || '';
+            const mount = document.getElementById('verify-email-mount');
+
+            if (targetEmail) {
+                localStorage.setItem('om_pending_verify_email', targetEmail);
+            }
+
+            const API_URL = window.API_URL || (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:3000/api/v1' : '/api/v1');
+
+            new window.OM_OTPComponent({
+                container: mount,
+                title: 'Verify Your Email',
+                subtitle: 'Enter the 6-digit verification code sent to:',
+                target: targetEmail || 'your registered email',
+                cooldown: 60,
+                onVerify: async (otp) => {
+                    const res = await fetch(`${API_URL}/auth/verify-registration-otp`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email: targetEmail, otp })
+                    });
+                    const body = await res.json();
+
+                    if (res.ok && body.success && body.data) {
+                        const token = body.data.tokens?.accessToken;
+                        const user = body.data.user;
+                        if (token) {
+                            localStorage.setItem('om_auth_token', token);
+                            localStorage.setItem('om_customer_auth_token', token);
+                        }
+                        if (user) {
+                            localStorage.setItem('om_user_session', JSON.stringify(user));
+                            localStorage.setItem('om_customer_session', JSON.stringify(user));
+                            if (window.DB) window.DB.saveUsers([user]);
+                        }
+                        localStorage.removeItem('om_pending_verify_email');
+                        window.showToast?.("Email verified successfully! Welcome to OM Mobile Art.", "success");
+                        setTimeout(() => {
+                            const redirect = urlParams.get('redirect') || 'profile.html';
+                            window.location.href = redirect;
+                        }, 1000);
+                    } else {
+                        const errorMsg = formatAuthError(body);
+                        throw new Error(errorMsg);
+                    }
+                },
+                onResend: async () => {
+                    const res = await fetch(`${API_URL}/auth/resend-registration-otp`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email: targetEmail })
+                    });
+                    const body = await res.json();
+                    if (!res.ok || !body.success) {
+                        const errorMsg = formatAuthError(body);
+                        throw new Error(errorMsg);
+                    }
+                },
+                onBack: () => {
+                    window.location.href = 'login.html';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

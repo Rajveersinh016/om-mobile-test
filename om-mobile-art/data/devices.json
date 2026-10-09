@@ -1,0 +1,20 @@
+[
+  { "id": 1, "name": "iPhone 16 Pro Max", "brand": "Apple" },
+  { "id": 2, "name": "iPhone 16 Pro", "brand": "Apple" },
+  { "id": 3, "name": "iPhone 15 Pro Max", "brand": "Apple" },
+  { "id": 4, "name": "iPhone 15 Pro", "brand": "Apple" },
+  { "id": 5, "name": "iPhone 15 Plus", "brand": "Apple" },
+  { "id": 6, "name": "iPhone 15", "brand": "Apple" },
+  { "id": 7, "name": "iPhone 14 Pro Max", "brand": "Apple" },
+  { "id": 8, "name": "iPhone 13", "brand": "Apple" },
+  { "id": 9, "name": "Samsung S24 Ultra", "brand": "Samsung" },
+  { "id": 10, "name": "Samsung S24", "brand": "Samsung" },
+  { "id": 11, "name": "Samsung S23 Ultra", "brand": "Samsung" },
+  { "id": 12, "name": "Google Pixel 8 Pro", "brand": "Google" },
+  { "id": 13, "name": "Google Pixel 8", "brand": "Google" },
+  { "id": 14, "name": "Google Pixel 7 Pro", "brand": "Google" },
+  { "id": 15, "name": "OnePlus 12", "brand": "OnePlus" },
+  { "id": 16, "name": "OnePlus 11", "brand": "OnePlus" },
+  { "id": 17, "name": "Nothing Phone 2", "brand": "Nothing" },
+  { "id": 18, "name": "Asus ROG Phone 8", "brand": "Asus" }
+]

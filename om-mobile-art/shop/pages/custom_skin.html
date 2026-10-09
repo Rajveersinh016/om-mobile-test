@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <meta name="description" content="Design your custom mobile or laptop skin with OM Mobile Art. Upload your artwork and get a precision-cut skin."/>
+    <title>Custom Skin Studio | OM Mobile Art</title>
+    
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,600;0,700;0,900;1,400&family=Poppins:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:ital,wght@0,400;0,600;0,700;1,400&family=Roboto:ital,wght@0,400;0,500;0,700;1,400&family=Open+Sans:ital,wght@0,400;0,600;0,700;1,400&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Lato:ital,wght@0,400;0,700;1,400&family=Oswald:wght@400;600;700&family=Pacifico&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif !important;
+            background-color: #FAFAFA;
+            color: #111827;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        
+        /* Studio Canvas Smartphone Mask Frame - Contained Viewport */
+        .phone-mockup-frame {
+            width: 250px;
+            height: 490px;
+            max-height: calc(100% - 8px);
+            aspect-ratio: 9 / 18;
+            position: relative;
+            overflow: hidden;
+            border-radius: 34px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12), 
+                        inset 0 0 0 9px #111827, 
+                        inset 0 0 15px rgba(255,255,255,0.03);
+            background: #EAEAEA;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            transform-origin: center center;
+        }
+
+        /* Studio Canvas Laptop Lid Mask Frame - Contained Viewport */
+        .laptop-mockup-frame {
+            width: 420px;
+            height: 270px;
+            max-width: calc(100% - 8px);
+            aspect-ratio: 16 / 10;
+            position: relative;
+            overflow: hidden;
+            border-radius: 18px;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.18), 
+                        inset 0 0 0 10px #1e293b, 
+                        inset 0 0 10px rgba(255,255,255,0.05);
+            background: #0f172a;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            transform-origin: center center;
+        }
+
+        .laptop-hinge-bar {
+            position: absolute;
+            bottom: 0;
+            left: 10%;
+            right: 10%;
+            height: 7px;
+            background: linear-gradient(180deg, #475569 0%, #0f172a 100%);
+            border-top-left-radius: 3px;
+            border-top-right-radius: 3px;
+            z-index: 35;
+            box-shadow: 0 -2px 5px rgba(0,0,0,0.4);
+        }
+
+        .laptop-lid-notch {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 4px;
+            background: #334155;
+            border-bottom-left-radius: 3px;
+            border-bottom-right-radius: 3px;
+            z-index: 35;
+        }
+
+        .camera-bump {
+            position: absolute;
+            top: 18px;
+            left: 18px;
+            z-index: 30;
+            background: #111827;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.25), inset 0 0 0 1px #333;
+            border-radius: 16px;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* Glassmorphism reflection overlay */
+        .glass-reflection {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0) 50%, rgba(0, 0, 0, 0) 50.1%, rgba(0, 0, 0, 0.05) 100%);
+            z-index: 25;
+            pointer-events: none;
+            opacity: 0.85;
+            mix-blend-mode: overlay;
+        }
+
+        /* Grid lines overlay */
+        .grid-overlay {
+            position: absolute;
+            inset: 0;
+            background-size: 20px 20px;
+            background-image: linear-gradient(to right, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+            z-index: 15;
+            pointer-events: none;
+        }
+
+        /* Uploaded Image inside Frame */
+        .uploaded-skin-preview-img {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform-origin: center center;
+            cursor: grab;
+            user-select: none;
+            max-width: none;
+            z-index: 10;
+        }
+
+        .uploaded-skin-preview-img:active {
+            cursor: grabbing;
+        }
+
+        /* Text Layer node styling */
+        .studio-text-layer {
+            position: absolute;
+            transform-origin: center center;
+            white-space: nowrap;
+            cursor: move;
+            user-select: none;
+            z-index: 23;
+        }
+        .studio-text-layer.selected-layer {
+            outline: 2px dashed #03045E;
+            outline-offset: 3px;
+        }
+
+        /* Range slider styling */
+        input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            background: #E8E8E8;
+            border-radius: 9999px;
+            height: 4px;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            background: #03045E;
+            border: 2px solid white;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            border-radius: 50%;
+            width: 14px;
+            height: 14px;
+            cursor: pointer;
+            transition: transform 0.1s ease;
+        }
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+
+        /* Responsive Mobile Scaling */
+        @media (max-width: 640px) {
+            .laptop-mockup-frame {
+                width: 300px;
+                height: 190px;
+                border-radius: 12px;
+            }
+            .phone-mockup-frame {
+                width: 210px;
+                height: 410px;
+                border-radius: 28px;
+            }
+        }
+    </style>
+    <script src="../../shared/js/tailwind-config-shop.js"></script>
+    <link rel="stylesheet" href="../../shared/css/shop-scrollbar.css?v=1.1"/>
+</head>
+<body class="bg-[#FAFAFA] font-body-main text-[#111827] antialiased min-h-screen flex flex-col justify-between">
+    <div>
+        <!-- Announcement Bar -->
+        <div id="announcement-bar-static" class="bg-black text-center py-1.5 text-[11px] font-bold text-white uppercase tracking-wider">
+            ✨ Design Custom Skins with Premium 3M Vinyl
+        </div>
+
+        <!-- Top Navigation Bar Header Placeholder -->
+        <header id="shop-header-placeholder"></header>
+
+        <main class="store-container py-3 max-w-[1320px] mx-auto px-4 md:px-6">
+            
+            <!-- STUDIO TOP BAR: TITLE & LARGE PROMINENT SEGMENTED BUTTON SWITCHER -->
+            <div class="mb-3 text-center md:text-left flex flex-col md:flex-row items-center justify-between gap-3">
+                <div>
+                    <h1 class="text-xl md:text-2xl font-black text-gray-900 tracking-tight">Custom Skin Studio</h1>
+                    <p class="text-xs text-gray-500 font-medium">Design your custom skin for mobile phone or laptop</p>
+                </div>
+
+                <!-- Large Segmented Service Switcher Tabs -->
+                <div class="inline-flex bg-gray-100 p-1.5 rounded-2xl border border-gray-200 shadow-inner w-full md:w-auto">
+                    <button type="button" id="service-tab-mobile" onclick="selectServiceFlow('mobile')" class="flex-1 md:flex-none px-6 py-2.5 rounded-xl text-xs font-extrabold transition-all bg-[#03045E] text-white shadow-sm flex items-center justify-center gap-2">
+                        <span class="text-base">📱</span> Mobile Back Skin (₹300)
+                    </button>
+                    <button type="button" id="service-tab-laptop" onclick="selectServiceFlow('laptop')" class="flex-1 md:flex-none px-6 py-2.5 rounded-xl text-xs font-extrabold transition-all text-gray-600 hover:text-gray-900 flex items-center justify-center gap-2">
+                        <span class="text-base">💻</span> Laptop Back Skin (₹500)
+                    </button>
+                </div>
+            </div>
+
+            <!-- MAIN STUDIO WORKSPACE CONTAINER (CONTAINED VIEWPORT WORKSPACE) -->
+            <div class="bg-white border border-[#E8E8E8] rounded-3xl shadow-sm overflow-hidden grid grid-cols-1 lg:grid-cols-12 min-h-[600px] lg:h-[calc(100vh-165px)] lg:max-h-[750px]">
+                
+                <!-- LEFT COLUMN: LIVE PREVIEW PANEL (lg:col-span-7) -->
+                <div id="preview-viewport-container" class="lg:col-span-7 bg-[#FAFAFA] border-b lg:border-b-0 lg:border-r border-[#E8E8E8] p-4 md:p-5 flex flex-col justify-between items-center relative overflow-hidden">
+                    
+                    <!-- Preview Top Header Bar -->
+                    <div class="w-full flex items-center justify-between z-30">
+                        <!-- Device Badge -->
+                        <div id="studio-device-badge" class="px-3 py-1 bg-white border border-gray-200 text-gray-900 text-xs font-extrabold rounded-full shadow-sm flex items-center gap-2 uppercase tracking-wider">
+                            <span id="badge-device-icon" class="material-symbols-outlined text-sm text-[#03045E]">smartphone</span>
+                            <span id="badge-device-name">Select your device to start</span>
+                        </div>
+
+                        <!-- Canvas Controls -->
+                        <div class="flex items-center gap-1 bg-white p-1 rounded-full border border-gray-200 shadow-sm">
+                            <button type="button" id="btn-toggle-grid" class="w-8 h-8 rounded-full text-gray-500 hover:text-[#03045E] hover:bg-gray-100 flex items-center justify-center transition-all" title="Toggle Grid"><span class="material-symbols-outlined text-sm">grid_on</span></button>
+                            <button type="button" id="btn-rotate-90" class="w-8 h-8 rounded-full text-gray-500 hover:text-[#03045E] hover:bg-gray-100 flex items-center justify-center transition-all" title="Rotate 90°"><span class="material-symbols-outlined text-sm">rotate_90_degrees_ccw</span></button>
+                        </div>
+                    </div>
+
+                    <!-- PREVIEW CANVAS VIEWPORT -->
+                    <div id="preview-canvas-area" class="w-full flex-1 flex items-center justify-center relative my-1 overflow-hidden">
+                        <div id="preview-rotation-wrapper" class="transition-transform duration-300 ease-out relative flex items-center justify-center">
+                            
+                            <!-- SMARTPHONE BACK MOCKUP (Active when flowType === 'mobile') -->
+                            <div id="phone-mask-container" class="phone-mockup-frame">
+                                <div id="phone-camera-bump" class="camera-bump rounded-2xl w-20 h-20 flex items-center justify-center">
+                                    <div class="grid grid-cols-2 gap-1.5 p-2.5 w-full h-full items-center justify-center">
+                                        <div class="w-4 h-4 rounded-full bg-zinc-950 border border-zinc-700/80 shadow-inner"></div>
+                                        <div class="w-4 h-4 rounded-full bg-zinc-950 border border-zinc-700/80 shadow-inner"></div>
+                                        <div class="w-4 h-4 rounded-full bg-zinc-950 border border-zinc-700/80 shadow-inner col-span-2 mx-auto"></div>
+                                    </div>
+                                </div>
+
+                                <div class="glass-reflection"></div>
+                                <div id="align-grid-mobile" class="grid-overlay hidden"></div>
+                                <div id="text-layers-overlay-mobile" class="absolute inset-0 z-[23] pointer-events-none"></div>
+                                <img id="uploaded-skin-preview-mobile" class="uploaded-skin-preview-img" src="" alt="Custom skin mobile preview">
+                            </div>
+
+                            <!-- LAPTOP LID MOCKUP (Active when flowType === 'laptop') -->
+                            <div id="laptop-mask-container" class="laptop-mockup-frame hidden">
+                                <div class="laptop-lid-notch"></div>
+                                <div class="laptop-hinge-bar"></div>
+
+                                <div class="glass-reflection"></div>
+                                <div id="align-grid-laptop" class="grid-overlay hidden"></div>
+                                <div id="text-layers-overlay-laptop" class="absolute inset-0 z-[23] pointer-events-none"></div>
+                                <img id="uploaded-skin-preview-laptop" class="uploaded-skin-preview-img" src="" alt="Custom skin laptop preview">
+                            </div>
+
+                            <!-- Shared Bounding Box Selection Outline -->
+                            <div id="selection-box" class="absolute hidden border-2 border-[#03045E] z-40 pointer-events-none select-none">
+                                <div class="absolute w-3 h-3 bg-white border-2 border-[#03045E] rounded-full -top-1.5 -left-1.5 pointer-events-auto cursor-nwse-resize" id="handle-tl"></div>
+                                <div class="absolute w-3 h-3 bg-white border-2 border-[#03045E] rounded-full -top-1.5 -right-1.5 pointer-events-auto cursor-nesw-resize" id="handle-tr"></div>
+                                <div class="absolute w-3 h-3 bg-white border-2 border-[#03045E] rounded-full -bottom-1.5 -left-1.5 pointer-events-auto cursor-nesw-resize" id="handle-bl"></div>
+                                <div class="absolute w-3 h-3 bg-white border-2 border-[#03045E] rounded-full -bottom-1.5 -right-1.5 pointer-events-auto cursor-nwse-resize" id="handle-br"></div>
+                                <div class="absolute w-0.5 h-5 bg-[#03045E] top-[-20px] left-1/2 -translate-x-1/2"></div>
+                                <div class="absolute w-4 h-4 bg-white border-2 border-[#03045E] rounded-full top-[-30px] left-1/2 -translate-x-1/2 pointer-events-auto cursor-grab active:cursor-grabbing flex items-center justify-center" id="handle-rotate" title="Rotate object">
+                                    <span class="material-symbols-outlined text-[9px] text-[#03045E] font-bold">sync</span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- Preview Bottom Toolbar (No Overlap with Mockup) -->
+                    <div class="w-full flex items-center justify-between border-t border-[#E8E8E8] pt-2.5 z-30">
+                        <div class="flex items-center gap-1.5">
+                            <button type="button" id="btn-undo" class="w-8 h-8 rounded-lg bg-white border border-[#E8E8E8] text-gray-600 hover:text-black flex items-center justify-center shadow-sm" title="Undo"><span class="material-symbols-outlined text-sm">undo</span></button>
+                            <button type="button" id="btn-redo" class="w-8 h-8 rounded-lg bg-white border border-[#E8E8E8] text-gray-600 hover:text-black flex items-center justify-center shadow-sm" title="Redo"><span class="material-symbols-outlined text-sm">redo</span></button>
+                            <button type="button" id="btn-reset-layout" class="px-2.5 h-8 rounded-lg bg-white border border-red-200 text-red-600 hover:bg-red-50 text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 shadow-sm"><span class="material-symbols-outlined text-xs">restart_alt</span> Reset</button>
+                        </div>
+                        <div class="flex items-center gap-1.5">
+                            <button type="button" id="btn-canvas-fit" onclick="triggerFitFill()" class="px-3 h-8 rounded-lg bg-white border border-[#E8E8E8] text-gray-700 hover:text-black text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 shadow-sm"><span class="material-symbols-outlined text-xs">fit_screen</span> Fit</button>
+                            <button type="button" id="btn-canvas-center" class="px-3 h-8 rounded-lg bg-white border border-[#E8E8E8] text-gray-700 hover:text-black text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 shadow-sm"><span class="material-symbols-outlined text-xs">filter_center_focus</span> Center</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RIGHT COLUMN: CONTROL PANEL WITH INTERNAL SCROLLING (lg:col-span-5) -->
+                <div class="lg:col-span-5 flex flex-col justify-between bg-white overflow-y-auto max-h-full p-4 md:p-5 divide-y divide-[#E8E8E8]">
+                    
+                    <div class="space-y-4 pb-4">
+                        
+                        <!-- SECTION 1: YOUR DEVICE (PROMINENT AT TOP) -->
+                        <div class="space-y-2.5">
+                            <h2 class="text-xs font-extrabold text-gray-900 uppercase tracking-widest flex items-center gap-2">
+                                <span class="w-5 h-5 rounded-full bg-[#03045E] text-white flex items-center justify-center text-[10px] font-black">1</span>
+                                Your Device
+                            </h2>
+
+                            <div class="grid grid-cols-1 gap-2">
+                                <!-- Category Selector -->
+                                <div class="space-y-0.5">
+                                    <label class="text-[9px] font-extrabold text-gray-400 uppercase tracking-widest block">Device Category</label>
+                                    <select id="select-device-type" class="w-full h-9 px-3 bg-gray-50 border border-gray-200 rounded-xl text-xs font-bold text-gray-900 focus:outline-none focus:border-[#03045E]">
+                                        <option value="mobile">📱 Mobile Phone</option>
+                                        <option value="laptop">💻 Laptop / MacBook</option>
+                                    </select>
+                                </div>
+
+                                <!-- Brand Selector -->
+                                <div class="space-y-0.5">
+                                    <label class="text-[9px] font-extrabold text-gray-400 uppercase tracking-widest block">Brand</label>
+                                    <select id="select-brand" class="w-full h-9 px-3 bg-gray-50 border border-gray-200 rounded-xl text-xs font-bold text-gray-900 focus:outline-none focus:border-[#03045E]">
+                                        <option value="" disabled selected>Select Brand</option>
+                                    </select>
+                                </div>
+
+                                <!-- Search Model Input -->
+                                <div class="space-y-0.5 relative">
+                                    <label class="text-[9px] font-extrabold text-gray-400 uppercase tracking-widest block">Model</label>
+                                    <div class="relative">
+                                        <input type="text" id="model-search-input" placeholder="Search or select device model..." class="w-full h-9 pl-8 pr-3 bg-gray-50 border border-gray-200 rounded-xl text-xs font-bold text-gray-900 focus:outline-none focus:border-[#03045E]" disabled>
+                                        <span class="material-symbols-outlined absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400 text-sm">search</span>
+                                    </div>
+                                    <div id="model-dropdown-options" class="hidden absolute left-0 right-0 top-11 mt-1 bg-white border border-gray-200 rounded-xl shadow-xl max-h-48 overflow-y-auto divide-y z-50"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- SECTION 2: YOUR DESIGN -->
+                        <div class="pt-3.5 space-y-2.5 border-t border-[#E8E8E8]">
+                            <h2 class="text-xs font-extrabold text-gray-900 uppercase tracking-widest flex items-center gap-2">
+                                <span class="w-5 h-5 rounded-full bg-[#03045E] text-white flex items-center justify-center text-[10px] font-black">2</span>
+                                Your Design
+                            </h2>
+
+                            <!-- Upload Box -->
+                            <div id="custom-skin-dropzone" class="upload-dropzone bg-gray-50 p-3 rounded-2xl text-center space-y-1 cursor-pointer border border-dashed border-[#03045E] hover:bg-[#03045E]/5 transition-all">
+                                <input type="file" id="skin-file-input" accept="image/png, image/jpeg, image/webp" class="hidden">
+                                <span class="material-symbols-outlined text-2xl text-[#03045E]">add_photo_alternate</span>
+                                <h3 id="upload-headline" class="text-xs font-extrabold text-gray-900">+ UPLOAD DESIGN</h3>
+                                <p class="text-gray-400 text-[10px]">PNG, JPG, WEBP (Max 10MB)</p>
+                            </div>
+
+                            <div id="artwork-active-bar" class="hidden flex items-center justify-between bg-gray-50 border border-gray-200 p-2 rounded-xl">
+                                <span id="active-file-name" class="text-xs font-bold text-gray-700 truncate max-w-[150px]">Artwork Loaded</span>
+                                <div class="flex items-center gap-1.5">
+                                    <button type="button" id="btn-replace-artwork" class="px-2.5 py-1 bg-white border border-gray-300 rounded-lg text-[10px] font-bold text-gray-700 hover:bg-gray-100 flex items-center gap-1">
+                                        <span class="material-symbols-outlined text-xs">autorenew</span> Replace
+                                    </button>
+                                    <button type="button" id="btn-remove-artwork" class="px-2 py-1 bg-red-50 border border-red-200 rounded-lg text-[10px] font-bold text-red-600 hover:bg-red-100 flex items-center gap-1">
+                                        <span class="material-symbols-outlined text-xs">delete</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Sample Suggestions -->
+                            <div class="space-y-1 pt-0.5">
+                                <label class="text-[9px] font-extrabold text-gray-400 uppercase tracking-widest block">Sample Artworks</label>
+                                <div class="grid grid-cols-4 gap-1.5" id="gallery-suggestions"></div>
+                            </div>
+
+                            <!-- Editor Sub-tabs (Adjust / Transform / Text Tool) -->
+                            <div class="bg-gray-100 p-1 rounded-xl flex items-center text-xs font-bold mt-2">
+                                <button type="button" id="tab-btn-adjust" class="flex-1 py-1.5 rounded-lg text-[10px] font-extrabold uppercase tracking-wider transition-all bg-white text-[#03045E] shadow-sm text-center">Adjust</button>
+                                <button type="button" id="tab-btn-transform" class="flex-1 py-1.5 rounded-lg text-[10px] font-extrabold uppercase tracking-wider transition-all text-gray-500 hover:text-gray-900 text-center">Transform</button>
+                                <button type="button" id="tab-btn-text" class="flex-1 py-1.5 rounded-lg text-[10px] font-extrabold uppercase tracking-wider transition-all text-gray-500 hover:text-gray-900 text-center">Text Tool</button>
+                            </div>
+
+                            <!-- ADJUST PANEL -->
+                            <div id="panel-adjust" class="space-y-2 pt-1">
+                                <div class="space-y-0.5">
+                                    <div class="flex justify-between text-[10px] font-bold text-gray-500">
+                                        <span>Zoom</span>
+                                        <span id="zoom-value" class="text-gray-900">35%</span>
+                                    </div>
+                                    <input type="range" id="slider-zoom" min="10" max="300" value="35" class="w-full">
+                                </div>
+                                <div class="space-y-0.5">
+                                    <div class="flex justify-between text-[10px] font-bold text-gray-500">
+                                        <span>Rotation</span>
+                                        <span id="rotate-value" class="text-gray-900">0°</span>
+                                    </div>
+                                    <input type="range" id="slider-rotate" min="0" max="360" value="0" class="w-full">
+                                </div>
+                                <div class="space-y-0.5">
+                                    <div class="flex justify-between text-[10px] font-bold text-gray-500">
+                                        <span>Opacity</span>
+                                        <span id="opacity-value" class="text-gray-900">100%</span>
+                                    </div>
+                                    <input type="range" id="slider-opacity" min="0" max="100" value="100" class="w-full">
+                                </div>
+                            </div>
+
+                            <!-- TRANSFORM PANEL -->
+                            <div id="panel-transform" class="hidden grid grid-cols-2 gap-1.5 pt-1">
+                                <button type="button" id="btn-flip-h" class="h-8 border border-gray-200 bg-white text-gray-700 rounded-lg text-xs font-bold flex items-center justify-center gap-1"><span class="material-symbols-outlined text-sm">flip</span> Flip H</button>
+                                <button type="button" id="btn-flip-v" class="h-8 border border-gray-200 bg-white text-gray-700 rounded-lg text-xs font-bold flex items-center justify-center gap-1"><span class="material-symbols-outlined text-sm">flip</span> Flip V</button>
+                                <button type="button" id="btn-fit-fill" onclick="triggerFitFill()" class="h-8 border border-gray-200 bg-white text-gray-700 rounded-lg text-xs font-bold flex items-center justify-center gap-1"><span class="material-symbols-outlined text-sm">photo_frame</span> Fit / Fill</button>
+                                <button type="button" id="btn-reset-transform" class="h-8 border border-red-100 bg-red-50 text-red-600 rounded-lg text-xs font-bold flex items-center justify-center gap-1"><span class="material-symbols-outlined text-sm">restart_alt</span> Reset</button>
+                            </div>
+
+                            <!-- REAL FUNCTIONAL TEXT TOOL PANEL -->
+                            <div id="panel-text" class="hidden space-y-3 pt-1">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-xs font-extrabold text-gray-900 uppercase tracking-widest">TEXT LAYERS</span>
+                                    <button type="button" id="btn-add-text-layer" class="text-xs text-[#03045E] font-black hover:underline flex items-center gap-1">
+                                        <span class="material-symbols-outlined text-sm">add_circle</span> + ADD TEXT
+                                    </button>
+                                </div>
+                                
+                                <div id="text-layers-list" class="space-y-1.5 max-h-28 overflow-y-auto"></div>
+                                
+                                <div id="text-properties-panel" class="hidden space-y-2.5 border-t border-gray-200 pt-2.5">
+                                    <div class="space-y-1">
+                                        <label class="text-[9px] font-extrabold text-gray-400 uppercase tracking-widest block">ENTER TEXT</label>
+                                        <input type="text" id="text-layer-string" class="w-full h-9 px-3 border border-gray-200 rounded-xl text-xs font-bold focus:outline-none focus:border-[#03045E]" placeholder="Enter custom text...">
+                                    </div>
+
+                                    <div class="grid grid-cols-2 gap-2">
+                                        <div class="space-y-1">
+                                            <label class="text-[9px] font-extrabold text-gray-400 uppercase tracking-widest block">FONT FAMILY</label>
+                                            <select id="text-layer-font" class="w-full h-9 px-2 border border-gray-200 rounded-xl text-xs font-bold bg-white focus:outline-none focus:border-[#03045E] cursor-pointer">
+                                                <option value="Inter">Inter</option>
+                                                <option value="Poppins">Poppins</option>
+                                                <option value="Montserrat">Montserrat</option>
+                                                <option value="Roboto">Roboto</option>
+                                                <option value="Open Sans">Open Sans</option>
+                                                <option value="Playfair Display">Playfair Display</option>
+                                                <option value="Lato">Lato</option>
+                                                <option value="Oswald">Oswald</option>
+                                                <option value="Pacifico">Pacifico</option>
+                                            </select>
+                                        </div>
+                                        <div class="space-y-1">
+                                            <div class="flex justify-between text-[9px] font-bold text-gray-400">
+                                                <span>FONT SIZE</span>
+                                                <span id="text-size-val" class="text-gray-900">24px</span>
+                                            </div>
+                                            <input type="range" id="text-layer-size" min="12" max="80" value="24" class="w-full">
+                                        </div>
+                                    </div>
+
+                                    <div class="flex items-center justify-between gap-2 pt-0.5">
+                                        <div class="flex items-center gap-1 bg-gray-100 p-0.5 rounded-lg border border-gray-200">
+                                            <button type="button" id="btn-text-align-left" class="w-7 h-7 rounded text-gray-700 hover:text-black flex items-center justify-center transition-all" title="Align Left"><span class="material-symbols-outlined text-xs">format_align_left</span></button>
+                                            <button type="button" id="btn-text-align-center" class="w-7 h-7 rounded text-gray-700 hover:text-black flex items-center justify-center transition-all" title="Align Center"><span class="material-symbols-outlined text-xs">format_align_center</span></button>
+                                            <button type="button" id="btn-text-align-right" class="w-7 h-7 rounded text-gray-700 hover:text-black flex items-center justify-center transition-all" title="Align Right"><span class="material-symbols-outlined text-xs">format_align_right</span></button>
+                                        </div>
+
+                                        <div class="flex items-center gap-1.5">
+                                            <label class="text-[9px] font-extrabold text-gray-400 uppercase">COLOR:</label>
+                                            <input type="color" id="text-layer-color" value="#03045E" class="w-7 h-7 rounded-lg border border-gray-300 bg-white cursor-pointer p-0">
+                                        </div>
+                                    </div>
+
+                                    <div class="grid grid-cols-2 gap-2 pt-0.5">
+                                        <div class="space-y-0.5">
+                                            <div class="flex justify-between text-[9px] font-bold text-gray-400">
+                                                <span>OPACITY</span>
+                                                <span id="text-opacity-val" class="text-gray-900">100%</span>
+                                            </div>
+                                            <input type="range" id="text-layer-opacity" min="0" max="100" value="100" class="w-full">
+                                        </div>
+                                        <div class="space-y-0.5">
+                                            <div class="flex justify-between text-[9px] font-bold text-gray-400">
+                                                <span>ROTATION</span>
+                                                <span id="text-rotate-val" class="text-gray-900">0°</span>
+                                            </div>
+                                            <input type="range" id="text-layer-rotate" min="0" max="360" value="0" class="w-full">
+                                        </div>
+                                    </div>
+
+                                    <button type="button" id="btn-delete-text-layer" class="w-full h-8 border border-red-200 bg-red-50 text-red-600 hover:bg-red-100 rounded-xl text-[10px] font-bold uppercase tracking-wider flex items-center justify-center gap-1">
+                                        <span class="material-symbols-outlined text-xs">delete</span> Delete Text Layer
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- SECTION 3: STICKY SUMMARY & ADD TO CART AT BOTTOM OF RIGHT PANEL -->
+                    <div class="pt-3.5 border-t border-[#E8E8E8] flex items-center justify-between gap-3 mt-auto">
+                        <div>
+                            <p class="text-[9px] font-extrabold text-gray-400 uppercase tracking-widest">Total Price</p>
+                            <h3 id="custom-skin-price" class="text-2xl font-black text-[#03045E] tracking-tight">₹300</h3>
+                        </div>
+
+                        <div class="flex items-center gap-2">
+                            <div class="flex items-center border border-gray-200 rounded-xl bg-gray-50 h-10 px-1">
+                                <button type="button" onclick="adjustQty(-1)" class="w-7 h-full text-gray-600 font-bold hover:bg-gray-200 rounded-lg text-xs">-</button>
+                                <input type="number" id="input-qty" value="1" min="1" class="w-8 text-center text-xs font-bold border-none bg-transparent focus:ring-0 p-0">
+                                <button type="button" onclick="adjustQty(1)" class="w-7 h-full text-gray-600 font-bold hover:bg-gray-200 rounded-lg text-xs">+</button>
+                            </div>
+                            <button type="button" id="btn-next-review" class="h-10 px-5 bg-[#03045E] hover:bg-[#2C4A6B] text-white font-extrabold text-xs uppercase tracking-wider rounded-xl transition-all shadow-md flex items-center gap-1.5 active:scale-95">
+                                Add to Cart <span class="material-symbols-outlined text-sm">shopping_cart</span>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Dynamic FAQ Section -->
+            <div id="faq-section-container" class="mt-10 border-t border-[#E8E8E8] pt-6 max-w-3xl mx-auto space-y-3">
+                <h2 class="text-lg font-extrabold tracking-tight text-[#111827] text-center uppercase tracking-widest">Frequently Asked Questions</h2>
+                <div id="faq-accordion" class="divide-y divide-[#E8E8E8]"></div>
+            </div>
+        </main>
+    </div>
+
+    <!-- BEAUTIFUL DESIGN VALIDATION DIALOG MODAL -->
+    <div id="validation-dialog-modal" class="fixed inset-0 bg-black/60 z-[99] hidden flex items-center justify-center p-4 backdrop-blur-sm transition-all duration-300">
+        <div class="bg-white border border-[#E8E8E8] rounded-3xl p-6 max-w-md w-full text-center space-y-4 shadow-2xl scale-95 transform transition-transform duration-300">
+            <div class="w-14 h-14 bg-[#03045E]/10 text-[#03045E] rounded-full flex items-center justify-center mx-auto shadow-inner">
+                <span class="material-symbols-outlined text-2xl font-bold">warning</span>
+            </div>
+            <div class="space-y-1">
+                <h3 class="text-base font-extrabold text-gray-900 uppercase tracking-wide">Configuration Incomplete</h3>
+                <p class="text-gray-500 text-xs leading-relaxed" id="validation-error-msg">
+                    Please select your specifications before continuing.
+                </p>
+            </div>
+            <div class="bg-[#FAFAFA] border border-[#E8E8E8] p-3 rounded-2xl text-left text-xs space-y-1.5" id="validation-checklist"></div>
+            <div class="pt-1">
+                <button type="button" id="btn-close-validation" class="w-full h-10 bg-black hover:bg-gray-900 text-white font-bold text-xs uppercase tracking-wider rounded-xl transition-colors shadow-sm">
+                    Configure Specifications
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer placeholder -->
+    <footer id="shop-footer-placeholder"></footer>
+
+    <!-- Script References -->
+    <script src="../../shared/js/storage.js"></script>
+    <script src="../../shared/js/utils.js" defer></script>
+    <script src="../../shared/js/notifications.js" defer></script>
+    <script src="../../shared/components/navbar.js" defer></script>
+    <script src="../../shared/components/productCard.js" defer></script>
+    <script src="../../shared/components/loader.js" defer></script>
+    <script src="../../shop/js/custom_skin.js"></script>
+</body>
+</html>

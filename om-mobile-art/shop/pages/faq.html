@@ -1,0 +1,62 @@
+<!DOCTYPE html><html class="scroll-smooth" lang="en"><head>
+<meta charset="utf-8"/><meta content="width=device-width,initial-scale=1.0" name="viewport"/>
+<title>FAQ | OM Mobile Art</title>
+<meta name="description" content="Answers to common questions about OM Mobile Art products, shipping, installation and returns."/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<style>.material-symbols-outlined{font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24;}</style>
+<script src="../../shared/js/tailwind-config-shop.js"></script>
+
+  <link rel="stylesheet" href="../../shared/css/shop-scrollbar.css?v=1.1"/>
+</head><body class="bg-background font-body-main text-on-surface">
+
+<header></header>
+<main class="store-container py-16">
+<div class="max-w-3xl mx-auto space-y-8">
+  <div class="text-center space-y-2">
+    <h1 class="font-headline-h1 text-4xl font-bold">Frequently Asked Questions</h1>
+    <p class="text-text-muted">Everything you need to know about OM Mobile Art skins.</p>
+  </div>
+  <div class="space-y-4" id="faq-list">
+    <!-- FAQ items injected by JS -->
+  </div>
+</div>
+<script>
+const FAQS=[
+  {q:"What are mobile skins made of?",a:"Our skins are crafted from premium 3M vinyl, leather, or real wood materials depending on the collection. All materials are precisely cut to fit your device with zero gaps or overhangs."},
+  {q:"Will the skin leave residue when removed?",a:"No. Our pressure-sensitive adhesive is designed to be residue-free. You can remove the skin cleanly without leaving any marks on your device."},
+  {q:"How long does a skin last?",a:"With normal use, our skins last 12–24 months. Avoid prolonged exposure to direct sunlight or extreme heat to maximize lifespan."},
+  {q:"Can I reapply a skin after removing it?",a:"Skins can be repositioned during initial application, but once firmly set, reapplication is not recommended as it may affect adhesion."},
+  {q:"Do skins protect against drops?",a:"Skins primarily protect against scratches, fingerprints, and everyday wear. They are not impact-absorbing like cases."},
+  {q:"How do I install the skin?",a:"Clean your device surface, peel the skin, align it carefully, and press firmly from center outward. Our installation guide has step-by-step instructions with photos."},
+  {q:"What if my skin doesn't fit perfectly?",a:"We offer a 100% fit guarantee. If your skin doesn't fit perfectly, contact us within 7 days for a free replacement."},
+  {q:"What payment methods do you accept?",a:"We accept UPI, credit/debit cards, net banking, and cash on delivery for eligible pin codes."},
+  {q:"How long does shipping take?",a:"Standard delivery takes 5–7 business days. Express shipping (2–3 days) is available at checkout."},
+  {q:"Can I get a custom design?",a:"Yes! Visit our Custom Skin Creator page to upload your own artwork and get a fully personalized skin."},
+];
+const list=document.getElementById('faq-list');
+FAQS.forEach((item,i)=>{
+  const div=document.createElement('div');
+  div.className='border border-border-subtle rounded-xl overflow-hidden';
+  div.innerHTML=`<button class="w-full text-left px-6 py-4 font-semibold flex items-center justify-between hover:bg-surface-container-low transition-colors" onclick="toggleFaq(this)">
+    <span>${item.q}</span><span class="material-symbols-outlined text-text-muted transition-transform">expand_more</span>
+  </button>
+  <div class="faq-answer overflow-hidden max-h-0 transition-all duration-300"><div class="px-6 pb-5 text-text-secondary text-sm leading-relaxed">${item.a}</div></div>`;
+  list.appendChild(div);
+});
+function toggleFaq(btn){
+  const answer=btn.nextElementSibling;
+  const icon=btn.querySelector('.material-symbols-outlined');
+  const isOpen=answer.style.maxHeight&&answer.style.maxHeight!=='0px';
+  answer.style.maxHeight=isOpen?'0px':answer.scrollHeight+'px';
+  icon.style.transform=isOpen?'rotate(0deg)':'rotate(180deg)';
+}
+</script>
+</main>
+<footer></footer>
+<script src="../../shared/js/storage.js"></script>
+<script src="../../shared/js/utils.js"></script>
+<script src="../../shared/js/notifications.js"></script>
+<script src="../../shared/components/navbar.js" defer></script>
+</body></html>

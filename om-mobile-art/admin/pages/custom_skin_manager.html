@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width,initial-scale=1.0" name="viewport"/>
+  <title>Custom Skin Configurators | OM Admin</title>
+  <meta name="description" content="Configure Custom Skin Studio pricing, lamination limits, material surcharge, text fonts, and smart image parameters."/>
+  
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #FAFAFA;
+      color: #111827;
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+    }
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+      animation: fadeIn 0.2s ease-in-out forwards;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+
+  <script src="../../shared/js/tailwind-config-admin.js"></script>
+  <link rel="stylesheet" href="../../shared/css/admin-scrollbar.css?v=1.1"/>
+</head>
+<body class="bg-[#FAFAFA] text-[#111827] antialiased">
+  <aside></aside>
+  
+  <div class="ml-[240px] min-h-screen flex flex-col">
+    <header></header>
+    
+    <main class="flex-1 p-6">
+      <div class="max-w-[1200px] mx-auto space-y-6">
+        <!-- Header -->
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#E8E8E8] pb-5">
+          <div>
+            <h1 class="text-2xl font-extrabold tracking-tight text-gray-900">Custom Skin Studio Configuration Panel</h1>
+            <p class="text-xs text-gray-500 mt-1">Manage customization services, pricing rules, materials, fonts, text layers, image safety parameters, and view order analytics.</p>
+          </div>
+          <div class="flex items-center gap-3">
+            <button id="btn-save-config" class="flex items-center gap-2 px-6 py-3 bg-[#35567F] hover:bg-[#2C4A6B] text-white rounded-xl text-xs font-bold uppercase tracking-wider shadow-sm transition-all">
+              <span class="material-symbols-outlined text-[18px]">save</span> 
+              Save configurations
+            </button>
+          </div>
+        </div>
+
+        <!-- Premium Tab Navigation -->
+        <div class="flex items-center gap-2 border border-[#E8E8E8] bg-white p-2 rounded-2xl overflow-x-auto shadow-sm">
+          <button type="button" class="tab-btn px-4 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider text-[#35567F] bg-[#35567F]/10 transition-all" data-target="tab-analytics">Analytics</button>
+          <button type="button" class="tab-btn px-4 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider text-gray-500 hover:text-black transition-all" data-target="tab-general">General Settings</button>
+          <button type="button" class="tab-btn px-4 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider text-gray-500 hover:text-black transition-all" data-target="tab-pricing">Pricing &amp; Business Rules</button>
+          <button type="button" class="tab-btn px-4 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider text-gray-500 hover:text-black transition-all" data-target="tab-materials">Materials &amp; Finishes</button>
+          <button type="button" class="tab-btn px-4 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider text-gray-500 hover:text-black transition-all" data-target="tab-devices">Device Matrix</button>
+          <button type="button" class="tab-btn px-4 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider text-gray-500 hover:text-black transition-all" data-target="tab-editors">Text &amp; Image Tools</button>
+          <button type="button" class="tab-btn px-4 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider text-gray-500 hover:text-black transition-all" data-target="tab-content">Help Content &amp; FAQs</button>
+        </div>
+
+        <form id="studio-config-form" class="space-y-6" onsubmit="return false;">
+          
+          <!-- TAB 0: Analytics Dashboard -->
+          <div id="tab-analytics" class="tab-content active space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-5">
+              <div class="bg-white border border-[#E8E8E8] rounded-2xl p-5 shadow-sm space-y-1">
+                <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Total Mobile Back Orders</p>
+                <h3 class="text-2xl font-black text-gray-900" id="stat-total-back">412</h3>
+                <span class="text-[10px] text-green-600 font-bold">↑ 12% vs last week</span>
+              </div>
+              <div class="bg-white border border-[#E8E8E8] rounded-2xl p-5 shadow-sm space-y-1">
+                <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Total Laptop Back Orders</p>
+                <h3 class="text-2xl font-black text-gray-900" id="stat-total-laptop">184</h3>
+                <span class="text-[10px] text-green-600 font-bold">↑ 8% vs last week</span>
+              </div>
+              <div class="bg-white border border-[#E8E8E8] rounded-2xl p-5 shadow-sm space-y-1">
+                <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Custom Skins Revenue</p>
+                <h3 class="text-2xl font-black text-[#35567F]" id="stat-revenue">₹1,69,450</h3>
+                <span class="text-[10px] text-green-600 font-bold">↑ 18% vs last week</span>
+              </div>
+              <div class="bg-white border border-[#E8E8E8] rounded-2xl p-5 shadow-sm space-y-1">
+                <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Average Order Value</p>
+                <h3 class="text-2xl font-black text-gray-900" id="stat-aov">₹1,245</h3>
+                <span class="text-[10px] text-gray-400 font-bold">Stable</span>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <!-- Materials Selection Analytics -->
+              <div class="bg-white border border-[#E8E8E8] rounded-2xl p-6 shadow-sm space-y-4">
+                <h3 class="text-xs font-extrabold text-gray-900 uppercase tracking-widest border-b pb-3">Most Selected Materials</h3>
+                <div class="space-y-3" id="analytics-materials-chart">
+                  <div class="space-y-1">
+                    <div class="flex justify-between text-xs font-bold">
+                      <span>Carbon Fiber Vinyl</span>
+                      <span>42% (250 orders)</span>
+                    </div>
+                    <div class="w-full bg-gray-100 h-2 rounded-full"><div class="bg-[#35567F] h-2 rounded-full" style="width: 42%"></div></div>
+                  </div>
+                  <div class="space-y-1">
+                    <div class="flex justify-between text-xs font-bold">
+                      <span>Matte Leather Grip</span>
+                      <span>28% (167 orders)</span>
+                    </div>
+                    <div class="w-full bg-gray-100 h-2 rounded-full"><div class="bg-[#35567F] h-2 rounded-full" style="width: 28%"></div></div>
+                  </div>
+                  <div class="space-y-1">
+                    <div class="flex justify-between text-xs font-bold">
+                      <span>Gloss Shimmer Finish</span>
+                      <span>18% (107 orders)</span>
+                    </div>
+                    <div class="w-full bg-gray-100 h-2 rounded-full"><div class="bg-[#35567F] h-2 rounded-full" style="width: 18%"></div></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Device Selection Analytics -->
+              <div class="bg-white border border-[#E8E8E8] rounded-2xl p-6 shadow-sm space-y-4">
+                <h3 class="text-xs font-extrabold text-gray-900 uppercase tracking-widest border-b pb-3">Most Customised Device Models</h3>
+                <div class="space-y-3" id="analytics-devices-chart">
+                  <div class="space-y-1">
+                    <div class="flex justify-between text-xs font-bold">
+                      <span>iPhone 16 Pro Max</span>
+                      <span>35% (209 orders)</span>
+                    </div>
+                    <div class="w-full bg-gray-100 h-2 rounded-full"><div class="bg-gray-900 h-2 rounded-full" style="width: 35%"></div></div>
+                  </div>
+                  <div class="space-y-1">
+                    <div class="flex justify-between text-xs font-bold">
+                      <span>Samsung Galaxy S24 Ultra</span>
+                      <span>25% (149 orders)</span>
+                    </div>
+                    <div class="w-full bg-gray-100 h-2 rounded-full"><div class="bg-gray-900 h-2 rounded-full" style="width: 25%"></div></div>
+                  </div>
+                  <div class="space-y-1">
+                    <div class="flex justify-between text-xs font-bold">
+                      <span>Nothing Phone (2)</span>
+                      <span>15% (89 orders)</span>
+                    </div>
+                    <div class="w-full bg-gray-100 h-2 rounded-full"><div class="bg-gray-900 h-2 rounded-full" style="width: 15%"></div></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 1: General Settings -->
+          <div id="tab-general" class="tab-content space-y-6">
+            <div class="bg-white border border-[#E8E8E8] rounded-2xl p-6 shadow-sm space-y-4">
+              <h2 class="text-base font-bold text-gray-900 flex items-center gap-2 border-b border-[#E8E8E8] pb-3">
+                <span class="material-symbols-outlined text-[#35567F]">settings</span> General Configuration Switch
+              </h2>
+              
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="bg-[#FAFAFA] border border-[#E8E8E8] p-4 rounded-xl space-y-2">
+                  <label class="flex items-center gap-3 text-xs font-bold text-gray-900">
+                    <input type="checkbox" id="backPanelEnabled" class="w-4 h-4 text-[#35567F] border-gray-300 rounded focus:ring-[#35567F]/20"> 
+                    Enable Mobile Back Skin Service
+                  </label>
+                  <p class="text-[10px] text-gray-500">Allow customers to upload artwork and order personalized mobile back skin panels.</p>
+                </div>
+
+                <div class="bg-[#FAFAFA] border border-[#E8E8E8] p-4 rounded-xl space-y-2">
+                  <label class="flex items-center gap-3 text-xs font-bold text-gray-900">
+                    <input type="checkbox" id="laptopBackEnabled" class="w-4 h-4 text-[#35567F] border-gray-300 rounded focus:ring-[#35567F]/20"> 
+                    Enable Laptop Back Skin Service
+                  </label>
+                  <p class="text-[10px] text-gray-500">Allow customers to upload artwork and order personalized laptop back skin covers.</p>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+                <div class="space-y-1">
+                  <label class="text-[10px] font-bold text-gray-500 uppercase tracking-widest block">Studio Main Switch</label>
+                  <label class="flex items-center gap-2 text-xs font-bold">
+                    <input type="checkbox" id="studioEnabled" class="w-4 h-4 text-[#35567F] border-gray-300 rounded focus:ring-[#35567F]/20"> Enable Custom Skin Studio Storefront
+                  </label>
+                </div>
+                <div class="space-y-1">
+                  <label class="text-[10px] font-bold text-gray-500 uppercase tracking-widest block">Global FAQ Block Visibility</label>
+                  <label class="flex items-center gap-2 text-xs font-bold">
+                    <input type="checkbox" id="showFaq" class="w-4 h-4 text-[#35567F] border-gray-300 rounded focus:ring-[#35567F]/20"> Show Frequently Asked Questions
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 2: Pricing & Business Rules -->
+          <div id="tab-pricing" class="tab-content space-y-6">
+            <div class="bg-white border border-[#E8E8E8] rounded-2xl p-6 shadow-sm space-y-4">
+              <h2 class="text-base font-bold text-gray-900 flex items-center gap-2 border-b border-[#E8E8E8] pb-3">
+                <span class="material-symbols-outlined text-[#35567F]">payments</span> Base Pricing &amp; Currency Matrix
+              </h2>
+              
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="space-y-1">
+                  <label class="text-[10px] font-bold text-gray-500 uppercase tracking-widest block">Mobile Back Base Price (₹)</label>
+                  <input type="number" id="backPanelBasePrice" class="w-full h-10 px-3 border border-[#E8E8E8] rounded-xl text-xs focus:outline-none focus:border-[#35567F]">
+                </div>
+                <div class="space-y-1">
+                  <label class="text-[10px] font-bold text-gray-500 uppercase tracking-widest block">Laptop Back Base Price (₹)</label>
+                  <input type="number" id="laptopBackBasePrice" class="w-full h-10 px-3 border border-[#E8E8E8] rounded-xl text-xs focus:outline-none focus:border-[#35567F]">
+                </div>
+                <div class="space-y-1">
+                  <label class="text-[10px] font-bold text-gray-500 uppercase tracking-widest block">Default Currency</label>
+                  <input type="text" id="defaultCurrency" class="w-full h-10 px-3 border border-[#E8E8E8] rounded-xl text-xs focus:outline-none focus:border-[#35567F]" placeholder="INR">
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="space-y-1">
+                  <label class="text-[10px] font-bold text-gray-500 uppercase tracking-widest block">Shipping Fee (₹)</label>
+                  <input type="number" id="shippingCharge" class="w-full h-10 px-3 border border-[#E8E8E8] rounded-xl text-xs focus:outline-none focus:border-[#35567F]">
+                </div>
+              </div>
+            </div>
+
+            <!-- Business Rules Warnings -->
+            <div class="bg-white border border-[#E8E8E8] rounded-2xl p-6 shadow-sm space-y-4">
+              <h2 class="text-base font-bold text-gray-900 flex items-center gap-2 border-b border-[#E8E8E8] pb-3">
+                <span class="material-symbols-outlined text-[#35567F]">rule</span> Business Guidelines &amp; Warning Notes
+              </h2>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="space-y-1">
+                  <label class="text-[10px] font-bold text-gray-500 uppercase tracking-widest block">Low Resolution Quality Message</label>
+                  <textarea id="lowQualityWarning" rows="2" class="w-full p-2.5 border border-[#E8E8E8] rounded-xl text-xs focus:outline-none focus:border-[#35567F]"></textarea>
+                </div>
+                <div class="space-y-1">
+                  <label class="text-[10px] font-bold text-gray-500 uppercase tracking-widest block">File Size Limit Exceeded Message</label>
+                  <textarea id="sizeWarning" rows="2" class="w-full p-2.5 border border-[#E8E8E8] rounded-xl text-xs focus:outline-none focus:border-[#35567F]"></textarea>
+                </div>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="space-y-1">
+                  <label class="text-[10px] font-bold text-gray-500 uppercase tracking-widest block">Max Design Uploads Limit</label>
+                  <input type="number" id="maxUploads" class="w-full h-10 px-3 border border-[#E8E8E8] rounded-xl text-xs">
+                </div>
+                <div class="space-y-1">
+                  <label class="text-[10px] font-bold text-gray-500 uppercase tracking-widest block">Allowed Aspect Ratio</label>
+                  <input type="text" id="allowedAspectRatio" class="w-full h-10 px-3 border border-[#E8E8E8] rounded-xl text-xs" placeholder="e.g. 1:2 or any">
+                </div>
+                <div class="space-y-1">
+                  <label class="text-[10px] font-bold text-gray-500 uppercase tracking-widest block">Estimated Delivery Note</label>
+                  <input type="text" id="deliveryTime" class="w-full h-10 px-3 border border-[#E8E8E8] rounded-xl text-xs">
+                </div>
+              </div>
+              <div class="space-y-1">
+                <label class="text-[10px] font-bold text-gray-500 uppercase tracking-widest block">Storefront Order Notes Disclaimer</label>
+                <textarea id="orderNotes" rows="2" class="w-full p-2.5 border border-[#E8E8E8] rounded-xl text-xs focus:outline-none focus:border-[#35567F]"></textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 3: Materials & Finishes -->
+          <div id="tab-materials" class="tab-content space-y-6">
+            <!-- Materials -->
+            <div class="bg-white border border-[#E8E8E8] rounded-2xl p-6 shadow-sm space-y-4">
+              <div class="flex items-center justify-between border-b border-[#E8E8E8] pb-3">
+                <h2 class="text-base font-bold text-gray-900 flex items-center gap-2">
+                  <span class="material-symbols-outlined text-[#35567F]">texture</span> Material Surcharges &amp; Textures
+                </h2>
+                <button type="button" id="btn-add-material" class="flex items-center gap-1 text-xs text-[#35567F] font-bold hover:underline">
+                  <span class="material-symbols-outlined text-sm">add_circle</span> Add Material
+                </button>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="materials-container">
+                <!-- Dynamically injected materials -->
+              </div>
+            </div>
+
+            <!-- Finishes -->
+            <div class="bg-white border border-[#E8E8E8] rounded-2xl p-6 shadow-sm space-y-4">
+              <div class="flex items-center justify-between border-b border-[#E8E8E8] pb-3">
+                <h2 class="text-base font-bold text-gray-900 flex items-center gap-2">
+                  <span class="material-symbols-outlined text-[#35567F]">water_drop</span> Finishes Configuration
+                </h2>
+                <button type="button" id="btn-add-finish" class="flex items-center gap-1 text-xs text-[#35567F] font-bold hover:underline">
+                  <span class="material-symbols-outlined text-sm">add_circle</span> Add Finish
+                </button>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="finishes-container">
+                <!-- Dynamically injected finishes -->
+              </div>
+            </div>
+
+            <!-- Coverages -->
+            <div class="bg-white border border-[#E8E8E8] rounded-2xl p-6 shadow-sm space-y-4">
+              <div class="flex items-center justify-between border-b border-[#E8E8E8] pb-3">
+                <h2 class="text-base font-bold text-gray-900 flex items-center gap-2">
+                  <span class="material-symbols-outlined text-[#35567F]">crop_free</span> Coverages Configuration
+                </h2>
+                <button type="button" id="btn-add-coverage" class="flex items-center gap-1 text-xs text-[#35567F] font-bold hover:underline">
+                  <span class="material-symbols-outlined text-sm">add_circle</span> Add Coverage
+                </button>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="coverages-container">
+                <!-- Dynamically injected coverages -->
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 4: Device Matrix -->
+          <div id="tab-devices" class="tab-content space-y-6">
+            <div class="bg-white border border-[#E8E8E8] rounded-2xl p-6 shadow-sm space-y-4">
+              <div class="flex items-center justify-between border-b border-[#E8E8E8] pb-3">
+                <h2 class="text-base font-bold text-gray-900 flex items-center gap-2">
+                  <span class="material-symbols-outlined text-[#35567F]">devices</span> Device Surcharge &amp; Mockup Matrix
+                </h2>
+                <button type="button" id="btn-add-device" class="flex items-center gap-1.5 text-xs text-[#35567F] font-bold hover:underline">
+                  <span class="material-symbols-outlined text-sm">add_circle</span> Add Device Line
+                </button>
+              </div>
+
+              <div class="overflow-x-auto">
+                <table class="w-full text-xs text-left text-gray-500">
+                  <thead class="text-[10px] text-gray-950 uppercase bg-[#FAFAFA] border-b border-[#E8E8E8]">
+                    <tr>
+                      <th class="px-4 py-3">Category</th>
+                      <th class="px-4 py-3">Brand</th>
+                      <th class="px-4 py-3">Series</th>
+                      <th class="px-4 py-3">Model Name</th>
+                      <th class="px-4 py-3">Camera Style</th>
+                      <th class="px-4 py-3">Surcharge (₹)</th>
+                      <th class="px-4 py-3 text-right">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="device-rows-container" class="divide-y divide-[#E8E8E8]">
+                    <!-- Dynamically populated -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 5: Text & Image Tools -->
+          <div id="tab-editors" class="tab-content space-y-6">
+            <!-- Text tools settings -->
+            <div class="bg-white border border-[#E8E8E8] rounded-2xl p-6 shadow-sm space-y-4">
+              <h2 class="text-base font-bold text-gray-900 flex items-center gap-2 border-b border-[#E8E8E8] pb-3">
+                <span class="material-symbols-outlined text-[#35567F]">text_fields</span> Text Designer Custom Limits
+              </h2>
+              
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <label class="flex items-center gap-3 text-xs font-bold">
+                  <input type="checkbox" id="enableGoogleFonts" class="w-4 h-4 text-[#35567F] border-gray-300 rounded">
+                  Enable Google Web Fonts Integration
+                </label>
+                <div class="space-y-1">
+                  <label class="text-[10px] font-bold text-gray-500 uppercase tracking-widest block">Extra Price per Text Layer (₹)</label>
+                  <input type="number" id="textPricingExtra" class="w-full h-10 px-3 border border-[#E8E8E8] rounded-xl text-xs">
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="space-y-1">
+                  <label class="text-[10px] font-bold text-gray-500 uppercase tracking-widest block">Max Allowed Text Layers</label>
+                  <input type="number" id="maxTextLayers" class="w-full h-10 px-3 border border-[#E8E8E8] rounded-xl text-xs">
+                </div>
+                <div class="space-y-1">
+                  <label class="text-[10px] font-bold text-gray-500 uppercase tracking-widest block">Max Characters Per Layer</label>
+                  <input type="number" id="maxCharactersPerLayer" class="w-full h-10 px-3 border border-[#E8E8E8] rounded-xl text-xs">
+                </div>
+                <div class="space-y-1">
+                  <label class="text-[10px] font-bold text-gray-500 uppercase tracking-widest block">Allowed Colors Hex List (comma separated)</label>
+                  <input type="text" id="allowedColors" class="w-full h-10 px-3 border border-[#E8E8E8] rounded-xl text-xs" placeholder="e.g. #FF0000,#00FF00">
+                </div>
+              </div>
+
+              <div class="border-t pt-4">
+                <div class="flex justify-between items-center pb-2">
+                  <h3 class="text-xs font-bold text-gray-900">Supported Fonts Manager</h3>
+                  <button type="button" id="btn-add-font" class="text-xs text-[#35567F] font-bold hover:underline flex items-center gap-1">
+                    <span class="material-symbols-outlined text-sm">add_circle</span> Add Font Family
+                  </button>
+                </div>
+                <div class="overflow-x-auto">
+                  <table class="w-full text-xs text-left text-gray-500">
+                    <thead class="bg-[#FAFAFA] border-b text-[10px] uppercase font-bold text-gray-900">
+                      <tr>
+                        <th class="px-4 py-2">Font Name</th>
+                        <th class="px-4 py-2">Slug / CSS Family</th>
+                        <th class="px-4 py-2">Font File URL</th>
+                        <th class="px-4 py-2">Category</th>
+                        <th class="px-4 py-2">Default</th>
+                        <th class="px-4 py-2">Status</th>
+                        <th class="px-4 py-2 text-right">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody id="font-rows-container" class="divide-y">
+                      <!-- Populated dynamically -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <!-- Image upload editor rules -->
+            <div class="bg-white border border-[#E8E8E8] rounded-2xl p-6 shadow-sm space-y-4">
+              <h2 class="text-base font-bold text-gray-900 flex items-center gap-2 border-b border-[#E8E8E8] pb-3">
+                <span class="material-symbols-outlined text-[#35567F]">image</span> Uploaded Image Editor Settings
+              </h2>
+              
+              <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div class="space-y-1">
+                  <label class="text-[10px] font-bold text-gray-500 uppercase tracking-widest block">Min Resolution Requirement</label>
+                  <input type="text" id="minResolution" class="w-full h-10 px-3 border border-[#E8E8E8] rounded-xl text-xs" placeholder="e.g. 1000x2000">
+                </div>
+                <div class="space-y-1">
+                  <label class="text-[10px] font-bold text-gray-500 uppercase tracking-widest block">Max Upload File Size (MB)</label>
+                  <input type="number" id="maxUploadSize" class="w-full h-10 px-3 border border-[#E8E8E8] rounded-xl text-xs">
+                </div>
+                <div class="space-y-1">
+                  <label class="text-[10px] font-bold text-gray-500 uppercase tracking-widest block">Allowed Formats (comma separated)</label>
+                  <input type="text" id="allowedFileTypes" class="w-full h-10 px-3 border border-[#E8E8E8] rounded-xl text-xs">
+                </div>
+                <div class="space-y-1">
+                  <label class="text-[10px] font-bold text-gray-500 uppercase tracking-widest block">Compression Quality (0.1 - 1.0)</label>
+                  <input type="number" step="0.1" id="compressionQuality" class="w-full h-10 px-3 border border-[#E8E8E8] rounded-xl text-xs">
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+                <div class="bg-[#FAFAFA] border border-[#E8E8E8] p-3 rounded-xl space-y-1">
+                  <label class="flex items-center gap-2.5 text-xs font-bold text-gray-900">
+                    <input type="checkbox" id="enableBackgroundRemoval" class="w-4 h-4 text-[#35567F] border-gray-300 rounded">
+                    Enable Background Removal tool
+                  </label>
+                  <p class="text-[10px] text-gray-500">Allow customers to toggle transparency filters to auto crop backgrounds.</p>
+                </div>
+                <div class="bg-[#FAFAFA] border border-[#E8E8E8] p-3 rounded-xl space-y-1">
+                  <label class="flex items-center gap-2.5 text-xs font-bold text-gray-900">
+                    <input type="checkbox" id="enableAutoCrop" class="w-4 h-4 text-[#35567F] border-gray-300 rounded">
+                    Enable Auto Center Alignment
+                  </label>
+                  <p class="text-[10px] text-gray-500">Automatically position the uploaded artwork layer in the viewport center.</p>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="bg-[#FAFAFA] border border-[#E8E8E8] p-3 rounded-xl space-y-1">
+                  <label class="flex items-center gap-2.5 text-xs font-bold text-gray-900">
+                    <input type="checkbox" id="enableSmartCenter" class="w-4 h-4 text-[#35567F] border-gray-300 rounded">
+                    Enable Smart Center alignment guides
+                  </label>
+                  <p class="text-[10px] text-gray-500">Show red crosshair guide grids on exact canvas midpoints.</p>
+                </div>
+                <div class="bg-[#FAFAFA] border border-[#E8E8E8] p-3 rounded-xl space-y-1">
+                  <label class="flex items-center gap-2.5 text-xs font-bold text-gray-900">
+                    <input type="checkbox" id="enableWatermark" class="w-4 h-4 text-[#35567F] border-gray-300 rounded">
+                    Enable Watermark Layer in preview
+                  </label>
+                  <p class="text-[10px] text-gray-500">Render subtle brand watermark overlay over preview mask to protect designs.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 6: Help Content & FAQs -->
+          <div id="tab-content" class="tab-content space-y-6">
+            <!-- Content & Guides -->
+            <div class="bg-white border border-[#E8E8E8] rounded-2xl p-6 shadow-sm space-y-4">
+              <h2 class="text-base font-bold text-gray-900 flex items-center gap-2 border-b border-[#E8E8E8] pb-3">
+                <span class="material-symbols-outlined text-[#35567F]">campaign</span> Studio Content Copy headers
+              </h2>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="space-y-1">
+                  <label class="text-[10px] font-bold text-gray-500 uppercase tracking-widest block">Hero Banner Title</label>
+                  <input type="text" id="heroTitle" class="w-full h-10 px-3 border border-[#E8E8E8] rounded-xl text-xs focus:outline-none focus:border-[#35567F]">
+                </div>
+                <div class="space-y-1">
+                  <label class="text-[10px] font-bold text-gray-500 uppercase tracking-widest block">Features / Benefits checklist (comma separated)</label>
+                  <input type="text" id="benefits" class="w-full h-10 px-3 border border-[#E8E8E8] rounded-xl text-xs focus:outline-none focus:border-[#35567F]">
+                </div>
+              </div>
+              <div class="space-y-1">
+                <label class="text-[10px] font-bold text-gray-500 uppercase tracking-widest block">Hero Subtitle</label>
+                <textarea id="heroSubtitle" rows="2" class="w-full p-2.5 border border-[#E8E8E8] rounded-xl text-xs focus:outline-none focus:border-[#35567F]"></textarea>
+              </div>
+            </div>
+
+            <!-- FAQ accordion rows -->
+            <div class="bg-white border border-[#E8E8E8] rounded-2xl p-6 shadow-sm space-y-4">
+              <div class="flex items-center justify-between border-b border-[#E8E8E8] pb-3">
+                <h2 class="text-base font-bold text-gray-900 flex items-center gap-2">
+                  <span class="material-symbols-outlined text-[#35567F]">help</span> Storefront Frequently Asked Questions
+                </h2>
+                <button type="button" id="btn-add-faq" class="flex items-center gap-1 text-xs text-[#35567F] font-bold hover:underline">
+                  <span class="material-symbols-outlined text-sm">add_circle</span> Add FAQ Row
+                </button>
+              </div>
+              <div class="space-y-4" id="faqs-container">
+                <!-- Dynamically populated FAQ rows -->
+              </div>
+            </div>
+
+            <!-- Support links -->
+            <div class="bg-white border border-[#E8E8E8] rounded-2xl p-6 shadow-sm space-y-4">
+              <h2 class="text-base font-bold text-gray-900 flex items-center gap-2 border-b border-[#E8E8E8] pb-3">
+                <span class="material-symbols-outlined text-[#35567F]">link</span> Support guides URLs
+              </h2>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="space-y-1">
+                  <label class="text-[10px] font-bold text-gray-500 uppercase tracking-widest block">Video Guide URL</label>
+                  <input type="text" id="videoUrl" class="w-full h-10 px-3 border border-[#E8E8E8] rounded-xl text-xs" placeholder="e.g. Youtube URL">
+                </div>
+                <div id="guide-uploader-container">
+                  <input type="hidden" id="installationGuideUrl">
+                </div>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="space-y-1">
+                  <label class="text-[10px] font-bold text-gray-500 uppercase tracking-widest block">Support Chat link</label>
+                  <input type="text" id="chatLink" class="w-full h-10 px-3 border border-[#E8E8E8] rounded-xl text-xs">
+                </div>
+                <div class="space-y-1">
+                  <label class="text-[10px] font-bold text-gray-500 uppercase tracking-widest block">Guidelines link</label>
+                  <input type="text" id="guidelinesLink" class="w-full h-10 px-3 border border-[#E8E8E8] rounded-xl text-xs">
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </form>
+      </div>
+    </main>
+    <footer></footer>
+  </div>
+
+  <script src="../../shared/js/storage.js"></script>
+  <script src="../../shared/js/api.js"></script>
+  <script src="../../admin/js/sidebar.js"></script>
+  <script src="../../admin/js/header.js"></script>
+  <script src="../../admin/js/uploader.js"></script>
+  <script src="../../shared/js/utils.js" defer></script>
+  <script src="../../admin/js/admin.js" defer></script>
+  <script src="../../admin/js/custom_skin_manager.js?v=1.2" defer></script>
+</body>
+</html>

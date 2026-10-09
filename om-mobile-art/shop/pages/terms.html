@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width,initial-scale=1.0" name="viewport"/>
+  <title>Terms & Conditions | OM Mobile Art</title>
+  <meta name="description" content="OM Mobile Art Terms and Conditions of Service."/>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <script src="../../shared/js/tailwind-config-shop.js"></script>
+  <link rel="stylesheet" href="../../shared/css/shop-scrollbar.css?v=1.1"/>
+</head>
+<body class="bg-background font-body-main text-on-surface">
+  <header></header>
+  
+  <main class="store-container py-16">
+    <div class="max-w-3xl mx-auto space-y-6" id="legal-page-container">
+      <div class="text-center space-y-2 mb-8">
+        <h1 class="font-headline-h1 text-4xl font-bold text-[#03045E]" id="lp-heading">Terms & Conditions</h1>
+      </div>
+      
+      <div id="legal-page-content" class="prose max-w-none text-gray-700 text-sm leading-relaxed space-y-4">
+        <p class="text-gray-500 text-center">Loading terms content...</p>
+      </div>
+    </div>
+  </main>
+
+  <footer></footer>
+
+  <script src="../../shared/js/storage.js"></script>
+  <script src="../../shared/js/api.js"></script>
+  <script src="../../shared/js/utils.js"></script>
+  <script src="../../shared/components/navbar.js" defer></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      if (window.API && window.API.getLegalPage) {
+        const page = await window.API.getLegalPage('terms-conditions');
+        if (page && page.content) {
+          document.getElementById('lp-heading').textContent = page.title;
+          document.getElementById('legal-page-content').innerHTML = page.content;
+        }
+      }
+    });
+  </script>
+</body>
+</html>

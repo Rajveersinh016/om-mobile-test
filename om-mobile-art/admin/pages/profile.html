@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width,initial-scale=1.0" name="viewport"/>
+  <title>Admin Profile | OM Mobile Art Admin</title>
+  <meta name="description" content="Admin profile settings for OM Mobile Art."/>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <script src="../../shared/js/tailwind-config-admin.js"></script>
+  <link rel="stylesheet" href="../../shared/css/admin-scrollbar.css?v=1.1"/>
+  <style>
+    body { font-family: 'DM Sans', sans-serif; background-color: #F8FAFC; }
+  </style>
+</head>
+<body class="bg-[#F8FAFC] font-body-default text-[#111827] overflow-x-hidden">
+<!-- SideNavBar Placeholder -->
+<aside></aside>
+
+<!-- Main Content Shell -->
+<main class="ml-[240px] w-[calc(100%-240px)] min-h-screen pb-16">
+  <!-- TopNavBar Placeholder -->
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-gray-200 h-[64px] flex items-center justify-between px-8 shadow-sm"></header>
+
+  <!-- Main Canvas -->
+  <div class="pt-6 px-8 space-y-6">
+
+    <!-- Top Action Row -->
+    <div class="flex flex-wrap items-center justify-between gap-4 bg-white p-6 rounded-2xl border border-gray-200 shadow-sm">
+      <div>
+        <h2 class="text-2xl font-extrabold text-[#03045E]">Administrator Account</h2>
+        <p class="text-xs text-gray-500 mt-1 font-medium">Manage credentials, administrative profile, and security preferences.</p>
+      </div>
+    </div>
+
+    <!-- Profile Grid Container -->
+    <div class="max-w-xl space-y-6">
+      
+      <!-- Profile Summary Card -->
+      <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm flex items-center gap-5">
+        <div class="w-16 h-16 rounded-2xl bg-[#03045E] text-white flex items-center justify-center text-2xl font-extrabold shadow-md" id="profile-avatar">AD</div>
+        <div>
+          <h3 class="font-extrabold text-lg text-[#03045E]" id="profile-name">Administrator</h3>
+          <p class="text-xs text-gray-500 font-mono" id="profile-email">admin@omma.com</p>
+          <span class="text-[10px] font-extrabold px-3 py-0.5 rounded-full bg-[#CAF0F8] text-[#0077B6] mt-2 inline-block uppercase tracking-wider">Super Administrator</span>
+        </div>
+      </div>
+
+      <!-- Edit Profile Card -->
+      <div class="bg-white border border-[#E5EEF8] rounded-2xl p-6 shadow-xs space-y-4">
+        <h3 class="font-extrabold text-sm text-[#03045E]">Personal Information</h3>
+        <form id="profile-form" class="space-y-4">
+          <div id="profile-avatar-uploader">
+            <input type="hidden" id="profile-avatar-url"/>
+          </div>
+          <div>
+            <label class="block text-xs font-extrabold uppercase tracking-wider text-gray-600 mb-1">Full Name</label>
+            <input type="text" id="profile-name-input" class="w-full h-10 px-3 border border-gray-300 rounded-xl text-xs font-bold text-gray-900 focus:border-[#0077B6] focus:outline-none"/>
+          </div>
+          <div>
+            <label class="block text-xs font-extrabold uppercase tracking-wider text-gray-600 mb-1">Phone Number</label>
+            <input type="text" id="profile-phone-input" class="w-full h-10 px-3 border border-gray-300 rounded-xl text-xs font-bold text-gray-900 focus:border-[#0077B6] focus:outline-none"/>
+          </div>
+          <button type="submit" class="px-5 py-2.5 bg-[#0077B6] hover:bg-[#03045E] text-white rounded-xl text-xs font-bold shadow-md transition-all cursor-pointer">Update Profile</button>
+        </form>
+      </div>
+
+      <!-- Change Password Card -->
+      <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm space-y-4">
+        <h3 class="font-extrabold text-sm text-[#03045E]">Security & Password</h3>
+        <form id="password-form" class="space-y-4">
+          <div>
+            <label class="block text-xs font-extrabold uppercase tracking-wider text-gray-600 mb-1">Current Password</label>
+            <input type="password" id="current-pass" class="w-full h-10 px-3 border border-gray-300 rounded-xl text-xs font-bold text-gray-900 focus:border-[#0077B6] focus:outline-none"/>
+          </div>
+          <div>
+            <label class="block text-xs font-extrabold uppercase tracking-wider text-gray-600 mb-1">New Password</label>
+            <input type="password" id="new-pass" class="w-full h-10 px-3 border border-gray-300 rounded-xl text-xs font-bold text-gray-900 focus:border-[#0077B6] focus:outline-none"/>
+          </div>
+          <div>
+            <label class="block text-xs font-extrabold uppercase tracking-wider text-gray-600 mb-1">Confirm New Password</label>
+            <input type="password" id="confirm-pass" class="w-full h-10 px-3 border border-gray-300 rounded-xl text-xs font-bold text-gray-900 focus:border-[#0077B6] focus:outline-none"/>
+          </div>
+          <button type="submit" class="px-5 py-2.5 border border-gray-300 rounded-xl text-xs font-bold text-gray-700 hover:bg-gray-50 cursor-pointer">Update Password</button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<script src="../../shared/js/storage.js"></script>
+<script src="../../shared/js/api.js"></script>
+<script src="../../admin/js/sidebar.js"></script>
+<script src="../../admin/js/header.js"></script>
+<script src="../../admin/js/uploader.js"></script>
+<script src="../../shared/js/utils.js" defer></script>
+<script src="../../admin/js/admin.js" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  if (window.AdminSidebar) window.AdminSidebar.init();
+  if (window.AdminHeader) window.AdminHeader.init();
+
+  if (!window.DB) return;
+  const user = window.DB.getCurrentUser();
+  if (!user) return;
+
+  const avatarUploader = window.AdminUploader.create({
+    container: 'profile-avatar-uploader',
+    input: 'profile-avatar-url',
+    label: 'Profile Avatar',
+    value: user.avatar || '',
+    folder: 'avatars'
+  });
+
+  const initials = (user.name || 'AD').split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+  document.getElementById('profile-avatar').textContent = initials;
+  document.getElementById('profile-name').textContent = user.name || 'Administrator';
+  document.getElementById('profile-email').textContent = user.email || 'admin@omma.com';
+  document.getElementById('profile-name-input').value = user.name || '';
+  document.getElementById('profile-phone-input').value = user.phone || '';
+
+  document.getElementById('profile-form').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const updatedName = document.getElementById('profile-name-input').value.trim();
+    const updatedPhone = document.getElementById('profile-phone-input').value.trim();
+    const updatedAvatar = document.getElementById('profile-avatar-url').value;
+
+    window.DB.updateCurrentUser({ name: updatedName, phone: updatedPhone, avatar: updatedAvatar });
+    document.getElementById('profile-name').textContent = updatedName;
+    if (window.showToast) window.showToast("Profile updated successfully!", "success");
+  });
+
+  document.getElementById('password-form').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const cur = document.getElementById('current-pass').value;
+    const nw = document.getElementById('new-pass').value;
+    const cf = document.getElementById('confirm-pass').value;
+    if (cur !== user.password) { window.showToast('Current password is incorrect.', 'error'); return; }
+    if (nw.length < 6) { window.showToast('New password must be at least 6 characters.', 'error'); return; }
+    if (nw !== cf) { window.showToast('Passwords do not match.', 'error'); return; }
+    window.DB.updateCurrentUser({ password: nw });
+    window.showToast('Password changed successfully!', 'success');
+    document.getElementById('password-form').reset();
+  });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <meta name="description" content="Search results for OM Mobile Art premium mobile skins."/>
+  <title>Search Results | OM Mobile Art</title>
+  <link rel="icon" type="image/png" href="../../assets/logos/logo.png?v=2.0"/>
+  <link rel="apple-touch-icon" href="../../assets/logos/logo.png?v=2.0"/>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+  <script src="../../shared/js/tailwind-config-shop.js"></script>
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+    }
+  </style>
+  <link rel="stylesheet" href="../../shared/css/shop-scrollbar.css?v=1.1"/>
+</head>
+<body class="bg-background text-on-surface font-body-main selection:bg-primary-fixed selection:text-on-primary-fixed">
+
+  <!-- Header Component -->
+  <header></header>
+
+  <main class="store-container py-10">
+
+    <!-- Search Input Header -->
+    <section class="mb-8">
+      <form action="search_results.html" method="GET" class="relative max-w-2xl mx-auto">
+        <input name="q" class="w-full h-12 bg-white border border-gray-300 rounded-xl px-5 pr-12 text-sm font-semibold focus:outline-none focus:border-[#0077B6] shadow-sm" placeholder="Search for skins, collections, or devices..." type="text"/>
+        <button type="submit" class="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 text-gray-500 hover:text-[#0077B6]">
+          <span class="material-symbols-outlined text-2xl">search</span>
+        </button>
+      </form>
+    </section>
+
+    <!-- Search Results Header -->
+    <section class="mb-6 border-b pb-4">
+      <h1 class="text-2xl font-extrabold text-[#111827]" id="search-title-label">Search Results</h1>
+    </section>
+
+    <!-- Product Grid (4-Column Desktop, 3-Column Tablet, 2-Column Mobile) -->
+    <section class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-16" id="search-products-grid">
+      <!-- Dynamically loaded -->
+    </section>
+
+  </main>
+
+  <!-- Footer Component -->
+  <footer></footer>
+
+  <!-- DB and Main scripts -->
+  <script src="../../shared/js/storage.js"></script>
+  <script src="../../shared/js/utils.js" defer></script>
+  <script src="../../shared/js/notifications.js" defer></script>
+  <script src="../../shared/components/navbar.js" defer></script>
+  <script src="../../shared/components/productCard.js" defer></script>
+  <script src="../../shared/components/loader.js" defer></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const grid = document.getElementById('search-products-grid');
+      if (!grid || !window.DB) return;
+      const urlParams = new URLSearchParams(window.location.search);
+      const query = urlParams.get('q') || urlParams.get('search') || '';
+      const titleLabel = document.getElementById('search-title-label');
+      if (titleLabel && query) {
+        titleLabel.innerHTML = `Search results for <span class="text-[#0077B6] italic">'${query}'</span>`;
+      }
+      
+      let products = window.DB.getProducts() || [];
+      if (query) {
+        const qLower = query.toLowerCase();
+        products = products.filter(p => p.name.toLowerCase().includes(qLower) || (p.brand && p.brand.toLowerCase().includes(qLower)) || (p.category && p.category.toLowerCase().includes(qLower)));
+      }
+
+      if (products.length === 0) {
+        grid.className = "col-span-full py-16 text-center";
+        grid.innerHTML = '<p class="text-gray-500 font-medium">No products found matching your query.</p>';
+      } else {
+        grid.innerHTML = products.map(p => window.renderProductCard(p, { detailPath: 'product_detail.html' })).join('');
+        if (window.attachProductCardListeners) window.attachProductCardListeners(grid);
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+{
+  "mcpServers": {
+    "clario": {
+      "type": "stdio",
+      "command": "C:\\Users\\krupp\\.clario\\runtime\\node-win32-x64.exe",
+      "args": [
+        "C:\\Users\\krupp\\.clario\\mcp-server\\index.js"
+      ],
+      "env": {
+        "CLAR_WORKSPACE": "c:\\Users\\krupp\\OneDrive\\Desktop\\Om - mysql",
+        "CLAR_API_URL": "https://hub.clario.chat",
+        "CLAR_JWT": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjkwNGIwZjkxYmU2ZWIwODY3ZGFiYmFhYjU4N2RmYzJlMzNmMDBhMjQiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vY2xhcmlvLWFpIiwiYXVkIjoiY2xhcmlvLWFpIiwiYXV0aF90aW1lIjoxNzg5MDQ2Nzc3LCJ1c2VyX2lkIjoiRmhLTTJxSmpENVN1bkU1S1J1RUQwald0NVYwMyIsInN1YiI6IkZoS00ycUpqRDVTdW5FNUtSdUVEMGpXdDVWMDMiLCJpYXQiOjE3OTA5NDk5MjIsImV4cCI6MTc5MDk1MzUyMiwiZW1haWwiOiJwYXRlbGtydXAxNUBnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiZmlyZWJhc2UiOnsiaWRlbnRpdGllcyI6eyJlbWFpbCI6WyJwYXRlbGtydXAxNUBnbWFpbC5jb20iXX0sInNpZ25faW5fcHJvdmlkZXIiOiJwYXNzd29yZCJ9fQ.rpsXc3HTjfGOJJnt6PXM0E8WRlQdkf_XPg-XvRTEEf2KkzdDjS9y4Ln5rzxCFwyVzMkXXdxdExnOwKIJpt1Q9x3gBFAN01ipVxQAllZrdZW_FpYoPeTA-YtArjVyEVtW9RrCit2Ccbnuqnfj6CV5qWPv9AJE6lm67ldJjBzlIgSVFTSIBTGpnV4UERs3oD3iRfBwfzPcZLQJDfxqzk3ADu7tdRmBMPUMPQm6hMgYw47InQaybapmCqVwHxezXsPIIdT2ACSIcOa63AUPEUOE2OJq1TuVDiimA6fwXzTSz7AiUv4AI-sQ6IH5Mj9kXeIrrIlw8dKpPpXan6UFmi6WiQ",
+        "PATH": "C:\\Users\\krupp\\.clario\\runtime;C:\\Program Files\\Common Files\\Oracle\\Java\\javapath;C:\\Program Files\\Python314\\Scripts\\;C:\\Program Files\\Python314\\;C:\\Windows\\system32;C:\\Windows;C:\\Windows\\System32\\Wbem;C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\;C:\\Windows\\System32\\OpenSSH\\;C:\\Program Files (x86)\\NVIDIA Corporation\\PhysX\\Common;C:\\Program Files\\NVIDIA Corporation\\NVIDIA NvDLISR;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\Program Files\\MySQL\\MySQL Server 8.0\\bin;C:\\Program Files\\dotnet\\;C:\\Program Files\\Git\\cmd;C:\\Program Files\\Java\\jdk-25.0.2\\bin;C:\\Program Files\\nodejs\\;C:\\Program Files\\PostgreSQL\\18\\bin;C:\\Users\\krupp\\AppData\\Local\\agy\\bin;C:\\Users\\krupp\\AppData\\Local\\Programs\\Python\\Python311\\Scripts\\;C:\\Users\\krupp\\AppData\\Local\\Programs\\Python\\Python311\\;C:\\Users\\krupp\\.local\\bin;C:\\Program Files\\MySQL\\MySQL Shell 8.0\\bin\\;C:\\Users\\krupp\\AppData\\Local\\Microsoft\\WindowsApps;C:\\Users\\krupp\\AppData\\Local\\Programs\\Microsoft VS Code\\bin;C:\\Users\\krupp\\AppData\\Local\\Programs\\Ollama;C:\\Users\\krupp\\AppData\\Local\\Programs\\Antigravity\\bin;C:\\Users\\krupp\\AppData\\Roaming\\npm;C:\\Users\\krupp\\AppData\\Local\\Programs\\Antigravity IDE\\bin;C:\\Program Files\\PostgreSQL\\18\\bin;"
+      }
+    }
+  }
+}

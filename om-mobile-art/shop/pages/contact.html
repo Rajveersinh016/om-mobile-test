@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1.0" name="viewport"/>
+<title>Contact Us | OM Mobile Art</title>
+<meta name="description" content="Get in touch with the OM Mobile Art support team for product queries, order tracking, or feedback."/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<style>.material-symbols-outlined{font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24;}</style>
+<script src="../../shared/js/tailwind-config-shop.js"></script>
+
+<link rel="stylesheet" href="../../shared/css/shop-scrollbar.css?v=1.1"/>
+<link rel="stylesheet" href="../../shared/css/animations.css?v=1.1"/>
+</head>
+<body class="bg-background font-body-main text-on-surface min-h-screen flex flex-col justify-between">
+
+<header></header>
+
+<main class="store-container py-12 md:py-16 w-full flex-1">
+  <div class="w-full space-y-20 md:space-y-24">
+    
+    <!-- Hero & Contact Section -->
+    <section class="space-y-12">
+      <!-- Hero Title -->
+      <div class="text-center space-y-3 max-w-2xl mx-auto">
+        <h1 class="font-headline-h1 text-4xl md:text-5xl font-bold tracking-tight">Get In Touch</h1>
+        <p class="text-text-muted text-base leading-relaxed">Our team is here to help. Send us a message or contact us directly — we typically respond within 24 hours.</p>
+      </div>
+
+      <!-- Main Contact Grid (60% Form / 40% Details) -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start">
+        
+        <!-- Contact Form (60% -> col-span-7) -->
+        <div class="lg:col-span-7 bg-surface-container-lowest border border-border-subtle rounded-2xl p-8 md:p-10 shadow-sm hover:shadow-md transition-all space-y-6">
+          <div>
+            <h2 class="font-headline-h3 text-2xl font-bold text-on-surface">Send Us a Message</h2>
+            <p class="text-text-muted text-xs md:text-sm mt-1">Fill out the form below and we will get back to you shortly.</p>
+          </div>
+          
+          <form id="contact-form" class="space-y-5">
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5" for="contact-name">Your Name *</label>
+              <input type="text" id="contact-name" required class="w-full h-12 px-4 border border-border-subtle rounded-xl focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 text-sm transition-all bg-background/50" placeholder="e.g. Alex Sharma">
+            </div>
+            
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5" for="contact-email">Email Address *</label>
+              <input type="email" id="contact-email" required class="w-full h-12 px-4 border border-border-subtle rounded-xl focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 text-sm transition-all bg-background/50" placeholder="yourname@gmail.com">
+            </div>
+            
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5" for="contact-order">Order ID <span class="normal-case text-text-muted font-normal">(optional)</span></label>
+              <input type="text" id="contact-order" class="w-full h-12 px-4 border border-border-subtle rounded-xl focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 text-sm transition-all bg-background/50" placeholder="e.g. OM-1001">
+            </div>
+            
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1.5" for="contact-message">Message *</label>
+              <textarea id="contact-message" required rows="6" class="w-full px-4 py-3.5 border border-border-subtle rounded-xl focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 text-sm transition-all resize-none bg-background/50 leading-relaxed" placeholder="Describe your question or issue in detail..."></textarea>
+            </div>
+            
+            <button type="submit" class="w-full h-12 bg-primary text-on-primary font-button-text font-bold text-base rounded-xl hover:bg-accent-hover transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 btn-premium">
+              <span class="material-symbols-outlined text-[20px]">send</span>
+              Send Message
+            </button>
+          </form>
+        </div>
+
+        <!-- Contact Details (40% -> col-span-5) -->
+        <div class="lg:col-span-5 space-y-8 lg:pt-2">
+          <div class="bg-surface-container-lowest border border-border-subtle rounded-2xl p-8 space-y-6 shadow-sm">
+            <h2 class="font-headline-h3 text-xl font-bold text-on-surface border-b border-border-subtle/60 pb-3">Contact Details</h2>
+            
+            <div class="space-y-6">
+              <!-- Email Support -->
+              <div class="flex items-start gap-4">
+                <div class="w-11 h-11 bg-primary/10 rounded-xl flex items-center justify-center flex-shrink-0 text-primary">
+                  <span class="material-symbols-outlined text-[22px]">email</span>
+                </div>
+                <div>
+                  <h3 class="font-bold text-sm text-on-surface">Email Support</h3>
+                  <p class="text-text-muted text-sm mt-0.5"><a href="#" data-setting-href="email" data-setting="supportEmail" class="text-primary hover:underline font-medium">ommobileart09@gmail.com</a></p>
+                  <p class="text-xs text-text-muted mt-1">We answer within 24 hours</p>
+                </div>
+              </div>
+
+              <!-- Phone / WhatsApp -->
+              <div class="flex items-start gap-4">
+                <div class="w-11 h-11 bg-primary/10 rounded-xl flex items-center justify-center flex-shrink-0 text-primary">
+                  <span class="material-symbols-outlined text-[22px]">phone</span>
+                </div>
+                <div>
+                  <h3 class="font-bold text-sm text-on-surface">Phone / WhatsApp</h3>
+                  <p class="text-text-muted text-sm mt-0.5"><a href="#" data-setting-href="phone" data-setting="supportPhone" class="text-primary hover:underline font-medium">+91 96386 52327</a></p>
+                  <p class="text-xs text-text-muted mt-1">Available Mon – Sat (10 AM – 7 PM)</p>
+                </div>
+              </div>
+
+              <!-- Office Location -->
+              <div class="flex items-start gap-4">
+                <div class="w-11 h-11 bg-primary/10 rounded-xl flex items-center justify-center flex-shrink-0 text-primary">
+                  <span class="material-symbols-outlined text-[22px]">location_on</span>
+                </div>
+                <div>
+                  <h3 class="font-bold text-sm text-on-surface">Store Address</h3>
+                  <p class="text-text-muted text-sm mt-0.5 font-medium leading-relaxed" data-setting="officeAddress">
+                    Shop No. - 1, Swadhyaya Complex, Lajamani Chowk, Mota Varachha, Surat - 394101
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Links Card -->
+          <div class="bg-primary/5 border border-primary/20 rounded-2xl p-6">
+            <h3 class="font-bold text-sm text-primary uppercase tracking-wider mb-3 flex items-center gap-2">
+              <span class="material-symbols-outlined text-[18px]">quick_reference</span>
+              Help & Resources
+            </h3>
+            <ul class="space-y-2.5 text-sm font-medium">
+              <li><a href="faq.html" class="text-on-surface hover:text-primary transition-colors flex items-center gap-2.5"><span class="material-symbols-outlined text-primary text-[18px]">help_outline</span>FAQ — Common Questions</a></li>
+              <li><a href="order_tracking.html" class="text-on-surface hover:text-primary transition-colors flex items-center gap-2.5"><span class="material-symbols-outlined text-primary text-[18px]">local_shipping</span>Track Your Order</a></li>
+              <li><a href="installation_guide.html" class="text-on-surface hover:text-primary transition-colors flex items-center gap-2.5"><span class="material-symbols-outlined text-primary text-[18px]">construction</span>Skin Installation Guide</a></li>
+              <li><a href="refund_policy.html" class="text-on-surface hover:text-primary transition-colors flex items-center gap-2.5"><span class="material-symbols-outlined text-primary text-[18px]">assignment_return</span>Returns & Refunds Policy</a></li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Visit Our Store Section (Full-Width Map + Floating Button + Centered Address) -->
+    <section class="space-y-10 reveal-on-scroll border-t border-border-subtle/50 pt-16">
+      <!-- Section Heading -->
+      <div class="text-center space-y-2 max-w-xl mx-auto">
+        <h2 class="font-headline-h2 text-3xl md:text-4xl font-bold tracking-tight">Visit Our Store</h2>
+        <p class="text-text-muted text-sm md:text-base leading-relaxed">Find us easily on Google Maps. We welcome walk-in customers during business hours.</p>
+      </div>
+
+      <!-- Full-Width Interactive Google Map Container -->
+      <div class="relative w-full h-[450px] md:h-[500px] bg-surface-container-lowest border border-border-subtle rounded-2xl shadow-lg overflow-hidden group">
+        
+        <!-- Google Map Iframe (100% Width) -->
+        <iframe
+          data-setting-src="mapsEmbedUrl"
+          src="https://maps.google.com/maps?q=21.2386814,72.8876396+(Om+Mobile+%26+Art)&t=&z=17&ie=UTF8&iwloc=&output=embed"
+          class="w-full h-full border-0 rounded-2xl"
+          loading="lazy"
+          allowfullscreen
+          referrerpolicy="no-referrer-when-downgrade"
+          title="OM Mobile Art Store Location Map">
+        </iframe>
+
+        <!-- Floating Get Directions Button (Bottom-Right Corner) -->
+        <div class="absolute bottom-5 right-5 md:bottom-6 md:right-6 z-10">
+          <a href="https://maps.app.goo.gl/t14LWUswCdPH8ShVA" 
+             target="_blank" 
+             rel="noopener noreferrer" 
+             data-setting-href="directions"
+             class="bg-primary text-on-primary font-bold text-sm px-5 py-3 rounded-xl shadow-2xl hover:bg-accent-hover flex items-center gap-2 transition-all hover:scale-105 btn-premium">
+            <span class="material-symbols-outlined text-[20px]">near_me</span>
+            Get Directions
+          </a>
+        </div>
+      </div>
+
+      <!-- Store Address Section Under the Map (Centered, 100% Dynamic) -->
+      <div class="bg-surface-container-lowest border border-border-subtle rounded-2xl p-8 md:p-10 shadow-sm max-w-2xl mx-auto text-center space-y-6">
+        <div class="space-y-2">
+          <div class="inline-flex items-center justify-center w-12 h-12 bg-primary/10 rounded-2xl text-primary mb-1">
+            <span class="material-symbols-outlined text-[26px]">location_on</span>
+          </div>
+          <h3 class="font-headline-h3 text-2xl font-bold text-on-surface" data-setting="storeName">OM Mobile Art</h3>
+          <p class="text-text-muted text-sm font-medium leading-relaxed max-w-md mx-auto" data-setting="officeAddress">
+            Shop No. - 1,<br/>
+            Swadhyaya Complex,<br/>
+            Lajamani Chowk,<br/>
+            Mota Varachha,<br/>
+            Surat - 394101
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 border-t border-border-subtle/60 text-sm">
+          <!-- Hours -->
+          <div class="p-3.5 rounded-xl bg-background/50 border border-border-subtle/50">
+            <span class="material-symbols-outlined text-primary text-[20px] mb-1 block">schedule</span>
+            <span class="font-bold text-xs uppercase tracking-wider text-text-muted block mb-1">Business Hours</span>
+            <span class="font-medium text-on-surface" data-setting="businessHours">Mon – Sat<br/>10:00 AM – 7:00 PM</span>
+          </div>
+
+          <!-- Phone -->
+          <div class="p-3.5 rounded-xl bg-background/50 border border-border-subtle/50">
+            <span class="material-symbols-outlined text-primary text-[20px] mb-1 block">call</span>
+            <span class="font-bold text-xs uppercase tracking-wider text-text-muted block mb-1">Phone</span>
+            <a href="#" data-setting-href="phone" data-setting="supportPhone" class="font-medium text-primary hover:underline block">+91 96386 52327</a>
+          </div>
+
+          <!-- Email -->
+          <div class="p-3.5 rounded-xl bg-background/50 border border-border-subtle/50">
+            <span class="material-symbols-outlined text-primary text-[20px] mb-1 block">mail</span>
+            <span class="font-bold text-xs uppercase tracking-wider text-text-muted block mb-1">Email</span>
+            <a href="#" data-setting-href="email" data-setting="supportEmail" class="font-medium text-primary hover:underline block truncate" title="ommobileart09@gmail.com">ommobileart09@gmail.com</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<footer></footer>
+
+<script src="../../shared/js/storage.js"></script>
+<script src="../../shared/js/utils.js"></script>
+<script src="../../shared/js/settings-manager.js"></script>
+<script src="../../shared/js/notifications.js"></script>
+<script src="../../shared/components/navbar.js" defer></script>
+
+<script>
+document.getElementById('contact-form').addEventListener('submit', (e) => {
+  e.preventDefault();
+  window.showToast('Your message has been sent! We will respond within 24 hours.', 'success');
+  document.getElementById('contact-form').reset();
+});
+
+// Scroll Reveal Observer
+document.addEventListener('DOMContentLoaded', () => {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('revealed');
+      }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal-on-scroll').forEach(el => observer.observe(el));
+});
+</script>
+</body>
+</html>

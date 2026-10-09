@@ -1,0 +1,20 @@
+[
+  {
+    "code": "WELCOME10",
+    "discountType": "percentage",
+    "discountValue": 10,
+    "minPurchase": 10.00
+  },
+  {
+    "code": "OM50",
+    "discountType": "fixed",
+    "discountValue": 5.00,
+    "minPurchase": 20.00
+  },
+  {
+    "code": "SUPEROFFER",
+    "discountType": "percentage",
+    "discountValue": 25,
+    "minPurchase": 30.00
+  }
+]

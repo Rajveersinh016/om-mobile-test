@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <meta name="description" content="Select your device to find perfectly fitted OM Mobile Art skins for iPhone, Samsung, Pixel, OnePlus and more."/>
+  <title>Device Selector | OM Mobile Art</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+  </style>
+  <!-- Tailwind Configuration -->
+  <script src="../../shared/js/tailwind-config-shop.js"></script>
+  <link rel="stylesheet" href="../../shared/css/shop-scrollbar.css?v=1.1"/>
+</head>
+<body class="bg-surface font-body-main text-on-surface">
+  <header></header>
+  
+  <main class="store-container py-12">
+    <!-- Progress Breadcrumb -->
+    <nav class="flex items-center justify-center gap-4 mb-12">
+      <div class="flex items-center gap-2">
+        <span class="w-8 h-8 rounded-full border border-primary flex items-center justify-center text-primary font-bold text-sm">1</span>
+        <span class="font-label-caps text-label-caps text-primary uppercase">Category</span>
+      </div>
+      <div class="w-12 h-[1px] bg-border-subtle"></div>
+      <div class="flex items-center gap-2">
+        <span class="w-8 h-8 rounded-full border border-border-subtle flex items-center justify-center text-text-muted font-bold text-sm" id="step-brand-num">2</span>
+        <span class="font-label-caps text-label-caps text-text-muted uppercase" id="step-brand-label">Brand</span>
+      </div>
+      <div class="w-12 h-[1px] bg-border-subtle"></div>
+      <div class="flex items-center gap-2">
+        <span class="w-8 h-8 rounded-full border border-border-subtle flex items-center justify-center text-text-muted font-bold text-sm" id="step-model-num">3</span>
+        <span class="font-label-caps text-label-caps text-text-muted uppercase" id="step-model-label">Model</span>
+      </div>
+    </nav>
+
+    <!-- Step 1: Choose Device Category -->
+    <section class="mb-10">
+      <h2 class="font-label-caps text-label-caps text-text-muted mb-6 uppercase tracking-widest text-center text-xs font-bold">Step 1: Choose Device Category</h2>
+      <div id="device-type-pills" class="flex justify-center gap-3 overflow-x-auto pb-4 flex-wrap">
+        <!-- Rendered dynamically -->
+      </div>
+    </section>
+
+    <!-- Step 2: Choose Brand -->
+    <section class="mb-12">
+      <h2 class="font-label-caps text-label-caps text-text-muted mb-6 uppercase tracking-widest text-center text-xs font-bold">Step 2: Choose Brand</h2>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="brand-cards-grid">
+        <!-- Rendered dynamically -->
+      </div>
+    </section>
+
+    <!-- Step 3: Choose Model -->
+    <section class="mb-16">
+      <h2 class="font-label-caps text-label-caps text-text-muted mb-6 uppercase tracking-widest text-center text-xs font-bold">Step 3: Choose Model</h2>
+      <div class="flex items-center justify-center gap-3 overflow-x-auto hide-scrollbar pb-4 flex-wrap" id="model-pills-container">
+        <!-- Rendered dynamically -->
+      </div>
+    </section>
+
+    <!-- Step 4: Available Skins -->
+    <section>
+      <div class="flex items-center justify-between mb-8 border-t border-border-subtle pt-8">
+        <h2 class="font-label-caps text-label-caps text-text-muted uppercase tracking-widest text-sm font-bold" id="selected-device-title">Step 4: Available Skins</h2>
+        <div class="flex items-center gap-2 text-primary cursor-pointer hover:underline">
+          <span class="font-label-caps text-label-caps">Filter &amp; Sort</span>
+          <span class="material-symbols-outlined text-sm">filter_list</span>
+        </div>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="compatible-products-grid">
+        <!-- Rendered dynamically -->
+      </div>
+    </section>
+  </main>
+
+  <footer></footer>
+
+  <!-- DB and Main scripts -->
+  <script src="../../shared/js/storage.js"></script>
+  <script src="../../shared/js/utils.js" defer></script>
+  <script src="../../shared/js/notifications.js" defer></script>
+  <script src="../../shared/components/navbar.js" defer></script>
+  <script src="../../shared/components/productCard.js" defer></script>
+  <script src="../../shared/components/loader.js" defer></script>
+  <!-- Page script -->
+  <script src="../../shop/js/device_selector.js"></script>
+</body>
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <meta name="description" content="Explore designs inside this curated collection."/>
+  <title>Collection Details | OM Mobile Art</title>
+  <link rel="icon" type="image/png" href="/assets/logos/logo.png?v=2.0"/>
+  <link rel="apple-touch-icon" href="/assets/logos/logo.png?v=2.0"/>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <script src="/shared/js/tailwind-config-shop.js"></script>
+  <style>
+    body { font-family: 'DM Sans', sans-serif; }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+  </style>
+  <link rel="stylesheet" href="/shared/css/shop-scrollbar.css?v=1.1"/>
+</head>
+<body class="bg-[#F8FAFC] text-[#111827] font-body-main antialiased">
+  <!-- Announcement Bar -->
+  <div id="global-announcement-bar"></div>
+
+  <!-- Global Header (TopNavBar) -->
+  <header id="shop-header-placeholder"></header>
+
+  <!-- Collection Hero Banner -->
+  <section class="relative bg-[#03045E] text-white py-16 overflow-hidden">
+    <div class="absolute inset-0 bg-cover bg-center opacity-30" id="collection-banner-bg"></div>
+    <div class="relative store-container space-y-4">
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white text-xs font-bold uppercase tracking-wider">
+        <span class="w-2 h-2 rounded-full bg-[#00B4D8] animate-pulse"></span>
+        <span id="collection-badge-label">Curated Series</span>
+      </div>
+      <h1 class="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight" id="collection-detail-title">Featured Collection</h1>
+      <p class="text-gray-200 text-sm sm:text-base max-w-2xl font-medium leading-relaxed" id="collection-detail-desc">Explore our hand-crafted skins tailored for mobile, camera, and laptop devices.</p>
+    </div>
+  </section>
+
+  <main class="store-container py-12">
+    <!-- Controls (Sort / Section Info) -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-gray-200 pb-6 mb-8">
+      <div>
+        <p class="text-sm text-gray-500">Showing <span class="font-bold text-gray-800" id="collection-count-display">0</span> designs</p>
+      </div>
+      <div class="flex items-center gap-3">
+        <label class="text-xs font-bold text-gray-500 uppercase tracking-wider whitespace-nowrap">Sort By:</label>
+        <select id="collection-sort-select" class="h-10 px-3 bg-white border border-gray-300 rounded-lg text-sm focus:outline-none focus:border-[#0077B6] cursor-pointer">
+          <option value="newest">Newest</option>
+          <option value="popular">Popular</option>
+          <option value="price_asc">Price: Low to High</option>
+          <option value="price_desc">Price: High to Low</option>
+          <option value="rating">Rating</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Product Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8" id="collection-detail-products-grid">
+      <!-- Dynamically filled with products belonging to this collection -->
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer></footer>
+
+  <!-- DB and Main scripts -->
+  <script src="/shared/js/storage.js"></script>
+  <script src="/shared/js/api.js"></script>
+  <script src="/shared/js/utils.js"></script>
+  <script src="/shared/js/notifications.js"></script>
+  <script src="/shared/components/navbar.js"></script>
+  <script src="/shared/components/productCard.js"></script>
+  <script src="/shared/components/loader.js"></script>
+  
+  <script src="/shop/js/collection_detail.js"></script>
+</body>
+</html>

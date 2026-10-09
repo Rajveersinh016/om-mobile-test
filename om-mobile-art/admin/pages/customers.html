@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <meta name="description" content="Manage customer accounts, addresses, status, and notes in OM Mobile Art admin panel."/>
+  <title>Customer Management | OM Mobile Art Admin</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+  <script src="../../shared/js/tailwind-config-admin.js"></script>
+  <style>
+    body { font-family: 'DM Sans', sans-serif; background-color: #F8FAFC; }
+    .chip-success { background-color: #E6F4EA; color: #1E8E3E; border: 1px solid #CEEAD6; }
+    .chip-warning { background-color: #FEF7E0; color: #E37400; border: 1px solid #FEEFC3; }
+    .chip-danger { background-color: #FCE8E6; color: #D93025; border: 1px solid #FAD2CF; }
+  </style>
+  <link rel="stylesheet" href="../../shared/css/admin-scrollbar.css?v=1.1"/>
+</head>
+<body class="bg-[#F8FAFC] font-body-default text-[#111827] overflow-x-hidden">
+  <!-- SideNavBar -->
+  <aside></aside>
+
+  <!-- Main Content -->
+  <main class="ml-[240px] w-[calc(100%-240px)] min-h-screen pb-16">
+    <!-- TopNavBar -->
+    <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-gray-200 h-[64px] flex items-center justify-between px-8 shadow-sm"></header>
+
+    <!-- Content Canvas -->
+    <div class="pt-6 px-8 space-y-6">
+
+      <!-- Header Title & Quick Actions -->
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <h1 class="text-2xl font-bold text-on-surface">Customer Management</h1>
+          <p class="text-xs text-secondary mt-1">Single source of truth for customer accounts, addresses, activity history, and status control.</p>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <button id="btnExportCustomersCsv" class="flex items-center gap-2 bg-primary text-white px-5 py-2.5 rounded-lg text-sm font-bold hover:shadow-md transition-all active:scale-95">
+            <span class="material-symbols-outlined text-[20px]">file_download</span>
+            Export Customers CSV
+          </button>
+        </div>
+      </div>
+
+      <!-- Dashboard Metrics Cards -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+        <div class="paper-card p-5 flex items-center gap-4 border border-outline-variant/60">
+          <div class="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary flex-shrink-0">
+            <span class="material-symbols-outlined text-[24px]">group</span>
+          </div>
+          <div>
+            <p class="text-[11px] font-bold text-secondary uppercase tracking-wider mb-0.5">Total Customers</p>
+            <h2 id="statTotalCustomers" class="text-xl font-bold text-on-surface">--</h2>
+          </div>
+        </div>
+
+        <div class="paper-card p-5 flex items-center gap-4 border border-outline-variant/60">
+          <div class="h-12 w-12 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-600 flex-shrink-0">
+            <span class="material-symbols-outlined text-[24px]">person_check</span>
+          </div>
+          <div>
+            <p class="text-[11px] font-bold text-secondary uppercase tracking-wider mb-0.5">Active Accounts</p>
+            <h2 id="statActiveCustomers" class="text-xl font-bold text-emerald-600">--</h2>
+          </div>
+        </div>
+
+        <div class="paper-card p-5 flex items-center gap-4 border border-outline-variant/60">
+          <div class="h-12 w-12 rounded-xl bg-amber-50 flex items-center justify-center text-amber-600 flex-shrink-0">
+            <span class="material-symbols-outlined text-[24px]">person_off</span>
+          </div>
+          <div>
+            <p class="text-[11px] font-bold text-secondary uppercase tracking-wider mb-0.5">Suspended / Blocked</p>
+            <h2 id="statSuspendedCustomers" class="text-xl font-bold text-amber-600">--</h2>
+          </div>
+        </div>
+
+        <div class="paper-card p-5 flex items-center gap-4 border border-outline-variant/60">
+          <div class="h-12 w-12 rounded-xl bg-indigo-50 flex items-center justify-center text-indigo-600 flex-shrink-0">
+            <span class="material-symbols-outlined text-[24px]">person_add</span>
+          </div>
+          <div>
+            <p class="text-[11px] font-bold text-secondary uppercase tracking-wider mb-0.5">New This Month</p>
+            <h2 id="statNewThisMonth" class="text-xl font-bold text-on-surface">--</h2>
+          </div>
+        </div>
+
+        <div class="paper-card p-5 flex items-center gap-4 border border-outline-variant/60">
+          <div class="h-12 w-12 rounded-xl bg-purple-50 flex items-center justify-center text-purple-600 flex-shrink-0">
+            <span class="material-symbols-outlined text-[24px]">price_change</span>
+          </div>
+          <div>
+            <p class="text-[11px] font-bold text-secondary uppercase tracking-wider mb-0.5">Avg Lifetime Spend</p>
+            <h2 id="statAverageSpend" class="text-lg font-bold text-purple-600">₹0</h2>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filters & Search Toolbar -->
+      <div class="paper-card p-4 flex flex-col md:flex-row items-center justify-between gap-4 border border-outline-variant/60">
+        <div class="flex-1 w-full md:w-auto relative">
+          <span class="material-symbols-outlined absolute left-3.5 top-2.5 text-secondary text-[20px]">search</span>
+          <input 
+            id="customerSearchInput" 
+            type="text" 
+            placeholder="Search by Customer Name, Email, Phone, or ID..." 
+            class="w-full pl-10 pr-4 py-2 border border-outline-variant rounded-lg focus:ring-primary focus:border-primary text-sm"
+          />
+        </div>
+
+        <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
+          <select id="filterCustomerStatus" class="border border-outline-variant rounded-lg text-sm px-3 py-2 focus:ring-primary">
+            <option value="ALL">All Account Statuses</option>
+            <option value="ACTIVE">Active</option>
+            <option value="SUSPENDED">Suspended</option>
+            <option value="BLOCKED">Blocked</option>
+            <option value="DELETED">Deleted</option>
+          </select>
+
+          <select id="filterCustomerTag" class="border border-outline-variant rounded-lg text-sm px-3 py-2 focus:ring-primary">
+            <option value="">All Customer Tags</option>
+            <option value="VIP">VIP Customer</option>
+            <option value="Wholesale">Wholesale</option>
+            <option value="Frequent Buyer">Frequent Buyer</option>
+            <option value="Manual Review">Manual Review</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Main Customers Table -->
+      <div class="paper-card overflow-hidden border border-outline-variant/60">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="bg-surface-container-low/50 border-b border-outline-variant">
+                <th class="px-6 py-4 font-bold text-xs text-secondary uppercase tracking-wider">Customer</th>
+                <th class="px-4 py-4 font-bold text-xs text-secondary uppercase tracking-wider">Phone</th>
+                <th class="px-4 py-4 font-bold text-xs text-secondary uppercase tracking-wider">Joined Date</th>
+                <th class="px-4 py-4 font-bold text-xs text-secondary uppercase tracking-wider">Last Login</th>
+                <th class="px-4 py-4 font-bold text-xs text-secondary uppercase tracking-wider text-center">Orders</th>
+                <th class="px-4 py-4 font-bold text-xs text-secondary uppercase tracking-wider">Total Spent</th>
+                <th class="px-4 py-4 font-bold text-xs text-secondary uppercase tracking-wider text-center">Status</th>
+                <th class="px-4 py-4 font-bold text-xs text-secondary uppercase tracking-wider">Tags</th>
+                <th class="px-6 py-4 font-bold text-xs text-secondary uppercase tracking-wider text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="customersTableBody" class="divide-y divide-outline-variant">
+              <tr>
+                <td colspan="9" class="px-6 py-12 text-center text-secondary">
+                  <span class="material-symbols-outlined animate-spin text-[32px] text-primary">sync</span>
+                  <p class="mt-2 text-sm">Loading customer database...</p>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Pagination Footer -->
+        <div id="customerPagination" class="flex items-center justify-between px-6 py-4 bg-surface-container-low/20 border-t border-outline-variant">
+        </div>
+      </div>
+
+    </div>
+    <footer></footer>
+  </main>
+
+  <!-- Comprehensive Customer Profile Drawer -->
+  <div id="customerProfileDrawer" class="fixed inset-0 bg-black/50 z-50 hidden items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-5xl w-full p-6 shadow-xl border border-outline-variant max-h-[92vh] flex flex-col">
+      <div class="flex items-center justify-between pb-4 border-b border-outline-variant">
+        <h3 class="text-lg font-bold text-on-surface flex items-center gap-2">
+          <span class="material-symbols-outlined text-primary">account_circle</span>
+          Customer Master Profile & Activity Log
+        </h3>
+        <button onclick="window.closeCustomerDrawer()" class="text-secondary hover:text-on-surface">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+
+      <div id="customerProfileContent" class="mt-4 flex-1 overflow-y-auto pr-1">
+        <p class="text-center py-12 text-secondary">Loading profile...</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Core scripts -->
+  <script src="../../shared/js/storage.js"></script>
+  <script src="../../shared/js/utils.js" defer></script>
+  <script src="../../admin/js/admin.js" defer></script>
+  <script src="../../admin/js/customers.js" defer></script>
+</body>
+</html>

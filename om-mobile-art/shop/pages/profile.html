@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <meta name="description" content="Manage your OM Mobile Art account, tracking details, saved addresses, and custom skin orders."/>
+    <title>My Account Dashboard | OM Mobile Art</title>
+    
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    
+    <style>
+        body {
+            font-family: 'DM Sans', sans-serif;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .tab-panel {
+            display: none;
+        }
+        .tab-panel.active {
+            display: block;
+        }
+        /* Timeline styling */
+        .timeline-step.completed .timeline-circle {
+            background-color: #03045E;
+            border-color: #03045E;
+            color: white;
+        }
+        .timeline-step.completed .timeline-line {
+            background-color: #03045E;
+        }
+    </style>
+    <script src="../../shared/js/tailwind-config-shop.js"></script>
+    <link rel="stylesheet" href="../../shared/css/shop-scrollbar.css?v=1.1"/>
+</head>
+<body class="bg-gray-50 text-gray-900 font-normal pb-20 lg:pb-0">
+    <!-- TopNavBar -->
+    <header></header>
+
+    <main class="store-container py-12">
+        <div class="flex flex-col lg:flex-row gap-8 relative items-start">
+            
+            <!-- Left Sidebar (Desktop) / Collapsible Panel (Tablet) -->
+            <aside class="w-full lg:w-[280px] bg-white border border-gray-200/80 p-6 rounded-2xl shadow-sm flex flex-col space-y-6 flex-shrink-0">
+                <div class="text-center space-y-3 border-b border-gray-150 pb-6">
+                    <div class="relative w-20 h-20 bg-gray-100 border border-gray-200 text-gray-400 rounded-full flex items-center justify-center mx-auto overflow-hidden group">
+                        <span class="material-symbols-outlined text-4xl group-hover:scale-105 transition-transform">person</span>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-base text-gray-900 profile-user-name">Loading Profile...</h3>
+                        <p class="text-xs text-gray-400 font-medium profile-user-email">email@example.com</p>
+                    </div>
+                    <div class="bg-gray-50 rounded-lg py-1.5 px-3 border inline-block">
+                        <span class="text-[10px] uppercase font-bold text-gray-400 tracking-wider">Member Since</span>
+                        <p class="text-[11px] font-bold text-gray-800" id="profile-member-since">July 2026</p>
+                    </div>
+                </div>
+                
+                <!-- Sidebar Menu Navigation Links -->
+                <nav class="hidden lg:flex flex-col gap-1 text-sm font-semibold" id="desktop-sidebar-menu">
+                    <button onclick="switchTab('dashboard')" class="menu-btn flex items-center gap-3 p-3 rounded-xl transition-all text-left bg-[#03045E]/10 text-[#03045E] border-l-4 border-l-[#03045E]" data-tab="dashboard">
+                        <span class="material-symbols-outlined text-[20px]">grid_view</span> Dashboard
+                    </button>
+                    <button onclick="switchTab('orders')" class="menu-btn flex items-center gap-3 p-3 rounded-xl transition-all text-left hover:bg-gray-50 text-gray-700" data-tab="orders">
+                        <span class="material-symbols-outlined text-[20px]">shopping_bag</span> My Orders
+                    </button>
+                    <button onclick="switchTab('wishlist')" class="menu-btn flex items-center gap-3 p-3 rounded-xl transition-all text-left hover:bg-gray-50 text-gray-700" data-tab="wishlist">
+                        <span class="material-symbols-outlined text-[20px]">favorite</span> Wishlist
+                    </button>
+                    <button onclick="switchTab('addresses')" class="menu-btn flex items-center gap-3 p-3 rounded-xl transition-all text-left hover:bg-gray-50 text-gray-700" data-tab="addresses">
+                        <span class="material-symbols-outlined text-[20px]">home</span> Addresses
+                    </button>
+                    <button onclick="switchTab('custom-designs')" class="menu-btn flex items-center gap-3 p-3 rounded-xl transition-all text-left hover:bg-gray-50 text-gray-700" data-tab="custom-designs">
+                        <span class="material-symbols-outlined text-[20px]">draw</span> Custom Designs
+                    </button>
+                    <button onclick="switchTab('settings')" class="menu-btn flex items-center gap-3 p-3 rounded-xl transition-all text-left hover:bg-gray-50 text-gray-700" data-tab="settings">
+                        <span class="material-symbols-outlined text-[20px]">manage_accounts</span> Account Settings
+                    </button>
+                    <button onclick="logoutCustomer()" class="menu-btn flex items-center gap-3 p-3 rounded-xl transition-all text-left text-red-600 hover:bg-red-50/50 mt-4 border-t border-gray-100 pt-5">
+                        <span class="material-symbols-outlined text-[20px]">logout</span> Logout
+                    </button>
+                </nav>
+            </aside>
+
+            <!-- Right Content Area -->
+            <section class="flex-grow w-full space-y-6">
+                
+                <!-- 1. DASHBOARD MODULE PANEL -->
+                <div class="tab-panel active" id="dashboard-tab-panel">
+                    <div class="space-y-6">
+                        <!-- Welcome Header -->
+                        <div class="bg-white border border-gray-200/80 p-6 rounded-2xl shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+                            <div>
+                                <h1 class="text-xl md:text-2xl font-extrabold text-gray-900 tracking-tight">Welcome back, <span class="profile-user-name">Guest</span>!</h1>
+                                <p class="text-sm text-gray-500 mt-1">Access orders, track deliveries, edit settings, and view custom skin designs.</p>
+                            </div>
+                            <a href="shop.html" class="px-5 py-2.5 bg-black hover:bg-gray-900 text-white rounded-xl text-xs font-bold uppercase tracking-wider transition-all duration-200 shadow-sm flex items-center gap-1.5 self-start md:self-auto">
+                                <span class="material-symbols-outlined text-[16px]">shopping_cart</span> Shop Collections
+                            </a>
+                        </div>
+
+                        <!-- KPI Grid Summary -->
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            <div class="bg-white border border-gray-200/80 p-5 rounded-2xl shadow-sm space-y-2">
+                                <span class="text-xs uppercase font-extrabold text-gray-400 tracking-wider">Total Orders</span>
+                                <p class="text-2xl font-extrabold text-black" id="dash-kpi-orders">0</p>
+                            </div>
+                            <div class="bg-white border border-gray-200/80 p-5 rounded-2xl shadow-sm space-y-2">
+                                <span class="text-xs uppercase font-extrabold text-gray-400 tracking-wider">OM Reward Points</span>
+                                <p class="text-2xl font-extrabold text-[#03045E]" id="dash-kpi-points">150 pts</p>
+                            </div>
+                            <div class="bg-white border border-gray-200/80 p-5 rounded-2xl shadow-sm space-y-2">
+                                <span class="text-xs uppercase font-extrabold text-gray-400 tracking-wider">Wishlist Items</span>
+                                <p class="text-2xl font-extrabold text-black" id="dash-kpi-wishlist">0</p>
+                            </div>
+                            <div class="bg-white border border-gray-200/80 p-5 rounded-2xl shadow-sm space-y-2">
+                                <span class="text-xs uppercase font-extrabold text-gray-400 tracking-wider">Saved Addresses</span>
+                                <p class="text-2xl font-extrabold text-black" id="dash-kpi-addresses">0</p>
+                            </div>
+                        </div>
+
+                        <!-- Quick Shortcuts Grid -->
+                        <div class="bg-white border border-gray-200/80 p-6 rounded-2xl shadow-sm space-y-4">
+                            <h3 class="font-bold text-sm text-gray-900 uppercase tracking-wider">Quick Actions</h3>
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                                <button onclick="switchTab('orders')" class="p-3 bg-gray-50 hover:bg-gray-100/80 rounded-xl text-center flex flex-col items-center justify-center gap-2 border transition-all">
+                                    <span class="material-symbols-outlined text-[#03045E] text-[24px]">shopping_bag</span>
+                                    <span class="text-xs font-semibold text-gray-800">View All Orders</span>
+                                </button>
+                                <button onclick="trackLatestOrder()" class="p-3 bg-gray-50 hover:bg-gray-100/80 rounded-xl text-center flex flex-col items-center justify-center gap-2 border transition-all">
+                                    <span class="material-symbols-outlined text-[#03045E] text-[24px]">local_shipping</span>
+                                    <span class="text-xs font-semibold text-gray-800">Track Recent Order</span>
+                                </button>
+                                <button onclick="switchTab('settings')" class="p-3 bg-gray-50 hover:bg-gray-100/80 rounded-xl text-center flex flex-col items-center justify-center gap-2 border transition-all">
+                                    <span class="material-symbols-outlined text-[#03045E] text-[24px]">manage_accounts</span>
+                                    <span class="text-xs font-semibold text-gray-800">Profile Settings</span>
+                                </button>
+                                <button onclick="switchTab('custom-designs')" class="p-3 bg-gray-50 hover:bg-gray-100/80 rounded-xl text-center flex flex-col items-center justify-center gap-2 border transition-all">
+                                    <span class="material-symbols-outlined text-[#03045E] text-[24px]">draw</span>
+                                    <span class="text-xs font-semibold text-gray-800">Custom Skins</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Recent Orders and Activity -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            
+                            <!-- Recent Orders column -->
+                            <div class="bg-white border border-gray-200/80 p-6 rounded-2xl shadow-sm space-y-4 flex flex-col justify-between">
+                                <div class="space-y-4">
+                                    <div class="flex justify-between items-center border-b pb-3">
+                                        <h3 class="font-bold text-sm text-gray-800 uppercase tracking-wider">Recent Orders</h3>
+                                        <button onclick="switchTab('orders')" class="text-xs font-bold text-[#03045E] hover:underline">View All</button>
+                                    </div>
+                                    <div id="dash-recent-orders-mount" class="space-y-3">
+                                        <p class="text-xs text-gray-400 italic">No orders found.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Saved Addresses column -->
+                            <div class="bg-white border border-gray-200/80 p-6 rounded-2xl shadow-sm space-y-4">
+                                <div class="flex justify-between items-center border-b pb-3">
+                                    <h3 class="font-bold text-sm text-gray-800 uppercase tracking-wider">Default Address</h3>
+                                    <button onclick="switchTab('addresses')" class="text-xs font-bold text-[#03045E] hover:underline">Manage Addresses</button>
+                                </div>
+                                <div id="dash-default-address-mount" class="space-y-2 text-sm text-gray-700">
+                                    <p class="text-xs text-gray-450 italic">No default addresses saved.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Recently Viewed Products -->
+                        <div class="bg-white border border-gray-200/80 p-6 rounded-2xl shadow-sm space-y-4">
+                            <h3 class="font-bold text-sm text-gray-800 uppercase tracking-wider">Recently Viewed</h3>
+                            <div id="dash-recent-viewed-mount" class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                <!-- Products loaded dynamically -->
+                                <p class="text-xs text-gray-405 italic col-span-full">No recently viewed items yet.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. MY ORDERS MODULE PANEL -->
+                <div class="tab-panel" id="orders-tab-panel">
+                    <div class="space-y-6">
+                        <!-- Filters Header -->
+                        <div class="bg-white border border-gray-200/80 p-6 rounded-2xl shadow-sm space-y-4">
+                            <h1 class="text-lg md:text-xl font-extrabold text-gray-900 uppercase tracking-tight">Order History</h1>
+                            
+                            <!-- Search Bar & Filter options -->
+                            <div class="flex flex-col md:flex-row gap-3">
+                                <div class="flex-grow relative">
+                                    <input type="text" id="order-search-input" placeholder="Search by order #, product, or device..." class="w-full h-10 pl-10 pr-4 border border-gray-200 rounded-xl text-sm focus:ring-1 focus:ring-[#03045E] focus:border-[#03045E]">
+                                    <span class="material-symbols-outlined absolute left-3 top-2.5 text-gray-400 text-[20px]">search</span>
+                                </div>
+                                <div class="flex gap-2 overflow-x-auto no-scrollbar pb-1 md:pb-0" id="order-status-filters">
+                                    <button onclick="filterOrders('ALL')" class="order-filter-btn px-4 py-2 bg-[#03045E] text-white rounded-xl text-xs font-bold uppercase transition-all" data-status="ALL">All</button>
+                                    <button onclick="filterOrders('ACTIVE')" class="order-filter-btn px-4 py-2 bg-gray-50 border text-gray-700 hover:bg-gray-100 rounded-xl text-xs font-bold uppercase transition-all" data-status="ACTIVE">Active</button>
+                                    <button onclick="filterOrders('DELIVERED')" class="order-filter-btn px-4 py-2 bg-gray-50 border text-gray-700 hover:bg-gray-100 rounded-xl text-xs font-bold uppercase transition-all" data-status="DELIVERED">Delivered</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Orders List container -->
+                        <div id="orders-list-mount" class="space-y-4">
+                            <!-- Populated dynamically -->
+                            <div class="animate-pulse space-y-4">
+                                <div class="h-28 bg-gray-200 rounded-2xl"></div>
+                                <div class="h-28 bg-gray-200 rounded-2xl"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. WISHLIST PANEL -->
+                <div class="tab-panel" id="wishlist-tab-panel">
+                    <div class="bg-white border border-gray-200/80 p-6 rounded-2xl shadow-sm space-y-6">
+                        <h1 class="text-lg md:text-xl font-extrabold text-gray-900 uppercase tracking-tight">My Wishlist</h1>
+                        <div id="wishlist-items-mount" class="grid grid-cols-2 md:grid-cols-3 gap-6">
+                            <!-- Items list -->
+                            <p class="text-xs text-gray-400 italic">Your wishlist is empty.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. ADDRESSES PANEL -->
+                <div class="tab-panel" id="addresses-tab-panel">
+                    <div class="bg-white border border-gray-200/80 p-6 rounded-2xl shadow-sm space-y-6">
+                        <div class="flex justify-between items-center border-b pb-3">
+                            <h1 class="text-lg md:text-xl font-extrabold text-gray-900 uppercase tracking-tight">Saved Addresses</h1>
+                            <button onclick="openNewAddressForm()" class="px-4 py-2 bg-[#03045E] hover:bg-[#2C4A6B] text-white rounded-xl text-xs font-bold uppercase transition-all">Add Address</button>
+                        </div>
+                        
+                        <div id="addresses-list-mount" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <!-- Load Addresses -->
+                        </div>
+
+                        <!-- Address Form -->
+                        <div id="address-form-wrapper" class="hidden border-t pt-6 space-y-4">
+                            <h3 class="font-bold text-sm text-gray-900 uppercase tracking-wider" id="address-form-title">Add New Address</h3>
+                            <form id="address-form" onsubmit="saveAddress(event)" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <input type="hidden" id="address-id">
+                                <div>
+                                    <label class="block text-xs uppercase font-bold text-gray-400 mb-1">First Name *</label>
+                                    <input type="text" id="address-first" required class="w-full h-10 px-3 border border-gray-200 rounded-xl text-sm focus:ring-1 focus:ring-[#03045E]">
+                                </div>
+                                <div>
+                                    <label class="block text-xs uppercase font-bold text-gray-400 mb-1">Last Name *</label>
+                                    <input type="text" id="address-last" required class="w-full h-10 px-3 border border-gray-200 rounded-xl text-sm focus:ring-1 focus:ring-[#03045E]">
+                                </div>
+                                <div class="md:col-span-2">
+                                    <label class="block text-xs uppercase font-bold text-gray-400 mb-1">Street Address *</label>
+                                    <input type="text" id="address-street-field" required class="w-full h-10 px-3 border border-gray-200 rounded-xl text-sm focus:ring-1 focus:ring-[#03045E]">
+                                </div>
+                                <div>
+                                    <label class="block text-xs uppercase font-bold text-gray-400 mb-1">City *</label>
+                                    <input type="text" id="address-city-field" required class="w-full h-10 px-3 border border-gray-200 rounded-xl text-sm focus:ring-1 focus:ring-[#03045E]">
+                                </div>
+                                <div>
+                                    <label class="block text-xs uppercase font-bold text-gray-400 mb-1">Zip Code / Pincode *</label>
+                                    <input type="text" id="address-zip-field" required class="w-full h-10 px-3 border border-gray-200 rounded-xl text-sm focus:ring-1 focus:ring-[#03045E]">
+                                </div>
+                                <div class="md:col-span-2 flex gap-3 pt-2">
+                                    <button type="submit" class="px-6 h-10 bg-[#03045E] hover:bg-[#2C4A6B] text-white rounded-xl text-xs font-bold uppercase transition-all">Save Address</button>
+                                    <button type="button" onclick="closeAddressForm()" class="px-6 h-10 border rounded-xl text-xs font-bold uppercase transition-all">Cancel</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5. CUSTOM DESIGNS PANEL -->
+                <div class="tab-panel" id="custom-designs-tab-panel">
+                    <div class="bg-white border border-gray-200/80 p-6 rounded-2xl shadow-sm space-y-6">
+                        <h1 class="text-lg md:text-xl font-extrabold text-gray-900 uppercase tracking-tight">My Saved Custom Skins</h1>
+                        <div id="custom-skins-mount" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <p class="text-xs text-gray-400 italic col-span-full">No custom skin drafts found.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 6. ACCOUNT SETTINGS PANEL -->
+                <div class="tab-panel" id="settings-tab-panel">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Profile update details card -->
+                        <div class="bg-white border border-gray-200/80 p-6 rounded-2xl shadow-sm space-y-6">
+                            <h2 class="text-base font-extrabold text-gray-900 uppercase tracking-wider border-b pb-3">Update Details</h2>
+                            <form id="profile-update-form" onsubmit="updateProfileInfo(event)" class="space-y-4">
+                                <div>
+                                    <label class="block text-xs uppercase font-bold text-gray-400 mb-1">Full Name</label>
+                                    <input type="text" id="settings-name" required class="w-full h-10 px-3 border border-gray-200 rounded-xl text-sm focus:ring-1 focus:ring-[#03045E]">
+                                </div>
+                                <div>
+                                    <label class="block text-xs uppercase font-bold text-gray-400 mb-1">Email Address</label>
+                                    <input type="email" id="settings-email" required class="w-full h-10 px-3 border border-gray-200 rounded-xl text-sm focus:ring-1 focus:ring-[#03045E]">
+                                </div>
+                                <button type="submit" class="w-full h-10 bg-[#03045E] hover:bg-[#2C4A6B] text-white rounded-xl text-xs font-bold uppercase transition-all">Save Changes</button>
+                            </form>
+                        </div>
+
+                        <!-- Change password card -->
+                        <div class="bg-white border border-gray-200/80 p-6 rounded-2xl shadow-sm space-y-6">
+                            <h2 class="text-base font-extrabold text-gray-900 uppercase tracking-wider border-b pb-3">Change Password</h2>
+                            <form id="password-change-form" onsubmit="changePassword(event)" class="space-y-4">
+                                <div>
+                                    <label class="block text-xs uppercase font-bold text-gray-400 mb-1">Current Password</label>
+                                    <input type="password" id="pass-current" required class="w-full h-10 px-3 border border-gray-200 rounded-xl text-sm focus:ring-1 focus:ring-[#03045E]">
+                                </div>
+                                <div>
+                                    <label class="block text-xs uppercase font-bold text-gray-400 mb-1">New Password</label>
+                                    <input type="password" id="pass-new" required class="w-full h-10 px-3 border border-gray-200 rounded-xl text-sm focus:ring-1 focus:ring-[#03045E]">
+                                </div>
+                                <div>
+                                    <label class="block text-xs uppercase font-bold text-gray-400 mb-1">Confirm New Password</label>
+                                    <input type="password" id="pass-confirm" required class="w-full h-10 px-3 border border-gray-200 rounded-xl text-sm focus:ring-1 focus:ring-[#03045E]">
+                                </div>
+                                <button type="submit" class="w-full h-10 bg-[#03045E] hover:bg-[#2C4A6B] text-white rounded-xl text-xs font-bold uppercase transition-all">Update Password</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+        </div>
+    </main>
+
+    <!-- Mobile Bottom Tab Bar -->
+    <nav class="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex items-center justify-around py-3 z-50 shadow-lg">
+        <button onclick="switchTab('dashboard')" class="mobile-tab-btn flex flex-col items-center gap-0.5 text-[#03045E]" data-tab="dashboard">
+            <span class="material-symbols-outlined text-[24px]">grid_view</span>
+            <span class="text-[9px] font-bold">Dashboard</span>
+        </button>
+        <button onclick="switchTab('orders')" class="mobile-tab-btn flex flex-col items-center gap-0.5 text-gray-400" data-tab="orders">
+            <span class="material-symbols-outlined text-[24px]">shopping_bag</span>
+            <span class="text-[9px] font-bold font-medium">Orders</span>
+        </button>
+        <button onclick="switchTab('wishlist')" class="mobile-tab-btn flex flex-col items-center gap-0.5 text-gray-400" data-tab="wishlist">
+            <span class="material-symbols-outlined text-[24px]">favorite</span>
+            <span class="text-[9px] font-bold font-medium">Wishlist</span>
+        </button>
+        <button onclick="switchTab('settings')" class="mobile-tab-btn flex flex-col items-center gap-0.5 text-gray-400" data-tab="settings">
+            <span class="material-symbols-outlined text-[24px]">person</span>
+            <span class="text-[9px] font-bold font-medium">Profile</span>
+        </button>
+    </nav>
+
+    <!-- Global Footer -->
+    <footer></footer>
+
+    <!-- Database and Main scripts -->
+    <script src="../../shared/js/storage.js?v=1.0.9"></script>
+    <script src="../../shared/js/utils.js?v=1.0.9" defer></script>
+    <script src="../../shared/js/notifications.js?v=1.0.9" defer></script>
+    <script src="../../shared/js/review-component.js?v=1.0.9"></script>
+    <script src="../../shared/components/navbar.js?v=1.0.9" defer></script>
+    <script src="../../shared/components/productCard.js?v=1.0.9" defer></script>
+    <script src="../../shared/components/loader.js?v=1.0.9" defer></script>
+    <script src="../../shared/js/api.js?v=1.0.9"></script>
+    <!-- Authentication/Dashboard script -->
+    <script src="../../shop/js/auth.js?v=1.0.9"></script>
+</body>
+</html>

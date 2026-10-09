@@ -1,0 +1,29 @@
+[
+  {
+    "id": 1,
+    "productId": 12,
+    "userName": "David K.",
+    "rating": 5,
+    "comment": "The fit is absolutely perfect. I've tried other brands but the texture and precision of OM Mobile Art is on another level. Highly recommended!",
+    "date": "2026-06-15",
+    "deviceModel": "iPhone 16 Pro"
+  },
+  {
+    "id": 2,
+    "productId": 12,
+    "userName": "Sarah M.",
+    "rating": 5,
+    "comment": "Installation was surprisingly easy. No bubbles at all. The design looks incredible in person—very premium finish.",
+    "date": "2026-06-20",
+    "deviceModel": "iPhone 16 Pro"
+  },
+  {
+    "id": 3,
+    "productId": 12,
+    "userName": "James L.",
+    "rating": 4,
+    "comment": "Fast shipping and the packaging was great. The skin has a nice grip that isn't slippery. Will buy again.",
+    "date": "2026-06-25",
+    "deviceModel": "iPhone 16 Pro"
+  }
+]

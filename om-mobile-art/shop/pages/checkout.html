@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <meta name="description" content="Complete your OM Mobile Art order. Secure checkout for premium mobile skins."/>
+  <title>Checkout | OM Mobile Art</title>
+  <link rel="icon" type="image/png" href="../../assets/logos/logo.png?v=2.0"/>
+  <link rel="apple-touch-icon" href="../../assets/logos/logo.png?v=2.0"/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script src="../../shared/js/tailwind-config-shop.js"></script>
+  <style>
+    body { font-family: 'DM Sans', sans-serif; background-color: #F8FAFC; color: #111827; }
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    .checkout-step:not(.active) .step-content { display: none; }
+    .payment-radio:checked + label { border-color: #0077B6; background-color: #CAF0F8; }
+    .payment-radio:checked + label .radio-indicator { border-color: #0077B6; }
+    .payment-radio:checked + label .radio-indicator::after { content: ''; display: block; width: 8px; height: 8px; background: #0077B6; border-radius: 50%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+  </style>
+  <link rel="stylesheet" href="../../shared/css/shop-scrollbar.css?v=1.1"/>
+</head>
+<body class="bg-[#F8FAFC] font-body-main text-[#111827]">
+
+  <!-- Header -->
+  <header></header>
+
+  <main class="store-container py-10 min-h-screen">
+    <div class="flex flex-col md:flex-row gap-8">
+      
+      <!-- Left Column: Checkout Steps (60%) -->
+      <div class="w-full md:w-[60%] space-y-6">
+        
+        <!-- Step 1: Shipping Address -->
+        <section class="checkout-step active bg-white border border-[#E5E7EB] rounded-2xl overflow-hidden shadow-sm" id="step-1">
+          <div class="p-5 border-b border-[#E5E7EB] flex items-center justify-between bg-[#F8FAFC]">
+            <div class="flex items-center gap-3">
+              <span class="w-10 h-10 rounded-full bg-[#0077B6] text-white flex items-center justify-center font-bold text-base shadow-sm" id="step-1-indicator">1</span>
+              <h2 class="text-lg font-extrabold text-[#03045E]">Shipping Address</h2>
+            </div>
+            <button class="text-[#0077B6] font-bold text-xs hover:underline hidden" id="edit-step-1-btn" onclick="toggleStep(1)">Edit</button>
+          </div>
+          
+          <div class="step-content p-6 space-y-5">
+            <!-- Saved Addresses Selector (Rendered dynamically if user has saved addresses) -->
+            <div id="saved-addresses-wrapper" class="hidden space-y-3 pb-4 border-b border-gray-100">
+              <label class="block text-xs font-extrabold uppercase tracking-wider text-gray-600">Saved Addresses</label>
+              <div id="saved-addresses-list" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
+            </div>
+
+            <form id="shipping-address-form" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <!-- First Name -->
+              <div class="space-y-1">
+                <label for="shipping-firstname" class="text-xs font-extrabold text-gray-600 uppercase tracking-wider">First Name <span class="text-red-500">*</span></label>
+                <input id="shipping-firstname" name="firstname" class="w-full h-11 px-4 border border-gray-300 rounded-xl text-xs font-bold text-gray-900 focus:outline-none focus:border-[#0077B6] transition-all" placeholder="First name" type="text" required/>
+                <p class="text-[11px] text-red-500 hidden font-semibold" id="err-firstname">First name is required</p>
+              </div>
+
+              <!-- Last Name -->
+              <div class="space-y-1">
+                <label for="shipping-lastname" class="text-xs font-extrabold text-gray-600 uppercase tracking-wider">Last Name <span class="text-red-500">*</span></label>
+                <input id="shipping-lastname" name="lastname" class="w-full h-11 px-4 border border-gray-300 rounded-xl text-xs font-bold text-gray-900 focus:outline-none focus:border-[#0077B6] transition-all" placeholder="Last name" type="text" required/>
+                <p class="text-[11px] text-red-500 hidden font-semibold" id="err-lastname">Last name is required</p>
+              </div>
+
+              <!-- Mobile Number -->
+              <div class="md:col-span-2 space-y-1">
+                <label for="shipping-mobile" class="text-xs font-extrabold text-gray-600 uppercase tracking-wider">Mobile Number <span class="text-red-500">*</span></label>
+                <div class="relative">
+                  <span class="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-bold text-gray-500">+91</span>
+                  <input id="shipping-mobile" name="mobile" maxlength="10" class="w-full h-11 pl-12 pr-4 border border-gray-300 rounded-xl text-xs font-bold text-gray-900 focus:outline-none focus:border-[#0077B6] transition-all" placeholder="10-digit mobile number" type="tel" required/>
+                </div>
+                <p class="text-[11px] text-red-500 hidden font-semibold" id="err-mobile">Please enter a valid 10-digit mobile number</p>
+              </div>
+
+              <!-- Address Line 1 -->
+              <div class="md:col-span-2 space-y-1">
+                <label for="shipping-address1" class="text-xs font-extrabold text-gray-600 uppercase tracking-wider">Address Line 1 <span class="text-red-500">*</span></label>
+                <input id="shipping-address1" name="address1" class="w-full h-11 px-4 border border-gray-300 rounded-xl text-xs font-bold text-gray-900 focus:outline-none focus:border-[#0077B6] transition-all" placeholder="Flat No., House No., Building, Street" type="text" required/>
+                <p class="text-[11px] text-red-500 hidden font-semibold" id="err-address1">Address Line 1 is required</p>
+              </div>
+
+              <!-- Address Line 2 -->
+              <div class="md:col-span-2 space-y-1">
+                <label for="shipping-address2" class="text-xs font-extrabold text-gray-600 uppercase tracking-wider">Address Line 2 <span class="text-gray-400 font-normal">(Optional)</span></label>
+                <input id="shipping-address2" name="address2" class="w-full h-11 px-4 border border-gray-300 rounded-xl text-xs font-bold text-gray-900 focus:outline-none focus:border-[#0077B6] transition-all" placeholder="Apartment, Landmark, Area, Locality" type="text"/>
+              </div>
+
+              <!-- Pincode -->
+              <div class="space-y-1">
+                <label for="shipping-pincode" class="text-xs font-extrabold text-gray-600 uppercase tracking-wider">Pincode <span class="text-red-500">*</span></label>
+                <div class="relative">
+                  <input id="shipping-pincode" name="pincode" maxlength="6" class="w-full h-11 px-4 pr-10 border border-gray-300 rounded-xl text-xs font-bold text-gray-900 focus:outline-none focus:border-[#0077B6] transition-all" placeholder="6-digit PIN code" type="text" required/>
+                  <div id="pincode-spinner" class="hidden absolute right-3 top-1/2 -translate-y-1/2">
+                    <div class="w-4 h-4 border-2 border-[#0077B6] border-t-transparent rounded-full animate-spin"></div>
+                  </div>
+                </div>
+                <p class="text-[11px] text-red-500 hidden font-semibold" id="err-pincode">Enter a valid 6-digit PIN code</p>
+              </div>
+
+              <!-- Area / Locality Selector (shown if PIN code returns multiple post offices) -->
+              <div id="area-selector-wrapper" class="space-y-1 hidden">
+                <label for="shipping-area-select" class="text-xs font-extrabold text-gray-600 uppercase tracking-wider">Select Locality / Area</label>
+                <select id="shipping-area-select" name="area" class="w-full h-11 px-3 border border-gray-300 rounded-xl text-xs font-bold text-gray-900 focus:outline-none focus:border-[#0077B6] bg-white cursor-pointer">
+                  <option value="">Select Area...</option>
+                </select>
+              </div>
+
+              <!-- City -->
+              <div class="space-y-1">
+                <label for="shipping-city" class="text-xs font-extrabold text-gray-600 uppercase tracking-wider">City <span class="text-red-500">*</span></label>
+                <input id="shipping-city" name="city" class="w-full h-11 px-4 border border-gray-300 rounded-xl text-xs font-bold text-gray-900 focus:outline-none focus:border-[#0077B6] bg-gray-50 transition-all" placeholder="City" type="text" required/>
+                <p class="text-[11px] text-red-500 hidden font-semibold" id="err-city">City is required</p>
+              </div>
+
+              <!-- State -->
+              <div class="space-y-1">
+                <label for="shipping-state" class="text-xs font-extrabold text-gray-600 uppercase tracking-wider">State <span class="text-red-500">*</span></label>
+                <input id="shipping-state" name="state" class="w-full h-11 px-4 border border-gray-300 rounded-xl text-xs font-bold text-gray-900 focus:outline-none focus:border-[#0077B6] bg-gray-50 transition-all" placeholder="State" type="text" required/>
+                <p class="text-[11px] text-red-500 hidden font-semibold" id="err-state">State is required</p>
+              </div>
+
+              <!-- Country -->
+              <div class="space-y-1">
+                <label for="shipping-country" class="text-xs font-extrabold text-gray-600 uppercase tracking-wider">Country</label>
+                <input id="shipping-country" class="w-full h-11 px-4 border border-gray-200 bg-gray-100 rounded-xl text-xs font-bold text-gray-500 cursor-not-allowed" value="India" readonly type="text"/>
+              </div>
+
+              <!-- Action Button -->
+              <div class="md:col-span-2 pt-2">
+                <button id="deliver-here-btn" disabled class="w-full md:w-auto bg-[#0077B6] hover:bg-[#03045E] text-white font-extrabold h-11 px-8 rounded-xl transition-all text-xs shadow-md disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-[#0077B6]" type="button">
+                  Deliver Here
+                </button>
+              </div>
+            </form>
+          </div>
+        </section>
+
+        <!-- Step 2: Payment Method -->
+        <section class="checkout-step bg-white border border-[#E5E7EB] rounded-2xl overflow-hidden shadow-sm" id="step-2">
+          <div class="p-5 sm:p-6 border-b border-[#E5E7EB] flex items-center justify-between bg-[#F8FAFC]">
+            <div class="flex items-center gap-3">
+              <span class="w-10 h-10 rounded-full bg-[#0077B6] text-white flex items-center justify-center font-bold text-base shadow-sm" id="step-2-indicator">2</span>
+              <div>
+                <h2 class="text-xl font-bold text-[#111827]">Payment Method</h2>
+                <p class="text-xs text-gray-500 font-medium mt-0.5">Choose how you'd like to pay.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="step-content p-5 sm:p-6 space-y-6">
+            <!-- Payment Options Stack (16px gap, 24px padding) -->
+            <div class="flex flex-col space-y-4">
+
+              <!-- 1. UPI Card -->
+              <div class="relative">
+                <input checked="" class="hidden payment-radio" id="payment-upi" name="payment" type="radio" value="UPI"/>
+                <label for="payment-upi" class="payment-card-label flex items-start p-6 bg-white border-2 border-[#0077B6] shadow-[0_0_15px_rgba(0,119,182,0.12)] rounded-2xl cursor-pointer transition-all duration-200 hover:-translate-y-[2px] group">
+                  <!-- Radio Circle Indicator -->
+                  <div class="radio-indicator relative w-5 h-5 border-2 border-[#0077B6] rounded-full mr-4 flex-shrink-0 mt-0.5">
+                    <span class="radio-dot block absolute inset-1 bg-[#0077B6] rounded-full"></span>
+                  </div>
+
+                  <!-- Text Details -->
+                  <div class="flex-grow pr-2">
+                    <h3 class="font-bold text-base text-[#111827] leading-snug">UPI</h3>
+                    <p class="text-xs text-gray-500 font-medium mt-1">Pay via GPay, PhonePe, or BHIM</p>
+                  </div>
+
+                  <!-- Icon -->
+                  <div class="flex items-center text-[#0077B6] flex-shrink-0 ml-2 pt-0.5">
+                    <span class="material-symbols-outlined text-2xl">account_balance_wallet</span>
+                  </div>
+                </label>
+              </div>
+
+              <!-- 2. Credit / Debit Card -->
+              <div class="relative">
+                <input class="hidden payment-radio" id="payment-card" name="payment" type="radio" value="CARD"/>
+                <label for="payment-card" class="payment-card-label flex items-start p-6 bg-white border border-[#E5E7EB] rounded-2xl cursor-pointer transition-all duration-200 hover:-translate-y-[2px] hover:border-gray-300 group">
+                  <!-- Radio Circle Indicator -->
+                  <div class="radio-indicator relative w-5 h-5 border-2 border-gray-300 rounded-full mr-4 flex-shrink-0 mt-0.5">
+                    <span class="radio-dot hidden absolute inset-1 bg-[#0077B6] rounded-full"></span>
+                  </div>
+
+                  <!-- Text Details -->
+                  <div class="flex-grow pr-2">
+                    <h3 class="font-bold text-base text-[#111827] leading-snug">Credit / Debit Card</h3>
+                    <p class="text-xs text-gray-500 font-medium mt-1">Visa, Mastercard, AMEX</p>
+                  </div>
+
+                  <!-- Icon -->
+                  <div class="flex items-center text-gray-400 group-hover:text-gray-600 flex-shrink-0 ml-2 pt-0.5 transition-colors">
+                    <span class="material-symbols-outlined text-2xl">credit_card</span>
+                  </div>
+                </label>
+              </div>
+
+              <!-- 3. Cash on Delivery Card -->
+              <div class="relative" id="cod-payment-option-container">
+                <input class="hidden payment-radio" id="payment-cod" name="payment" type="radio" value="COD"/>
+                <label for="payment-cod" class="payment-card-label flex items-start p-6 bg-white border border-[#E5E7EB] rounded-2xl cursor-pointer transition-all duration-200 hover:-translate-y-[2px] hover:border-gray-300 group">
+                  <!-- Radio Circle Indicator -->
+                  <div class="radio-indicator relative w-5 h-5 border-2 border-gray-300 rounded-full mr-4 flex-shrink-0 mt-0.5">
+                    <span class="radio-dot hidden absolute inset-1 bg-[#0077B6] rounded-full"></span>
+                  </div>
+
+                  <!-- Text Details -->
+                  <div class="flex-grow pr-2">
+                    <h3 class="font-bold text-base text-[#111827] leading-snug">Cash on Delivery</h3>
+                    <p class="text-xs text-gray-500 font-medium mt-1">Pay when you receive the order</p>
+                  </div>
+
+                  <!-- Icon -->
+                  <div class="flex items-center text-gray-400 group-hover:text-gray-600 flex-shrink-0 ml-2 pt-0.5 transition-colors">
+                    <span class="material-symbols-outlined text-2xl">local_shipping</span>
+                  </div>
+                </label>
+              </div>
+
+            </div>
+
+            <!-- Full-Width Call-to-Action Button & Security Footer -->
+            <div class="pt-2 flex flex-col items-center space-y-3">
+              <button id="step-2-payment-btn" class="w-full bg-[#0077B6] hover:bg-[#03045E] text-white font-extrabold h-14 rounded-2xl transition-all duration-200 text-base shadow-md flex items-center justify-center gap-2.5 active:scale-[0.99] cursor-pointer" type="button">
+                <span class="material-symbols-outlined text-xl">lock</span> Pay Securely
+              </button>
+              <div id="payment-security-footer" class="flex items-center gap-1.5 text-xs text-gray-400 font-medium">
+                <span class="material-symbols-outlined text-sm text-gray-400">shield</span>
+                <span>Powered by Razorpay • 100% Secure Payments</span>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- Step 3: Confirmation -->
+        <section class="checkout-step bg-white border border-[#E5E7EB] rounded-2xl overflow-hidden shadow-sm" id="step-3">
+          <div class="p-5 border-b border-[#E5E7EB] flex items-center justify-between bg-[#F8FAFC]">
+            <div class="flex items-center gap-3">
+              <span class="w-10 h-10 rounded-full bg-[#90E0EF] text-white flex items-center justify-center font-bold text-base shadow-sm" id="step-3-indicator">3</span>
+              <h2 class="text-lg font-bold text-gray-700">Review &amp; Place Order</h2>
+            </div>
+          </div>
+          <div class="step-content p-6 space-y-4">
+            <div class="p-4 bg-[#CAF0F8]/40 rounded-xl border border-[#90E0EF] flex items-start gap-3">
+              <span class="material-symbols-outlined text-[#0077B6]">info</span>
+              <p class="text-xs text-gray-700 leading-relaxed">By clicking "Place Order", you agree to our Terms of Service and Privacy Policy. All premium skins are custom-made to order.</p>
+            </div>
+            <button class="w-full bg-[#0077B6] hover:bg-[#03045E] text-white font-bold h-[56px] text-lg rounded-[10px] transition-all duration-200 transform active:scale-[0.98] shadow-md">
+              Place Order
+            </button>
+            <p class="text-center text-gray-400 text-xs uppercase tracking-wider">
+              Encrypted 256-bit SSL Secure Checkout
+            </p>
+          </div>
+        </section>
+
+      </div>
+
+      <!-- Right Column: Order Summary (40%) -->
+      <div class="w-full md:w-[40%]">
+        <div class="sticky top-[100px] space-y-4">
+          <div class="bg-white border border-[#E5E7EB] rounded-2xl overflow-hidden shadow-sm p-6">
+            <h2 class="text-xl font-bold text-[#111827] border-b pb-4 mb-4">Order Summary</h2>
+            
+            <!-- Items Container -->
+            <div id="checkout-summary-items" class="space-y-3 mb-6">
+              <!-- Populated by checkout.js -->
+            </div>
+
+            <!-- Price Totals -->
+            <div class="pt-4 border-t border-gray-100 space-y-2 text-sm">
+              <div class="flex justify-between text-gray-600">
+                <span>Subtotal</span>
+                <span id="checkout-summary-subtotal" class="font-semibold text-gray-900">₹0</span>
+              </div>
+              <div class="flex justify-between text-gray-600">
+                <span>Shipping</span>
+                <span id="checkout-summary-shipping" class="text-[#0077B6] font-bold">FREE</span>
+              </div>
+            </div>
+
+            <div class="pt-4 border-t border-gray-200 mt-4">
+              <div class="flex justify-between items-end">
+                <span class="text-lg font-bold text-[#111827]">Total</span>
+                <span id="checkout-summary-total" class="text-2xl font-extrabold text-[#03045E]">₹0</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Trust Badges -->
+          <div class="flex justify-between items-center px-4 py-3 bg-white border border-[#E5E7EB] rounded-xl text-xs text-gray-500">
+            <div class="flex items-center gap-1">
+              <span class="material-symbols-outlined text-base">verified_user</span>
+              <span>Secure</span>
+            </div>
+            <div class="flex items-center gap-1">
+              <span class="material-symbols-outlined text-base">package_2</span>
+              <span>Tracked</span>
+            </div>
+            <div class="flex items-center gap-1">
+              <span class="material-symbols-outlined text-base">history</span>
+              <span>30-Day Returns</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer></footer>
+
+  <!-- DB and Main scripts -->
+  <script src="../../shared/js/storage.js?v=1.0.8"></script>
+  <script src="../../shared/js/settings-manager.js?v=1.0.8"></script>
+  <script src="../../shared/js/api.js?v=1.0.8"></script>
+  <script src="../../shared/js/pricing.js?v=1.0.8"></script>
+  <script src="../../shared/js/utils.js?v=1.0.8"></script>
+  <script src="../../shared/js/notifications.js?v=1.0.8"></script>
+  <script src="../../shared/components/navbar.js?v=1.0.8"></script>
+  <script src="../../shared/components/productCard.js?v=1.0.8"></script>
+  <script src="../../shared/components/loader.js?v=1.0.8"></script>
+  
+  <!-- Razorpay Checkout SDK -->
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+  <!-- Page script -->
+  <script src="../../shop/js/checkout.js?v=1.0.8"></script>
+</body>
+</html>

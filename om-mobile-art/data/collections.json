@@ -1,0 +1,38 @@
+[
+  {
+    "id": 1,
+    "name": "Anime Collection",
+    "slug": "anime",
+    "image": "https://lh3.googleusercontent.com/aida-public/AB6AXuAWZemF2MP94MBoM9Da5hPKQsIT9sA4Kw-eCGm_2jkW3e2lseyT3myJJvXUl6DvVdDhNXRXu2TbpcppeKwybD_4VUDSxRSPmS4wxsj76et2SLDtDJspAprAHPhg0p1EDRP873BilOjXHzddxHjgWbNUDIwdXZKFfHrq7R4NQMr8V9QgPoz9rNtDZaUShvwpUhLHUzSUFT2-pDqNZEVNww6BuOsooDLaXxEsLtLlD-AMTqsUKzd1OPf-LgHqjzjNqbpTpwye8m1sVwA"
+  },
+  {
+    "id": 2,
+    "name": "Marvel Edition",
+    "slug": "marvel",
+    "image": "https://lh3.googleusercontent.com/aida-public/AB6AXuBYnPO-qED1PlSChAUTvBxzzE0ZSHz4uKkPUeahVzDftVi2s2RRI2Z5KUzQhvmjwrYS0celseczhC8vtZ-GCKTiFvPys52OtMDRG6LNfLp36QVjVdpJG4Dh0ejKgIdkINidq56I6JbD0KJ5gGDeN5O6nLJcbHRLka7jOHIGqQkTpvkgEOTaJePNydQSFhJCgoEkM-L2FGM6EGjThAO3J8DbLjWZ7CTR-9AFclHhBP5-oYVnCgDFDfzOXRBX6JlblaWUR_VF4K4lhvI"
+  },
+  {
+    "id": 3,
+    "name": "Gaming Gear",
+    "slug": "gaming",
+    "image": "https://lh3.googleusercontent.com/aida-public/AB6AXuA0PbpLjMq9NmPJL3YlGG_bakeGffy52nituv8DUQzUt1tTc_0hNduuk4VJI1gt8l9FeIGv1KLILZdeWv3gn5f7hl81sqlk4Q7NMRs7fg7G_M6_Q0CTPCtV24np0xfz5VUXCHLhHTXi8EqjjbylMeRmPHE5-ahjp0R_qbVR5_MnSpABd3nsLKBm3IUVgTV1Uq1SojhfiBIYZIosqAoArDPSjeDTCqcGtMrFd-CukY8MxRAMKyrm5fP7XHrof1bNFeJNPf7xAwC2EI0"
+  },
+  {
+    "id": 4,
+    "name": "Nature Series",
+    "slug": "nature",
+    "image": "https://lh3.googleusercontent.com/aida-public/AB6AXuDUAr8QecGtUiFufrNv4A-cFZEcDq9C6brYs9yUc8mD7tWHFCzZSl-jmdRmtHpS2eIxYeEaL9iLf55v1e8afKwhmbtWLEvS6ow7KtIo0E8KlOeAD8zds3zONzkt_9MDC-L_VCSaOPH_p999h1ievpzaHLo1h43ye072lcmqOg3menlC0IrsO6fxMvniAp1NLw6qPFIJgbMb8YNP_Tt7IWk85PdXwB1DTlCsIbicUroIbcydsSnOAXsOc95_GV5rFslDxheQIcEp4_c"
+  },
+  {
+    "id": 5,
+    "name": "God Collection",
+    "slug": "gods",
+    "image": "https://lh3.googleusercontent.com/aida-public/AB6AXuD-V--0Nmn23T77DNjV7BMs8ft_JFe9evlZt33BQSwhJyOR5IXpIfAXtvsP5pL0w1UBiIHauC5TeyMhu_82fRRL164vmtO33SZX7G4kchHtpzQbvjEW267xV0fr_5AgKRVYwATL8PedzngSrGoqZb5JHZSLfynxeXxjmOslJktvj_vwGNmiUq2fBC_B2XO3X1HO5gq1ravIR7K0E-HQTvmij-1KmyXQiUu5nU1xW82oOM7tBlY6RyfOVHBhkKk9km3xCQbHrtLWqxk"
+  },
+  {
+    "id": 6,
+    "name": "Carbon Fiber",
+    "slug": "carbon",
+    "image": "https://lh3.googleusercontent.com/aida-public/AB6AXuDAv3rLo5iLG3BkwTB6bd5h45wl3k20_Yh-ObG-kbCv0WChfhNAeHKmsCwQLcFOmu3mAfCdpWX3mEEgzSPPE75ckkAdlTQRTohxOfDpxgyynrpDH19a43Ci42B11nCAVRUyqbVyOpOX8xn2NxmO2M9dGGaatsJ8DJiKx1-VSXQjDb2TOW6b-r5udQal21I7sj4l3rTA0rITuBYQaKeElRylNc2eSdvsqyZjrGb_pl7w2cB-gJ61Q0aFe0i-8xxZU80sHSpMl8MhrfA"
+  }
+]

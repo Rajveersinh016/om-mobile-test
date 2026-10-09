@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <meta name="description" content="Your OM Mobile Art order has been placed successfully."/>
+    <title>Order Confirmed | OM Mobile Art</title>
+    <link rel="icon" type="image/png" href="../../assets/logos/logo.png?v=2.0"/>
+    <link rel="apple-touch-icon" href="../../assets/logos/logo.png?v=2.0"/>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <style>
+        body { font-family: 'DM Sans', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+    <script src="../../shared/js/tailwind-config-shop.js"></script>
+    <link rel="stylesheet" href="../../shared/css/shop-scrollbar.css?v=1.1"/>
+</head>
+<body class="bg-[#F8FAFC] font-body-main text-on-surface">
+    <!-- Announcement Bar -->
+    <div id="global-announcement-bar"></div>
+    
+    <!-- TopNavBar -->
+    <header id="shop-header-placeholder"></header>
+
+    <main class="store-container py-20 text-center space-y-8 min-h-[60vh] flex flex-col justify-center items-center">
+        <div class="flex items-center justify-center mx-auto min-h-[56px]">
+            <span class="material-symbols-outlined text-green-600 text-6xl">check_circle</span>
+        </div>
+        
+        <div class="space-y-3">
+            <h1 class="text-3xl font-extrabold text-[#03045E]">Thank You for Your Order!</h1>
+            <p class="text-gray-500 text-base max-w-md mx-auto">Your purchase was successful. We are preparing your precision-cut skins for shipment.</p>
+        </div>
+
+        <div class="bg-white border border-[#E5E7EB] p-6 rounded-2xl max-w-md w-full text-left space-y-4 shadow-sm">
+            <div class="flex justify-between border-b border-gray-100 pb-3 text-sm font-bold">
+                <span class="text-gray-500">Order ID:</span>
+                <span class="text-[#0077B6]" id="success-order-id">OM-XXXX</span>
+            </div>
+            <div class="flex justify-between border-b border-gray-100 pb-3 text-sm" id="payment-id-wrapper">
+                <span class="text-gray-500">Payment ID:</span>
+                <span class="font-mono text-xs font-bold text-gray-800" id="success-payment-id">pay_xxxxxx</span>
+            </div>
+            <div class="flex justify-between border-b border-gray-100 pb-3 text-sm">
+                <span class="text-gray-500">Payment Status:</span>
+                <span class="font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full text-xs" id="success-payment-status">Verified (PAID)</span>
+            </div>
+            <div class="flex justify-between border-b border-gray-100 pb-3 text-sm">
+                <span class="text-gray-500">Estimated Delivery:</span>
+                <span class="font-bold text-gray-800">3 - 5 Business Days</span>
+            </div>
+            <div class="text-center pt-2">
+                <p class="text-xs text-gray-400">A confirmation email has been sent to your registered address.</p>
+            </div>
+        </div>
+
+        <div class="flex gap-4">
+            <a href="shop.html" class="px-6 py-3 bg-[#0077B6] hover:bg-[#03045E] text-white font-bold rounded-[10px] transition-colors text-sm shadow-md">Continue Shopping</a>
+            <a href="profile.html#orders" class="px-6 py-3 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 font-bold rounded-[10px] transition-colors text-sm shadow-sm">View Orders</a>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer></footer>
+
+    <!-- DB and Main scripts -->
+    <script src="../../shared/js/storage.js"></script>
+    <script src="../../shared/js/api.js"></script>
+    <script src="../../shared/js/utils.js"></script>
+    <script src="../../shared/js/notifications.js"></script>
+    <script src="../../shared/components/navbar.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const orderId = urlParams.get('orderId') || 'OM-1000';
+            const paymentId = urlParams.get('paymentId');
+            const method = urlParams.get('paymentMethod');
+
+            const orderIdEl = document.getElementById('success-order-id');
+            const payIdEl = document.getElementById('success-payment-id');
+            const payIdWrap = document.getElementById('payment-id-wrapper');
+            const statusEl = document.getElementById('success-payment-status');
+
+            if (orderIdEl) orderIdEl.textContent = orderId;
+
+            if (paymentId && payIdEl) {
+                payIdEl.textContent = paymentId;
+            } else if (method === 'COD' && payIdWrap) {
+                payIdWrap.classList.add('hidden');
+                if (statusEl) {
+                    statusEl.textContent = 'Cash on Delivery (Pending)';
+                    statusEl.className = 'font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full text-xs';
+                }
+            }
+
+            // Trigger Confetti if available
+            if (window.OM && window.OM.triggerConfetti) {
+                setTimeout(() => {
+                    window.OM.triggerConfetti();
+                }, 300);
+            }
+        });
+    </script>
+</body>
+</html>

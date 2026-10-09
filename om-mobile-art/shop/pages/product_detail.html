@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <meta name="description" content="Premium 3M mobile skin by OM Mobile Art. Ultra-thin precision-cut protection for your device."/>
+    <title>Product Details | OM Mobile Art</title>
+    <link rel="icon" type="image/png" href="../../assets/logos/logo.png?v=2.0"/>
+    <link rel="apple-touch-icon" href="../../assets/logos/logo.png?v=2.0"/>
+    
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <script src="../../shared/js/tailwind-config-shop.js"></script>
+    
+    <style>
+        body {
+            font-family: 'DM Sans', sans-serif !important;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .active-tab {
+            border-bottom: 2px solid #03045E;
+            color: #03045E;
+        }
+        .thumbnail-active {
+            border: 2px solid #03045E;
+        }
+    </style>
+    <link rel="stylesheet" href="../../shared/css/shop-scrollbar.css?v=1.1"/>
+</head>
+<body class="bg-background text-on-surface font-body-main antialiased">
+    <!-- Header placeholder -->
+    <header id="shop-header-placeholder"></header>
+
+    <main class="store-container py-8 md:py-12">
+        <!-- Breadcrumb -->
+        <nav class="flex items-center space-x-2 text-text-muted text-[13px] mb-stack-md">
+            <a class="hover:text-primary" href="home.html">Home</a>
+            <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+            <a class="hover:text-primary" href="shop.html">Shop</a>
+            <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+            <span class="text-on-surface font-medium" id="breadcrumb-product-title">Loading...</span>
+        </nav>
+
+        <div class="flex flex-col md:flex-row gap-gutter">
+            <!-- Left: Image Gallery (55%) -->
+            <div class="w-full md:w-[55%] space-y-4">
+                <div class="relative aspect-square bg-[#F8FAFC] border border-border-subtle rounded-2xl overflow-hidden group flex items-center justify-center p-4 sm:p-6 shadow-sm">
+                    <img class="max-w-full max-h-full object-contain p-2 transition-transform duration-300" id="main-product-image" src="" alt="Main product view"/>
+                    <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/5 cursor-zoom-in pointer-events-none">
+                        <span class="material-symbols-outlined text-on-surface text-4xl">zoom_in</span>
+                    </div>
+                </div>
+                <div class="grid grid-cols-5 gap-4" id="product-thumbnails-grid">
+                    <!-- Loaded dynamically -->
+                </div>
+            </div>
+
+            <!-- Right: Product Information (45%) -->
+            <div class="w-full md:w-[45%] space-y-6">
+                <div>
+                    <h1 class="font-headline-h2 text-headline-h2 font-bold mb-2">Loading...</h1>
+                    <div id="product-rating-container" class="flex items-center space-x-2">
+                        <span class="text-text-muted text-xs font-semibold">No Reviews Yet</span>
+                    </div>
+                </div>
+
+                <!-- Price Container -->
+                <div class="flex items-baseline space-x-4" id="detail-price-container">
+                </div>
+
+                <div class="space-y-4">
+                    <!-- Stepped Hierarchical Device Selector -->
+                    <div class="space-y-3" id="hierarchical-device-selector">
+                        <!-- Product Type Badge -->
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="text-[10px] font-extrabold text-[#888888] uppercase tracking-wider">Product Type:</span>
+                            <span id="product-type-badge" class="px-2.5 py-0.5 bg-[#03045E]/10 text-[#03045E] text-xs font-bold rounded-full border border-[#03045E]/20">Back Skin</span>
+                        </div>
+
+                        <!-- 1. Device Type Selector -->
+                        <div class="space-y-1" id="selector-container-device-type">
+                            <label class="text-[10px] font-extrabold text-[#888888] uppercase tracking-wider block">1. Select Device Type</label>
+                            <select id="select-device-type" class="w-full h-11 px-3 bg-white border border-border-subtle rounded-xl text-xs font-bold text-[#111111] focus:outline-none focus:border-[#03045E] focus:ring-0 transition-colors cursor-pointer">
+                                <option value="" disabled selected>Select Device Type</option>
+                            </select>
+                        </div>
+
+                        <!-- 2. Brand Selector -->
+                        <div class="space-y-1" id="selector-container-brand">
+                            <label class="text-[10px] font-extrabold text-[#888888] uppercase tracking-wider block">2. Select Brand</label>
+                            <select id="select-brand" disabled class="w-full h-11 px-3 bg-white border border-border-subtle rounded-xl text-xs font-bold text-[#111111] focus:outline-none focus:border-[#03045E] focus:ring-0 transition-colors disabled:opacity-50 disabled:bg-gray-50 cursor-pointer">
+                                <option value="" disabled selected>Select Brand</option>
+                            </select>
+                        </div>
+
+                        <!-- 3. Model Selector -->
+                        <div class="space-y-1" id="selector-container-model">
+                            <label class="text-[10px] font-extrabold text-[#888888] uppercase tracking-wider block">3. Select Model</label>
+                            <select id="select-model" disabled class="w-full h-11 px-3 bg-white border border-border-subtle rounded-xl text-xs font-bold text-[#111111] focus:outline-none focus:border-[#03045E] focus:ring-0 transition-colors disabled:opacity-50 disabled:bg-gray-50 cursor-pointer">
+                                <option value="" disabled selected>Select Model</option>
+                            </select>
+
+                            <!-- Custom Model Name Input Fallback (Camera & Camera Lens Products Only) -->
+                            <div id="custom-model-input-wrapper" class="hidden mt-3 space-y-1.5 pt-1">
+                                <label for="input-custom-model" class="text-[10px] font-extrabold text-[#888888] uppercase tracking-wider block">
+                                    MODEL NAME <span class="text-red-500">*</span>
+                                </label>
+                                <input type="text" id="input-custom-model" maxlength="255"
+                                       class="w-full h-11 px-3 bg-white border border-border-subtle rounded-xl text-xs font-bold text-[#111111] focus:outline-none focus:border-[#03045E] focus:ring-0 transition-colors"
+                                       placeholder="e.g. Canon EF 70-200mm f/2.8L IS II USM Telephoto Zoom Lens" />
+                                <p class="text-[11px] text-gray-500 font-medium">Enter the complete model name, including series, numbers and specifications.<br/>Example: Canon EF 70-200mm f/2.8L IS II USM Telephoto Zoom Lens</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Finish Options -->
+                    <div class="space-y-2">
+                        <label class="text-label-caps text-text-muted uppercase">Select Finish</label>
+                        <div class="flex gap-3" id="finish-options-container">
+                            <!-- Populated dynamically -->
+                        </div>
+                    </div>
+
+                    <!-- Material Options -->
+                    <div class="space-y-2">
+                        <label class="text-label-caps text-text-muted uppercase">Select Material</label>
+                        <div class="flex gap-3" id="material-options-container">
+                            <!-- Populated dynamically -->
+                        </div>
+                    </div>
+
+                    <!-- Quantity stepper, Cart and Wishlist actions -->
+                    <div class="flex items-center space-x-4 pt-4">
+                        <div class="flex items-center border border-border-subtle rounded-lg h-[44px]" id="quantity-stepper-container">
+                            <button onclick="adjustQty(-1)" class="px-3 hover:text-primary"><span class="material-symbols-outlined">remove</span></button>
+                            <span class="px-4 font-bold border-x border-border-subtle h-full flex items-center" id="qty-indicator">1</span>
+                            <button onclick="adjustQty(1)" class="px-3 hover:text-primary"><span class="material-symbols-outlined">add</span></button>
+                        </div>
+                        <div class="flex-1 flex gap-3">
+                            <button id="btn-add-to-cart" class="flex-1 border-2 border-badge-sale text-badge-sale font-button-text text-button-text h-[44px] rounded-lg hover:bg-badge-sale/5 transition-colors">Add to Cart</button>
+                            <button id="btn-buy-now" class="flex-[1.5] bg-badge-sale text-on-primary font-button-text text-button-text h-[44px] rounded-lg hover:bg-accent-hover transition-colors shadow-sm active:scale-95">Buy Now</button>
+                        </div>
+                    </div>
+                    <!-- Specs placeholder (SKU & Stock Status) -->
+                    <div id="model-specs-block" class="hidden mt-4 border-t border-border-subtle/50 pt-4 text-xs space-y-1.5 text-text-secondary">
+                    </div>
+                </div>
+
+                <!-- Premium Delivery & Guarantee Badges -->
+                <div class="pt-6 border-t border-border-subtle flex flex-col sm:flex-row gap-3 sm:items-center justify-between text-xs font-bold text-[#03045E]">
+                    <div class="flex items-center space-x-2 bg-[#CAF0F8]/40 px-3.5 py-2.5 rounded-xl border border-[#90E0EF]/60 flex-1">
+                        <span class="text-base">🚚</span>
+                        <span>Free Shipping Across India</span>
+                    </div>
+                    <div class="flex items-center space-x-2 bg-[#CAF0F8]/40 px-3.5 py-2.5 rounded-xl border border-[#90E0EF]/60 flex-1">
+                        <span class="text-base">📦</span>
+                        <span>Dispatch within 24 Hours</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabs Section: Description | Installation Guide | Reviews (0) -->
+        <div class="mt-section-padding border-t border-border-subtle">
+            <div class="flex items-center justify-center space-x-8 sm:space-x-12 border-b border-border-subtle">
+                <button id="tab-btn-description" onclick="window.switchProductTab('description')" class="py-4 font-bold text-xs sm:text-sm uppercase tracking-widest active-tab border-b-2 border-[#03045E] text-[#03045E] transition-all cursor-pointer">Description</button>
+                <button id="tab-btn-installation" onclick="window.switchProductTab('installation')" class="py-4 font-bold text-xs sm:text-sm uppercase tracking-widest text-text-muted hover:text-primary transition-all cursor-pointer">Installation Guide</button>
+                <button id="tab-btn-reviews" onclick="window.switchProductTab('reviews')" class="py-4 font-bold text-xs sm:text-sm uppercase tracking-widest text-text-muted hover:text-primary transition-all cursor-pointer">Customer Reviews</button>
+            </div>
+
+            <div class="py-10 max-w-4xl mx-auto">
+                <!-- TAB 1: DESCRIPTION (Default Active) -->
+                <div id="tab-content-description" class="space-y-8">
+                    <p class="text-body-main leading-relaxed text-center text-on-surface-variant max-w-2xl mx-auto" id="product-long-description">
+                        Premium textured skin providing exceptional scratch resistance and enhanced grip.
+                    </p>
+                    <div class="grid md:grid-cols-3 gap-6 py-4">
+                        <div class="text-center space-y-2 p-5 bg-[#F8FAFC] border border-border-subtle/60 rounded-2xl shadow-sm">
+                            <span class="material-symbols-outlined text-primary text-3xl">texture</span>
+                            <h4 class="font-bold text-sm text-gray-900">Textured Feel</h4>
+                            <p class="text-xs text-text-muted">Real-touch 3M vinyl texture for non-slip grip.</p>
+                        </div>
+                        <div class="text-center space-y-2 p-5 bg-[#F8FAFC] border border-border-subtle/60 rounded-2xl shadow-sm">
+                            <span class="material-symbols-outlined text-primary text-3xl">shield</span>
+                            <h4 class="font-bold text-sm text-gray-900">Zero Residue</h4>
+                            <p class="text-xs text-text-muted">Air-release technology for bubble-free application.</p>
+                        </div>
+                        <div class="text-center space-y-2 p-5 bg-[#F8FAFC] border border-border-subtle/60 rounded-2xl shadow-sm">
+                            <span class="material-symbols-outlined text-primary text-3xl">bolt</span>
+                            <h4 class="font-bold text-sm text-gray-900">Heat Resistant</h4>
+                            <p class="text-xs text-text-muted">Precision 0.23mm cut that doesn't restrict cooling.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 2: INSTALLATION GUIDE (Universal) -->
+                <div id="tab-content-installation" class="hidden space-y-8">
+                    <div class="text-center max-w-xl mx-auto">
+                        <h3 class="text-base font-bold text-[#03045E] mb-1">Universal Step-by-Step Installation Guide</h3>
+                        <p class="text-xs text-text-muted">Follow these 6 simple steps for a bubble-free, precision fit application.</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                        <div class="p-4 bg-white border border-gray-200 rounded-2xl space-y-2 shadow-sm">
+                            <div class="w-8 h-8 rounded-xl bg-[#03045E]/10 text-[#03045E] font-extrabold text-xs flex items-center justify-center">Step 1</div>
+                            <h5 class="font-bold text-xs text-gray-900">Clean the Screen / Body</h5>
+                            <p class="text-[11px] text-gray-500">Thoroughly clean your device using a microfiber cloth and cleaning wipe.</p>
+                        </div>
+                        <div class="p-4 bg-white border border-gray-200 rounded-2xl space-y-2 shadow-sm">
+                            <div class="w-8 h-8 rounded-xl bg-[#03045E]/10 text-[#03045E] font-extrabold text-xs flex items-center justify-center">Step 2</div>
+                            <h5 class="font-bold text-xs text-gray-900">Remove Dust</h5>
+                            <p class="text-[11px] text-gray-500">Use a dust sticker to lift any microscopic lint or particles off the surface.</p>
+                        </div>
+                        <div class="p-4 bg-white border border-gray-200 rounded-2xl space-y-2 shadow-sm">
+                            <div class="w-8 h-8 rounded-xl bg-[#03045E]/10 text-[#03045E] font-extrabold text-xs flex items-center justify-center">Step 3</div>
+                            <h5 class="font-bold text-xs text-gray-900">Align Carefully</h5>
+                            <p class="text-[11px] text-gray-500">Peel backing paper slightly and align carefully with camera cutouts and edges.</p>
+                        </div>
+                        <div class="p-4 bg-white border border-gray-200 rounded-2xl space-y-2 shadow-sm">
+                            <div class="w-8 h-8 rounded-xl bg-[#03045E]/10 text-[#03045E] font-extrabold text-xs flex items-center justify-center">Step 4</div>
+                            <h5 class="font-bold text-xs text-gray-900">Apply Slowly</h5>
+                            <p class="text-[11px] text-gray-500">Apply slowly from top to bottom, letting air release channels push out trapped air.</p>
+                        </div>
+                        <div class="p-4 bg-white border border-gray-200 rounded-2xl space-y-2 shadow-sm">
+                            <div class="w-8 h-8 rounded-xl bg-[#03045E]/10 text-[#03045E] font-extrabold text-xs flex items-center justify-center">Step 5</div>
+                            <h5 class="font-bold text-xs text-gray-900">Push Out Air Bubbles</h5>
+                            <p class="text-[11px] text-gray-500">Use a squeegee card or soft cloth to smooth out any remaining micro-bubbles.</p>
+                        </div>
+                        <div class="p-4 bg-white border border-gray-200 rounded-2xl space-y-2 shadow-sm">
+                            <div class="w-8 h-8 rounded-xl bg-[#03045E]/10 text-[#03045E] font-extrabold text-xs flex items-center justify-center">Step 6</div>
+                            <h5 class="font-bold text-xs text-gray-900">Heat Edges for Contour Fit</h5>
+                            <p class="text-[11px] text-gray-500">Gently warm corners with a hairdryer for 3 seconds for a 100% seamless fit.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 3: REVIEWS (Genuine Customer Reviews) -->
+                <div id="tab-content-reviews" class="hidden space-y-6">
+                    <div id="reviews-tab-container">
+                        <div class="p-8 text-center bg-[#F8FAFC] border border-dashed border-gray-300 rounded-3xl max-w-lg mx-auto space-y-3">
+                            <span class="material-symbols-outlined text-4xl text-gray-400">rate_review</span>
+                            <h4 class="font-bold text-base text-gray-900">No Reviews Yet</h4>
+                            <p class="text-xs text-gray-500 max-w-xs mx-auto">This product hasn't received any reviews yet. Be the first to review it after your purchase.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Related Products -->
+        <div class="mt-section-padding space-y-8" id="related-products-container">
+            <!-- Populated dynamically -->
+        </div>
+
+        <!-- Product Reviews Section -->
+        <div class="mt-section-padding border-t border-border-subtle pt-10 space-y-8" id="reviews-section-container">
+            <!-- Populated dynamically -->
+        </div>
+    </main>
+
+    <!-- Footer placeholder -->
+    <footer id="shop-footer-placeholder"></footer>
+
+    <!-- Database and script dependencies -->
+    <script src="../../shared/js/storage.js?v=1.0.4"></script>
+    <script src="../../shared/js/api.js?v=1.0.4"></script>
+    <script src="../../shared/js/utils.js?v=1.0.4"></script>
+    <script src="../../shared/js/notifications.js?v=1.0.4"></script>
+    <script src="../../shared/js/review-component.js?v=1.0.4"></script>
+    <script src="../../shared/components/navbar.js?v=1.0.4"></script>
+    <script src="../../shared/components/productCard.js?v=1.0.4"></script>
+    <script src="../../shared/components/loader.js?v=1.0.4"></script>
+    <script src="../../shop/js/product_detail.js?v=1.0.4"></script>
+</body>
+</html>

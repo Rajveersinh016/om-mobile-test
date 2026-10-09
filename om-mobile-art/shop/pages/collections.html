@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <meta name="description" content="Discover OM Mobile Art premium design collections - Anime, Marvel, Carbon Fiber, and more."/>
+  <title>Design Collections | OM Mobile Art</title>
+  <link rel="icon" type="image/png" href="/assets/logos/logo.png?v=2.0"/>
+  <link rel="apple-touch-icon" href="/assets/logos/logo.png?v=2.0"/>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <script src="/shared/js/tailwind-config-shop.js"></script>
+  <style>
+    body { font-family: 'DM Sans', sans-serif; }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+  </style>
+  <link rel="stylesheet" href="/shared/css/shop-scrollbar.css?v=1.1"/>
+</head>
+<body class="bg-[#F8FAFC] text-[#111827] font-body-main antialiased">
+  <!-- Announcement Bar -->
+  <div id="global-announcement-bar"></div>
+
+  <!-- Global Header (TopNavBar) -->
+  <header id="shop-header-placeholder"></header>
+
+  <main class="store-container py-12 space-y-16">
+    <!-- Header Section -->
+    <div class="text-center max-w-2xl mx-auto space-y-4">
+      <span class="text-xs font-bold text-[#0077B6] uppercase tracking-widest block">Design Gallery</span>
+      <h1 class="text-4xl font-extrabold text-[#03045E] sm:text-5xl">Explore Our Collections</h1>
+      <p class="text-gray-500 text-lg">Discover curated artwork, textures, and premium themes precision-crafted to transform your device.</p>
+    </div>
+
+    <!-- Collections Gallery Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-10" id="collections-gallery-grid">
+      <!-- Rendered dynamically by collections.js -->
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer></footer>
+
+  <!-- DB and Main scripts -->
+  <script src="/shared/js/storage.js"></script>
+  <script src="/shared/js/api.js"></script>
+  <script src="/shared/js/utils.js"></script>
+  <script src="/shared/js/notifications.js"></script>
+  <script src="/shared/components/navbar.js"></script>
+  <script src="/shared/components/loader.js"></script>
+  
+  <script src="/shop/js/collections.js"></script>
+</body>
+</html>

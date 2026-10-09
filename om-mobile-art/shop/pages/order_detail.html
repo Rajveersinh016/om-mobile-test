@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1.0" name="viewport"/>
+<title>Order Details | OM Mobile Art</title>
+<meta name="description" content="View your OM Mobile Art order details and status."/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<style>.material-symbols-outlined{font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24;}</style>
+<script src="../../shared/js/tailwind-config-shop.js"></script>
+
+  <link rel="stylesheet" href="../../shared/css/shop-scrollbar.css?v=1.1"/>
+</head>
+<body class="bg-background font-body-main text-on-surface">
+
+<header></header>
+<main class="store-container py-16">
+  <div class="max-w-3xl mx-auto space-y-6" id="order-detail-container">
+    <div class="flex items-center gap-3 mb-2">
+      <a href="profile.html#orders" class="flex items-center gap-1 text-primary hover:underline text-sm font-medium">
+        <span class="material-symbols-outlined text-[18px]">arrow_back</span>Back to Orders
+      </a>
+    </div>
+    <div id="order-detail-content" class="space-y-6">
+      <p class="text-text-muted text-center py-12">Loading order details...</p>
+    </div>
+  </div>
+</main>
+<footer></footer>
+<script src="../../shared/js/storage.js"></script>
+<script src="../../shared/js/utils.js"></script>
+<script src="../../shared/js/notifications.js"></script>
+<script src="../../shared/components/navbar.js" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded',()=>{
+  const id=new URLSearchParams(window.location.search).get('id');
+  const el=document.getElementById('order-detail-content');
+  if(!id||!window.DB){el.innerHTML='<p class="text-center text-red-600">Order not found.</p>';return;}
+  const order=window.DB.getOrders().find(o=>o.id===id);
+  if(!order){el.innerHTML='<p class="text-center text-text-muted">Order '+id+' not found.</p>';return;}
+  const statusColors={'Delivered':'bg-green-100 text-green-700','Shipped':'bg-blue-100 text-blue-700','Printing':'bg-purple-100 text-purple-700','Placed':'bg-yellow-100 text-yellow-700','Cancelled':'bg-red-100 text-red-700'};
+  const statusCls=statusColors[order.status]||'bg-gray-100 text-gray-700';
+  
+  const itemsHtml = order.items.map(item => `
+    <div class="flex gap-4 items-center">
+      <img src="${item.image}" class="w-16 h-16 object-contain p-1 rounded-xl bg-[#F8FAFC] border border-border-subtle flex-shrink-0">
+      <div class="flex-1">
+        <p class="font-medium">${item.name}</p>
+        <p class="text-xs text-text-muted mt-0.5">${item.device} &middot; ${item.finish} &middot; Qty: ${item.qty}</p>
+      </div>
+      <p class="font-bold">₹${Math.round(item.price*item.qty*80).toLocaleString('en-IN')}</p>
+    </div>
+  `).join('');
+
+  el.innerHTML=`
+    <div class="bg-surface-container-lowest border border-border-subtle rounded-xl p-6 space-y-4">
+      <div class="flex flex-wrap justify-between items-start gap-4">
+        <div>
+          <h1 class="font-headline-h2 text-2xl font-bold">${order.id}</h1>
+          <p class="text-text-muted text-sm mt-0.5">${new Date(order.date).toLocaleDateString('en-IN',{year:'numeric',month:'long',day:'numeric'})}</p>
+        </div>
+        <span class="px-3 py-1 rounded-full text-sm font-medium ${statusCls}">${order.status}</span>
+      </div>
+      <div class="border-t border-border-subtle pt-4 space-y-3">
+        <h2 class="font-semibold text-sm uppercase tracking-wider text-text-muted">Items Ordered</h2>
+        ${itemsHtml}
+      </div>
+      <div class="border-t border-border-subtle pt-4 space-y-2 text-sm">
+        <div class="flex justify-between"><span class="text-text-muted">Subtotal</span><span>₹${Math.round((order.subtotal||0)*80).toLocaleString('en-IN')}</span></div>
+        ${order.discount>0?`<div class="flex justify-between text-green-600"><span>Discount</span><span>-₹${Math.round(order.discount*80).toLocaleString('en-IN')}</span></div>`:''}
+        <div class="flex justify-between"><span class="text-text-muted">Shipping</span><span>${order.shipping>0?'₹'+Math.round(order.shipping*80).toLocaleString('en-IN'):'Free'}</span></div>
+        <div class="flex justify-between font-bold text-base pt-2 border-t border-border-subtle"><span>Total</span><span class="text-primary">₹${Math.round(order.total*80).toLocaleString('en-IN')}</span></div>
+      </div>
+    </div>
+    <div class="bg-surface-container-lowest border border-border-subtle rounded-xl p-6 space-y-2">
+      <h2 class="font-semibold text-sm uppercase tracking-wider text-text-muted mb-3">Shipping Address</h2>
+      <p class="font-medium">${order.shippingAddress.firstName} ${order.shippingAddress.lastName}</p>
+      <p class="text-text-secondary text-sm">${order.shippingAddress.street}, ${order.shippingAddress.city} — ${order.shippingAddress.zip}</p>
+    </div>
+  `;
+});
+</script>
+</body>
+</html>

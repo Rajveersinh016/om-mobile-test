@@ -1,0 +1,23 @@
+{
+  "name": "om-mobile-art",
+  "version": "1.0.0",
+  "description": "OM Mobile Art - E-Commerce Storefront & Admin Panel",
+  "main": "index.html",
+  "scripts": {
+    "build:css": "tailwindcss -i ./shared/css/input.css -o ./shared/css/styles.css",
+    "dev": "tailwindcss -i ./shared/css/input.css -o ./shared/css/styles.css --watch",
+    "serve": "npx serve -p 8080"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "@tailwindcss/postcss": "^4.0.0",
+    "postcss": "^8.5.0",
+    "tailwindcss": "^4.0.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.0.0"
+  }
+}

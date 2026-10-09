@@ -1,0 +1,10 @@
+node_modules/
+.env
+.env.*
+!.env.example
+dist/
+build/
+coverage/
+*.log
+om-mobile-art/data/users.json
+om-mobile-art/data/orders.json

@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <meta name="description" content="Track your order and shipment for OM Mobile Art precision skins."/>
+    <title>Track Order | OM Mobile Art</title>
+    <link rel="icon" type="image/png" href="../../assets/logos/logo.png?v=2.0"/>
+    <link rel="apple-touch-icon" href="../../assets/logos/logo.png?v=2.0"/>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <style>
+        body { font-family: 'DM Sans', sans-serif; background-color: #F8FAFC; color: #111827; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .stepper-line { position: absolute; top: 20px; left: 28px; right: 28px; height: 3px; background: #E2E8F0; z-index: 0; }
+        .stepper-progress { position: absolute; top: 20px; left: 28px; height: 3px; background: #0077B6; z-index: 1; transition: width 500ms ease; }
+    </style>
+    <script src="../../shared/js/tailwind-config-shop.js"></script>
+    <link rel="stylesheet" href="../../shared/css/shop-scrollbar.css?v=1.1"/>
+</head>
+<body class="bg-[#F8FAFC] font-body-main text-[#111827]">
+    <!-- Announcement Bar -->
+    <div id="global-announcement-bar"></div>
+    
+    <!-- TopNavBar -->
+    <header id="shop-header-placeholder"></header>
+
+    <main class="store-container py-12 min-h-[75vh]">
+        <!-- Page Title & Hero Search -->
+        <div class="text-center space-y-4 max-w-xl mx-auto mb-10">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-[#CAF0F8] text-[#0077B6] font-extrabold text-xs rounded-full">
+                <span class="material-symbols-outlined text-sm">local_shipping</span>
+                Live Order Tracking
+            </span>
+            <h1 class="text-3xl font-extrabold text-[#03045E]">Track Your Order</h1>
+            <p class="text-gray-500 text-xs">Enter your <strong>Order Number</strong> (e.g. OM-2608-0001) or <strong>Tracking Number</strong> to view real-time delivery status.</p>
+            
+            <form id="tracking-search-form" class="flex gap-2 max-w-md mx-auto pt-2">
+                <input id="tracking-input" type="text" placeholder="Enter Order # or Tracking Number..." required class="flex-grow h-12 px-4 border border-gray-300 rounded-xl text-xs font-bold focus:outline-none focus:border-[#0077B6] shadow-sm"/>
+                <button type="submit" id="track-btn" class="h-12 px-6 bg-[#0077B6] hover:bg-[#03045E] text-white font-extrabold rounded-xl transition-all text-xs shadow-md flex items-center justify-center gap-1">
+                    <span class="material-symbols-outlined text-base">search</span>
+                    Track
+                </button>
+            </form>
+        </div>
+
+        <!-- Loading State -->
+        <div id="tracking-loader" class="hidden text-center py-16">
+            <div class="inline-block w-8 h-8 border-4 border-[#0077B6] border-t-transparent rounded-full animate-spin"></div>
+            <p class="text-xs text-gray-500 font-bold mt-3">Fetching shipment checkpoints...</p>
+        </div>
+
+        <!-- Error State -->
+        <div id="tracking-error" class="hidden max-w-md mx-auto bg-red-50 border border-red-200 text-red-700 p-4 rounded-xl text-center text-xs font-bold space-y-1">
+            <span class="material-symbols-outlined text-2xl text-red-500">error</span>
+            <p id="tracking-error-msg">No shipment records found for this tracking number.</p>
+        </div>
+
+        <!-- Tracking Results Card -->
+        <div id="tracking-result" class="hidden bg-white border border-[#E5E7EB] rounded-2xl shadow-sm p-6 md:p-8 space-y-8">
+            
+            <!-- Summary Header -->
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-gray-100 pb-6 gap-4">
+                <div>
+                    <div class="flex items-center gap-3">
+                        <h2 class="text-xl font-extrabold text-[#03045E]" id="result-order-num">OM-XXXX</h2>
+                        <span id="result-status-badge" class="px-3 py-1 bg-emerald-100 text-emerald-800 font-extrabold text-xs rounded-full uppercase">PAID</span>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-1">Carrier: <strong class="text-gray-800" id="result-carrier">Standard Courier</strong> | AWB: <strong class="font-mono text-[#0077B6]" id="result-awb">-</strong></p>
+                </div>
+                <div class="text-left md:text-right bg-blue-50/50 p-3 rounded-xl border border-blue-100 min-w-[200px]">
+                    <div class="text-[10px] text-gray-500 font-bold uppercase tracking-wider">Estimated Delivery</div>
+                    <div class="text-sm font-extrabold text-[#03045E]" id="result-delivery-date">3 - 5 Business Days</div>
+                </div>
+            </div>
+
+            <!-- Visual Progress Stepper -->
+            <div class="relative py-4 px-2">
+                <div class="stepper-line"></div>
+                <div id="stepper-progress-bar" class="stepper-progress" style="width: 20%;"></div>
+
+                <div class="relative z-10 grid grid-cols-6 gap-2 text-center" id="stepper-steps-container">
+                    <!-- Dynamic Stepper Nodes rendered via JS -->
+                </div>
+            </div>
+
+            <!-- Detailed Checkpoints Table -->
+            <div class="space-y-4 pt-4 border-t border-gray-100">
+                <h3 class="text-sm font-extrabold text-[#03045E] uppercase tracking-wider flex items-center gap-2">
+                    <span class="material-symbols-outlined text-base text-[#0077B6]">history</span>
+                    Shipment Activity & Checkpoint History
+                </h3>
+
+                <div class="overflow-x-auto border border-gray-200 rounded-xl">
+                    <table class="w-full text-left text-xs">
+                        <thead class="bg-gray-50 text-gray-500 font-extrabold uppercase border-b border-gray-200">
+                            <tr>
+                                <th class="p-3">Timestamp</th>
+                                <th class="p-3">Location / Hub</th>
+                                <th class="p-3">Activity Details</th>
+                                <th class="p-3">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="checkpoint-table-body" class="divide-y divide-gray-100 font-medium text-gray-700">
+                            <!-- Checkpoints inserted via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex flex-wrap gap-3 pt-4 border-t border-gray-100 justify-between items-center">
+                <div class="flex gap-2">
+                    <a id="label-link" target="_blank" href="#" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-800 font-bold rounded-lg transition-colors text-xs flex items-center gap-1">
+                        <span class="material-symbols-outlined text-sm">print</span>
+                        Print Shipping Label
+                    </a>
+                </div>
+                <div class="flex gap-2">
+                    <a href="profile.html#orders" class="px-4 py-2 bg-[#0077B6] hover:bg-[#03045E] text-white font-bold rounded-lg transition-colors text-xs">View All Orders</a>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer></footer>
+
+    <!-- DB and Main scripts -->
+    <script src="../../shared/js/storage.js"></script>
+    <script src="../../shared/js/api.js"></script>
+    <script src="../../shared/js/utils.js"></script>
+    <script src="../../shared/js/notifications.js"></script>
+    <script src="../../shared/components/navbar.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const queryNum = urlParams.get('trackingNumber') || urlParams.get('orderId') || urlParams.get('id');
+            const form = document.getElementById('tracking-search-form');
+            const input = document.getElementById('tracking-input');
+
+            if (queryNum) {
+                input.value = queryNum;
+                fetchTracking(queryNum);
+            }
+
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const val = input.value.trim();
+                if (val) {
+                    fetchTracking(val);
+                }
+            });
+        });
+
+        async function fetchTracking(identifier) {
+            const loader = document.getElementById('tracking-loader');
+            const errorBox = document.getElementById('tracking-error');
+            const resultBox = document.getElementById('tracking-result');
+
+            loader.classList.remove('hidden');
+            errorBox.classList.add('hidden');
+            resultBox.classList.add('hidden');
+
+            try {
+                const API_URL = window.API_URL || (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:3000/api/v1' : '/api/v1');
+                const res = await fetch(`${API_URL}/shipping/track/${encodeURIComponent(identifier)}`);
+                const data = await res.json();
+
+                loader.classList.add('hidden');
+
+                if (res.ok && data.success && data.data) {
+                    renderTrackingResults(data.data);
+                    resultBox.classList.remove('hidden');
+                } else {
+                    document.getElementById('tracking-error-msg').textContent = data.message || `No tracking information found for '${identifier}'.`;
+                    errorBox.classList.remove('hidden');
+                }
+            } catch (err) {
+                loader.classList.add('hidden');
+                document.getElementById('tracking-error-msg').textContent = "Failed to connect to tracking service. Please try again.";
+                errorBox.classList.remove('hidden');
+            }
+        }
+
+        function renderTrackingResults(info) {
+            document.getElementById('result-order-num').textContent = `Order #${info.orderNumber}`;
+            document.getElementById('result-carrier').textContent = info.carrier || 'Standard Courier';
+            document.getElementById('result-awb').textContent = info.trackingNumber;
+            document.getElementById('result-status-badge').textContent = info.currentStatus;
+
+            if (info.shippingLabelUrl) {
+                const API_URL = window.API_URL || (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:3000/api/v1' : '/api/v1');
+                document.getElementById('label-link').href = info.shippingLabelUrl.startsWith('http') ? info.shippingLabelUrl : `${API_URL}/shipping/label/${info.shipmentId || 'mock'}`;
+            }
+
+            if (info.estimatedDelivery) {
+                document.getElementById('result-delivery-date').textContent = new Date(info.estimatedDelivery).toLocaleDateString('en-IN', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
+            }
+
+            // Render Stepper
+            const stepperContainer = document.getElementById('stepper-steps-container');
+            const progressBar = document.getElementById('stepper-progress-bar');
+            
+            const stepper = info.stepper || [];
+            let completedCount = 0;
+
+            stepperContainer.innerHTML = stepper.map((step, idx) => {
+                if (step.completed) completedCount++;
+                const isCurrent = step.completed && (idx === stepper.length - 1 || !stepper[idx + 1]?.completed);
+                
+                const nodeBg = step.completed ? (isCurrent ? 'bg-[#0077B6] text-white ring-4 ring-blue-100' : 'bg-[#0077B6] text-white') : 'bg-white border-2 border-gray-300 text-gray-400';
+                const icon = step.completed ? 'check' : 'radio_button_unchecked';
+
+                return `
+                    <div class="flex flex-col items-center gap-1.5">
+                        <div class="w-8 h-8 rounded-full ${nodeBg} flex items-center justify-center font-bold text-xs shadow-sm z-10 transition-all">
+                            <span class="material-symbols-outlined text-base">${icon}</span>
+                        </div>
+                        <span class="text-[10px] font-extrabold ${step.completed ? 'text-[#03045E]' : 'text-gray-400'}">${step.label}</span>
+                    </div>
+                `;
+            }).join('');
+
+            const progressPct = Math.min(100, Math.max(10, (completedCount / stepper.length) * 100));
+            progressBar.style.width = `${progressPct}%`;
+
+            // Render Events Table
+            const tbody = document.getElementById('checkpoint-table-body');
+            const events = info.events || [];
+
+            if (events.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-gray-400">No detailed checkpoint events recorded yet.</td></tr>`;
+            } else {
+                tbody.innerHTML = events.map(e => `
+                    <tr class="hover:bg-gray-50">
+                        <td class="p-3 whitespace-nowrap text-gray-500 font-mono text-[11px]">${new Date(e.timestamp).toLocaleString()}</td>
+                        <td class="p-3 font-bold text-gray-800">${e.location}</td>
+                        <td class="p-3 text-gray-600">${e.activity}</td>
+                        <td class="p-3"><span class="px-2 py-0.5 bg-blue-50 text-[#0077B6] font-bold text-[10px] rounded">${e.status}</span></td>
+                    </tr>
+                `).join('');
+            }
+        }
+    </script>
+</body>
+</html>

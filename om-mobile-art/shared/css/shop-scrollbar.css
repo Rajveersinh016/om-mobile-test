@@ -1,0 +1,133 @@
+/**
+ * OM Mobile Art — Premium Storefront Scrollbar Styling (shop-scrollbar.css)
+ * Uses Deep Navy (#03045E) and Royal Blue (#0077B6) for Webkit and Firefox.
+ */
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+::-webkit-scrollbar {
+  width: 6px !important;
+  height: 6px !important;
+}
+
+html::-webkit-scrollbar-track,
+body::-webkit-scrollbar-track,
+::-webkit-scrollbar-track {
+  background: transparent !important;
+}
+
+html::-webkit-scrollbar-thumb,
+body::-webkit-scrollbar-thumb,
+::-webkit-scrollbar-thumb {
+  background-color: #03045E !important;
+  border-radius: 999px !important;
+  border: 1px solid transparent !important;
+  background-clip: padding-box !important;
+}
+
+html::-webkit-scrollbar-thumb:hover,
+body::-webkit-scrollbar-thumb:hover,
+::-webkit-scrollbar-thumb:hover {
+  background-color: #0077B6 !important;
+}
+
+html::-webkit-scrollbar-thumb:active,
+body::-webkit-scrollbar-thumb:active,
+::-webkit-scrollbar-thumb:active {
+  background-color: #00B4D8 !important;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px !important;
+  height: 6px !important;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent !important;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #03045E !important;
+  border-radius: 999px !important;
+  border: 1px solid transparent !important;
+  background-clip: padding-box !important;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: #0077B6 !important;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:active {
+  background-color: #00B4D8 !important;
+}
+
+.no-scrollbar::-webkit-scrollbar,
+.hide-scrollbar::-webkit-scrollbar {
+  display: none !important;
+}
+
+html, body, * {
+  scrollbar-width: thin;
+  scrollbar-color: #03045E transparent;
+}
+
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #03045E transparent;
+}
+
+.no-scrollbar,
+.hide-scrollbar {
+  scrollbar-width: none !important;
+}
+
+html, body {
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+.overflow-x-auto {
+  overflow-x: auto;
+}
+
+/* ==========================================================================
+   OM Mobile Art — Centralized Storefront Container (Global Spacing Standard)
+   ========================================================================== */
+.store-container,
+.shop-container,
+.max-w-container-max-width {
+  width: 100% !important;
+  max-width: 1440px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding-left: 16px !important;
+  padding-right: 16px !important;
+}
+
+@media (min-width: 640px) {
+  .store-container,
+  .shop-container,
+  .max-w-container-max-width {
+    padding-left: 24px !important;
+    padding-right: 24px !important;
+  }
+}
+
+@media (min-width: 1024px) {
+  .store-container,
+  .shop-container,
+  .max-w-container-max-width {
+    padding-left: 32px !important;
+    padding-right: 32px !important;
+  }
+}
+
+@media (min-width: 1280px) {
+  .store-container,
+  .shop-container,
+  .max-w-container-max-width {
+    padding-left: 40px !important;
+    padding-right: 40px !important;
+  }
+}
+

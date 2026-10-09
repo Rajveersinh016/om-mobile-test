@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brands - Compatibility Management - OM Mobile Art Admin</title>
+  <link rel="icon" type="image/png" href="../../assets/logos/favicon.png"/>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+  <script src="../../shared/js/tailwind-config-admin.js"></script>
+  <link rel="stylesheet" href="../../shared/css/admin-scrollbar.css?v=1.1"/>
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #F8FBFF; }
+  </style>
+</head>
+<body class="text-gray-900 antialiased min-h-screen overflow-x-hidden">
+  <aside></aside>
+
+  <div class="ml-[220px] transition-all duration-300 min-h-screen flex flex-col">
+    <header class="h-16 bg-white border-b border-[#E5EEF8] px-6 flex items-center justify-between sticky top-0 z-40 shadow-xs"></header>
+
+    <main class="flex-1 p-6 space-y-6">
+      <!-- Top Title & Action Banner -->
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div>
+          <div class="flex items-center gap-2 text-xs font-bold text-gray-500 mb-1">
+            <a href="dashboard.html" class="hover:text-[#0077B6] transition-colors">Dashboard</a>
+            <span class="text-gray-300">/</span>
+            <span class="text-gray-500">Compatibility</span>
+            <span class="text-gray-300">/</span>
+            <span class="text-[#03045E] font-black">Brands</span>
+          </div>
+          <h1 class="text-2xl font-black text-[#03045E] mt-1">Brands Catalog</h1>
+          <p class="text-xs text-gray-500 font-medium">Manage hardware brands and link them to top-level device categories.</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="openImportModal()" class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-extrabold rounded-xl transition-all shadow-xs flex items-center gap-1.5 cursor-pointer">
+            <span class="material-symbols-outlined text-sm">upload_file</span> Bulk CSV Import
+          </button>
+          <button onclick="openBrandModal()" class="px-4 py-2.5 bg-[#0077B6] hover:bg-[#03045E] text-white text-xs font-extrabold rounded-xl transition-all shadow-sm hover:shadow-md flex items-center gap-2 cursor-pointer">
+            <span class="material-symbols-outlined text-sm">add</span> Add Brand
+          </button>
+        </div>
+      </div>
+
+      <!-- KPI Summary Cards -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="p-4 bg-white border border-[#E5EEF8] rounded-2xl shadow-xs">
+          <p class="text-[11px] font-bold text-gray-500 uppercase tracking-wider">Total Brands</p>
+          <p class="text-2xl font-black text-[#03045E] mt-1" id="kpi-total-brands">0</p>
+        </div>
+        <div class="p-4 bg-white border border-[#E5EEF8] rounded-2xl shadow-xs">
+          <p class="text-[11px] font-bold text-emerald-600 uppercase tracking-wider">Published</p>
+          <p class="text-2xl font-black text-emerald-700 mt-1" id="kpi-active-brands">0</p>
+        </div>
+        <div class="p-4 bg-white border border-[#E5EEF8] rounded-2xl shadow-xs">
+          <p class="text-[11px] font-bold text-amber-600 uppercase tracking-wider">Hidden / Draft</p>
+          <p class="text-2xl font-black text-amber-700 mt-1" id="kpi-hidden-brands">0</p>
+        </div>
+        <div class="p-4 bg-white border border-[#E5EEF8] rounded-2xl shadow-xs">
+          <p class="text-[11px] font-bold text-red-600 uppercase tracking-wider">Deleted (Trash)</p>
+          <p class="text-2xl font-black text-red-700 mt-1" id="kpi-deleted-brands">0</p>
+        </div>
+      </div>
+
+      <!-- Search, Filters & Bulk Actions -->
+      <div class="p-4 bg-white border border-[#E5EEF8] rounded-2xl shadow-xs flex flex-wrap items-center justify-between gap-3">
+        <div class="relative flex-1 min-w-[240px]">
+          <span class="material-symbols-outlined absolute left-3 top-2.5 text-gray-400 text-sm">search</span>
+          <input type="text" id="brand-search-input" placeholder="Search brands by name or slug..." oninput="renderBrandsGrid()" class="w-full h-9 pl-9 pr-3 border border-gray-300 rounded-xl text-xs font-bold text-gray-900 focus:border-[#0077B6] focus:outline-none"/>
+        </div>
+        <div class="flex flex-wrap items-center gap-2">
+          <select id="brand-device-filter" onchange="renderBrandsGrid()" class="h-9 px-3 border border-gray-300 rounded-xl text-xs font-bold text-gray-800 focus:border-[#0077B6] focus:outline-none bg-white">
+            <option value="all">All Device Categories</option>
+            <!-- Populated dynamically -->
+          </select>
+
+          <select id="brand-status-filter" onchange="renderBrandsGrid()" class="h-9 px-3 border border-gray-300 rounded-xl text-xs font-bold text-gray-800 focus:border-[#0077B6] focus:outline-none bg-white">
+            <option value="all">All Statuses (Active)</option>
+            <option value="PUBLISHED">Published Only</option>
+            <option value="HIDDEN">Hidden Only</option>
+            <option value="DRAFT">Draft Only</option>
+            <option value="deleted">Deleted (Trash)</option>
+          </select>
+
+          <select id="brand-bulk-action" onchange="handleBulkAction(this.value)" class="h-9 px-3 border border-gray-300 rounded-xl text-xs font-bold text-gray-800 focus:border-[#0077B6] focus:outline-none bg-white">
+            <option value="">Bulk Actions</option>
+            <option value="PUBLISH">Publish Selected</option>
+            <option value="HIDE">Hide Selected</option>
+            <option value="DELETE">Delete Selected</option>
+            <option value="RESTORE">Restore Selected</option>
+            <option value="MOVE">Move Category</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Selection Banner -->
+      <div id="selection-banner" class="hidden p-3 bg-[#CAF0F8]/50 border border-[#90E0EF] rounded-xl flex items-center justify-between text-xs font-bold text-[#03045E]">
+        <div>
+          <input type="checkbox" id="select-all-toggle" onchange="toggleSelectAll(this.checked)" class="mr-2 rounded border-gray-300 text-[#0077B6]"/>
+          <span id="selection-count">0 items selected</span>
+        </div>
+        <button onclick="clearSelection()" class="text-xs text-gray-500 hover:text-red-600">Clear Selection</button>
+      </div>
+
+      <!-- Brands Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4" id="brands-grid">
+        <!-- Rendered via JS -->
+      </div>
+    </main>
+  </div>
+
+  <!-- Modal Editor -->
+  <div id="brand-modal" class="fixed inset-0 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4 z-50 opacity-0 pointer-events-none transition-all duration-200">
+    <div class="bg-white rounded-2xl w-full max-w-lg p-6 shadow-2xl space-y-4 border border-[#E5EEF8]">
+      <div class="flex items-center justify-between border-b border-gray-100 pb-3">
+        <h3 class="text-base font-black text-[#03045E]" id="modal-brand-title">Add New Brand</h3>
+        <button onclick="closeBrandModal()" class="text-gray-400 hover:text-gray-600"><span class="material-symbols-outlined text-sm">close</span></button>
+      </div>
+
+      <form id="brand-form" onsubmit="handleSaveBrand(event)" class="space-y-4">
+        <input type="hidden" id="brand-id"/>
+        
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-extrabold uppercase tracking-wider text-gray-600 mb-1">Brand Name *</label>
+            <input type="text" id="brand-name" required placeholder="e.g. Apple, Samsung" oninput="autoGenerateSlug(this.value)" class="w-full h-10 px-3 border border-gray-300 rounded-xl text-xs font-bold text-gray-900 focus:border-[#0077B6] focus:outline-none"/>
+          </div>
+          <div>
+            <label class="block text-xs font-extrabold uppercase tracking-wider text-gray-600 mb-1">URL Slug</label>
+            <input type="text" id="brand-slug" placeholder="apple" class="w-full h-10 px-3 border border-gray-300 rounded-xl text-xs font-bold text-gray-900 focus:border-[#0077B6] focus:outline-none bg-gray-50"/>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-extrabold uppercase tracking-wider text-gray-600 mb-1">Device Category Type *</label>
+          <select id="brand-device-select" required class="w-full h-10 px-3 border border-gray-300 rounded-xl text-xs font-bold text-gray-900 focus:border-[#0077B6] focus:outline-none bg-white">
+            <!-- Populated dynamically -->
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-extrabold uppercase tracking-wider text-gray-600 mb-1">Description</label>
+          <textarea id="brand-description" rows="2" placeholder="Brief description of the brand" class="w-full p-3 border border-gray-300 rounded-xl text-xs font-bold text-gray-900 focus:border-[#0077B6] focus:outline-none resize-none"></textarea>
+        </div>
+
+        <div id="brand-logo-container">
+          <input type="hidden" id="brand-logo"/>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-extrabold uppercase tracking-wider text-gray-600 mb-1">Sort Order</label>
+            <input type="number" id="brand-sort" value="0" class="w-full h-10 px-3 border border-gray-300 rounded-xl text-xs font-bold text-gray-900 focus:border-[#0077B6] focus:outline-none"/>
+          </div>
+          <div>
+            <label class="block text-xs font-extrabold uppercase tracking-wider text-gray-600 mb-1">Status</label>
+            <select id="brand-status" class="w-full h-10 px-3 border border-gray-300 rounded-xl text-xs font-bold text-gray-900 focus:border-[#0077B6] focus:outline-none bg-white">
+              <option value="PUBLISHED">Published</option>
+              <option value="HIDDEN">Hidden</option>
+              <option value="DRAFT">Draft</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-end gap-3 pt-3 border-t border-gray-100">
+          <button type="button" onclick="closeBrandModal()" class="px-4 py-2 border border-gray-300 rounded-xl text-xs font-bold text-gray-700 hover:bg-gray-50">Cancel</button>
+          <button type="submit" class="px-4 py-2 bg-[#0077B6] hover:bg-[#03045E] text-white rounded-xl text-xs font-bold transition-all shadow-xs">Save Brand</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Move Target Modal -->
+  <div id="move-modal" class="fixed inset-0 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4 z-50 opacity-0 pointer-events-none transition-all duration-200">
+    <div class="bg-white rounded-2xl w-full max-w-sm p-6 shadow-2xl space-y-4 border border-[#E5EEF8]">
+      <div class="flex items-center justify-between border-b border-gray-100 pb-3">
+        <h3 class="text-base font-black text-[#03045E]">Move Selected Brands</h3>
+        <button onclick="closeMoveModal()" class="text-gray-400 hover:text-gray-600"><span class="material-symbols-outlined text-sm">close</span></button>
+      </div>
+      <div>
+        <label class="block text-xs font-extrabold uppercase tracking-wider text-gray-600 mb-2">Target Device Category Type</label>
+        <select id="move-target-select" class="w-full h-10 px-3 border border-gray-300 rounded-xl text-xs font-bold text-gray-900 focus:border-[#0077B6] focus:outline-none bg-white">
+          <!-- Populated dynamically -->
+        </select>
+      </div>
+      <div class="flex items-center justify-end gap-3 pt-3 border-t border-gray-100">
+        <button type="button" onclick="closeMoveModal()" class="px-4 py-2 border border-gray-300 rounded-xl text-xs font-bold text-gray-700 hover:bg-gray-50">Cancel</button>
+        <button type="button" onclick="executeBulkMove()" class="px-4 py-2 bg-[#0077B6] hover:bg-[#03045E] text-white rounded-xl text-xs font-bold transition-all shadow-xs">Move Brands</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CSV Import Modal -->
+  <div id="import-modal" class="fixed inset-0 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4 z-50 opacity-0 pointer-events-none transition-all duration-200">
+    <div class="bg-white rounded-2xl w-full max-w-lg p-6 shadow-2xl space-y-4 border border-[#E5EEF8]">
+      <div class="flex items-center justify-between border-b border-gray-100 pb-3">
+        <h3 class="text-base font-black text-[#03045E]">Bulk CSV Import Brands</h3>
+        <button onclick="closeImportModal()" class="text-gray-400 hover:text-gray-600"><span class="material-symbols-outlined text-sm">close</span></button>
+      </div>
+      <div class="space-y-2">
+        <p class="text-[11px] text-gray-500 font-bold">CSV Format: <code class="bg-gray-100 px-1 py-0.5 rounded text-red-600">Brand Name, Logo, Slug, Description, Status, Device Type Name</code></p>
+        <textarea id="csv-textarea" rows="8" placeholder="Apple,,apple,Luxury brand,PUBLISHED,Mobile&#10;Samsung,,samsung,Korean titan,PUBLISHED,Mobile" class="w-full p-3 border border-gray-300 rounded-xl text-xs font-bold text-gray-900 focus:border-[#0077B6] focus:outline-none resize-none font-mono"></textarea>
+      </div>
+      
+      <!-- Import validation errors container -->
+      <div id="import-errors" class="hidden p-3 bg-red-50 border border-red-200 rounded-xl max-h-36 overflow-y-auto space-y-1 text-[11px] font-bold text-red-700">
+        <!-- Rendered dynamically -->
+      </div>
+
+      <div class="flex items-center justify-end gap-3 pt-3 border-t border-gray-100">
+        <button type="button" onclick="closeImportModal()" class="px-4 py-2 border border-gray-300 rounded-xl text-xs font-bold text-gray-700 hover:bg-gray-50">Cancel</button>
+        <button type="button" onclick="handleExecuteImport()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition-all shadow-xs">Import Brands</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="../../shared/js/storage.js"></script>
+  <script src="../../shared/js/api.js"></script>
+  <script src="../../admin/js/sidebar.js"></script>
+  <script src="../../admin/js/header.js"></script>
+  <script src="../../admin/js/uploader.js"></script>
+
+  <script>
+    let brandsCache = [];
+    let deviceTypes = [];
+    let selectedIds = new Set();
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      if (window.AdminSidebar) window.AdminSidebar.init();
+      if (window.AdminHeader) window.AdminHeader.init();
+
+      window.brandLogoUploader = window.AdminUploader.create({
+        container: 'brand-logo-container',
+        input: 'brand-logo',
+        label: 'Brand Logo Image',
+        folder: 'brands'
+      });
+
+      await loadInitialData();
+    });
+
+    async function loadInitialData() {
+      deviceTypes = await window.API.getDeviceTypes() || [];
+      
+      const filterSelect = document.getElementById('brand-device-filter');
+      const modalSelect = document.getElementById('brand-device-select');
+      const moveSelect = document.getElementById('move-target-select');
+
+      const dtOptions = deviceTypes.map(d => `<option value="${d.id}">${d.name}</option>`).join('');
+      filterSelect.innerHTML = '<option value="all">All Device Categories</option>' + dtOptions;
+      modalSelect.innerHTML = dtOptions;
+      moveSelect.innerHTML = dtOptions;
+
+      await renderBrandsGrid();
+    }
+
+    async function renderBrandsGrid() {
+      const devFilter = document.getElementById('brand-device-filter').value;
+      const statusFilter = document.getElementById('brand-status-filter').value;
+      const includeDeleted = statusFilter === 'deleted';
+
+      brandsCache = await window.API.getBrands(undefined, true) || [];
+      const models = await window.API.getAllModels() || [];
+
+      // Update KPI metrics
+      document.getElementById('kpi-total-brands').textContent = brandsCache.filter(b => !b.deletedAt).length;
+      document.getElementById('kpi-active-brands').textContent = brandsCache.filter(b => b.status === 'PUBLISHED' && !b.deletedAt).length;
+      document.getElementById('kpi-hidden-brands').textContent = brandsCache.filter(b => (b.status === 'HIDDEN' || b.status === 'DRAFT') && !b.deletedAt).length;
+      document.getElementById('kpi-deleted-brands').textContent = brandsCache.filter(b => b.deletedAt).length;
+
+      const q = document.getElementById('brand-search-input').value.toLowerCase().trim();
+
+      const filtered = brandsCache.filter(b => {
+        const matchesQ = b.name.toLowerCase().includes(q) || (b.slug && b.slug.toLowerCase().includes(q));
+        const matchesDev = devFilter === 'all' || b.deviceTypeId === devFilter;
+        const matchesDeleted = includeDeleted ? (b.deletedAt !== null) : (b.deletedAt === null);
+        const matchesStatus = statusFilter === 'all' || statusFilter === 'deleted' || b.status === statusFilter;
+        return matchesQ && matchesDev && matchesDeleted && matchesStatus;
+      });
+
+      const grid = document.getElementById('brands-grid');
+      if (filtered.length === 0) {
+        grid.innerHTML = `<div class="col-span-full p-8 bg-white border border-[#E5EEF8] rounded-2xl text-center text-xs text-gray-500 font-bold">No brands match search filters.</div>`;
+        return;
+      }
+
+      grid.innerHTML = filtered.map(b => {
+        const isDeleted = b.deletedAt !== null;
+        const isChecked = selectedIds.has(b.id);
+        const brandModels = models.filter(m => String(m.brandId) === String(b.id));
+
+        let statusBadge = '';
+        if (isDeleted) {
+          statusBadge = `<span class="px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-red-50 text-red-600 border border-red-200">Deleted</span>`;
+        } else if (b.status === 'PUBLISHED') {
+          statusBadge = `<span class="px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">Published</span>`;
+        } else if (b.status === 'HIDDEN') {
+          statusBadge = `<span class="px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-amber-50 text-amber-700 border border-amber-200">Hidden</span>`;
+        } else {
+          statusBadge = `<span class="px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-gray-100 text-gray-500 border border-gray-200">Draft</span>`;
+        }
+
+        const devTypeName = b.deviceType ? b.deviceType.name : 'Unknown';
+
+        return `
+          <div class="p-4 bg-white border border-[#E5EEF8] rounded-2xl shadow-xs hover:shadow-md transition-all space-y-3 relative">
+            <div class="absolute top-4 left-4">
+              <input type="checkbox" value="${b.id}" ${isChecked ? 'checked' : ''} onchange="handleSelectRow('${b.id}', this.checked)" class="row-checkbox w-4 h-4 rounded border-gray-300 text-[#0077B6]"/>
+            </div>
+
+            <div class="flex items-center justify-between pl-6">
+              <div class="w-10 h-10 rounded-xl bg-gray-150 border border-gray-200 flex items-center justify-center font-black text-sm text-[#03045E] overflow-hidden">
+                ${b.logo ? `<img src="${b.logo}" class="w-full h-full object-contain p-1"/>` : b.name.substring(0, 2).toUpperCase()}
+              </div>
+              ${statusBadge}
+            </div>
+
+            <div class="pl-6">
+              <h3 class="font-black text-sm text-[#03045E]">${b.name}</h3>
+              <p class="text-[11px] text-gray-400 font-mono">/${b.slug || ''}</p>
+              <div class="mt-1.5"><span class="px-2 py-0.5 bg-[#CAF0F8]/50 text-[#0077B6] border border-[#90E0EF] rounded-md text-[10px] font-bold">${devTypeName}</span></div>
+            </div>
+
+            <div class="pl-6 grid grid-cols-2 gap-2 pt-2 border-t border-gray-100 text-[11px]">
+              <div>
+                <span class="text-gray-400 block font-medium">Models</span>
+                <span class="font-extrabold text-gray-800">${brandModels.length} Models</span>
+              </div>
+              <div>
+                <span class="text-gray-400 block font-medium">Sort Order</span>
+                <span class="font-extrabold text-gray-800">#${b.sortOrder || 0}</span>
+              </div>
+            </div>
+
+            <div class="flex items-center justify-end gap-2 pt-2">
+              ${isDeleted ? `
+                <button onclick="handleRestore('${b.id}')" title="Restore" class="p-1.5 text-emerald-600 hover:bg-emerald-50 rounded-lg cursor-pointer"><span class="material-symbols-outlined text-sm">settings_backup_restore</span></button>
+                <button onclick="handlePermanentDelete('${b.id}')" title="Delete Permanently" class="p-1.5 text-red-600 hover:bg-red-50 rounded-lg cursor-pointer"><span class="material-symbols-outlined text-sm">delete_forever</span></button>
+              ` : `
+                <select onchange="handleInlineStatus('${b.id}', this.value)" class="text-[10px] font-bold border border-gray-200 rounded px-1.5 py-0.5 bg-white text-gray-700">
+                  <option value="PUBLISHED" ${b.status === 'PUBLISHED' ? 'selected' : ''}>Publish</option>
+                  <option value="HIDDEN" ${b.status === 'HIDDEN' ? 'selected' : ''}>Hide</option>
+                  <option value="DRAFT" ${b.status === 'DRAFT' ? 'selected' : ''}>Draft</option>
+                </select>
+                <button onclick="openBrandModal('${b.id}')" class="p-1.5 text-gray-500 hover:text-[#0077B6] hover:bg-gray-50 rounded-lg cursor-pointer"><span class="material-symbols-outlined text-sm">edit</span></button>
+                <button onclick="handleDeleteBrand('${b.id}')" class="p-1.5 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg cursor-pointer"><span class="material-symbols-outlined text-sm">delete</span></button>
+              `}
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      updateSelectionBanner();
+    }
+
+    function autoGenerateSlug(name) {
+      const slugInput = document.getElementById('brand-slug');
+      if (document.getElementById('brand-id').value === '') {
+        slugInput.value = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+      }
+    }
+
+    function handleSelectRow(id, checked) {
+      if (checked) selectedIds.add(id);
+      else selectedIds.delete(id);
+      updateSelectionBanner();
+    }
+
+    function toggleSelectAll(checked) {
+      document.querySelectorAll('.row-checkbox').forEach(c => {
+        c.checked = checked;
+        if (checked) selectedIds.add(c.value);
+        else selectedIds.delete(c.value);
+      });
+      updateSelectionBanner();
+    }
+
+    function updateSelectionBanner() {
+      const banner = document.getElementById('selection-banner');
+      const countLabel = document.getElementById('selection-count');
+      if (selectedIds.size > 0) {
+        banner.classList.remove('hidden');
+        countLabel.textContent = `${selectedIds.size} items selected`;
+      } else {
+        banner.classList.add('hidden');
+      }
+    }
+
+    function clearSelection() {
+      selectedIds.clear();
+      document.getElementById('select-all-toggle').checked = false;
+      document.querySelectorAll('.row-checkbox').forEach(c => c.checked = false);
+      updateSelectionBanner();
+    }
+
+    async function handleBulkAction(action) {
+      if (!action || selectedIds.size === 0) return;
+      if (action === 'MOVE') {
+        openMoveModal();
+        return;
+      }
+      if (confirm(`Execute bulk ${action} on ${selectedIds.size} brands?`)) {
+        await window.API.bulkBrands(Array.from(selectedIds), action);
+        if (window.showToast) window.showToast(`Bulk ${action} executed successfully!`, "success");
+        selectedIds.clear();
+        document.getElementById('brand-bulk-action').value = '';
+        renderBrandsGrid();
+      }
+    }
+
+    function openMoveModal() {
+      document.getElementById('move-modal').classList.remove('opacity-0', 'pointer-events-none');
+    }
+
+    function closeMoveModal() {
+      document.getElementById('move-modal').classList.add('opacity-0', 'pointer-events-none');
+    }
+
+    async function executeBulkMove() {
+      const targetId = document.getElementById('move-target-select').value;
+      await window.API.bulkBrands(Array.from(selectedIds), 'MOVE', targetId);
+      if (window.showToast) window.showToast(`Moved ${selectedIds.size} brands to target category`, "success");
+      closeMoveModal();
+      selectedIds.clear();
+      document.getElementById('brand-bulk-action').value = '';
+      renderBrandsGrid();
+    }
+
+    async function handleInlineStatus(id, newStatus) {
+      await window.API.saveBrand({ id, status: newStatus });
+      if (window.showToast) window.showToast("Brand status updated inline", "success");
+      renderBrandsGrid();
+    }
+
+    async function handleRestore(id) {
+      await window.API.restoreBrand(id);
+      if (window.showToast) window.showToast("Brand restored successfully", "success");
+      renderBrandsGrid();
+    }
+
+    async function handlePermanentDelete(id) {
+      if (confirm("Permanently delete this Brand? All associated models will be affected. This action is IRREVERSIBLE.")) {
+        await window.API.permanentDeleteBrand(id);
+        if (window.showToast) window.showToast("Brand permanently removed.", "info");
+        renderBrandsGrid();
+      }
+    }
+
+    function openBrandModal(id) {
+      const modal = document.getElementById('brand-modal');
+      modal.classList.remove('opacity-0', 'pointer-events-none');
+      if (id) {
+        const item = brandsCache.find(b => String(b.id) === String(id));
+        if (item) {
+          document.getElementById('modal-brand-title').textContent = "Edit Brand";
+          document.getElementById('brand-id').value = item.id;
+          document.getElementById('brand-name').value = item.name;
+          document.getElementById('brand-slug').value = item.slug || '';
+          document.getElementById('brand-description').value = item.description || '';
+          document.getElementById('brand-device-select').value = item.deviceTypeId || '';
+          document.getElementById('brand-sort').value = item.sortOrder || 0;
+          document.getElementById('brand-status').value = item.status || 'PUBLISHED';
+          if (window.brandLogoUploader) window.brandLogoUploader.setValue(item.logo || '');
+        }
+      } else {
+        document.getElementById('modal-brand-title').textContent = "Add New Brand";
+        document.getElementById('brand-form').reset();
+        document.getElementById('brand-id').value = '';
+        document.getElementById('brand-status').value = 'PUBLISHED';
+        if (window.brandLogoUploader) window.brandLogoUploader.setValue('');
+      }
+    }
+
+    function closeBrandModal() {
+      const modal = document.getElementById('brand-modal');
+      modal.classList.add('opacity-0', 'pointer-events-none');
+    }
+
+    async function handleSaveBrand(e) {
+      e.preventDefault();
+      const id = document.getElementById('brand-id').value;
+      const name = document.getElementById('brand-name').value.trim();
+      const slug = document.getElementById('brand-slug').value.trim();
+      const deviceTypeId = document.getElementById('brand-device-select').value;
+      const description = document.getElementById('brand-description').value.trim();
+      const logo = document.getElementById('brand-logo').value.trim();
+      const sortOrder = parseInt(document.getElementById('brand-sort').value) || 0;
+      const status = document.getElementById('brand-status').value;
+
+      const payload = { id: id || undefined, name, slug, deviceTypeId, description, logo, sortOrder, status };
+      const res = await window.API.saveBrand(payload);
+      if (res) {
+        if (window.showToast) window.showToast("Brand saved successfully!", "success");
+        closeBrandModal();
+        renderBrandsGrid();
+      } else {
+        if (window.showToast) window.showToast("Conflict or validation error saving brand.", "danger");
+      }
+    }
+
+    async function handleDeleteBrand(id, force = false) {
+      const res = await window.API.deleteBrand(id, force);
+      if (res && res.requiresConfirmation) {
+        openDeleteImpactModal({
+          title: 'Brand In Use',
+          productCount: res.productCount,
+          onSoftDelete: () => handleDeleteBrand(id, true)
+        });
+      } else if (res && res.success) {
+        if (window.showToast) window.showToast("Brand deleted successfully.", "success");
+        closeDeleteImpactModal();
+        renderBrandsGrid();
+      } else {
+        if (window.showToast) window.showToast(res.message || "Cannot delete Brand.", "danger");
+      }
+    }
+
+    async function handlePermanentDelete(id) {
+      if (confirm("Permanently delete this Brand? This action is IRREVERSIBLE.")) {
+        const res = await window.API.permanentDeleteBrand(id);
+        if (res && res.success) {
+          if (window.showToast) window.showToast(res.message || "Brand permanently removed.", "success");
+          renderBrandsGrid();
+        } else {
+          if (window.showToast) window.showToast(res.message || "Cannot delete because this Brand is used by products.", "danger");
+        }
+      }
+    }
+
+    async function handleBulkAction(action) {
+      if (!action || selectedIds.size === 0) return;
+      if (action === 'MOVE') {
+        openMoveModal();
+        return;
+      }
+      if (action === 'DELETE') {
+        executeBulkDeleteBrands(false);
+      } else {
+        if (confirm(`Execute bulk ${action} on ${selectedIds.size} brands?`)) {
+          const res = await window.API.bulkBrands(Array.from(selectedIds), action);
+          if (res && res.success) {
+            if (window.showToast) window.showToast(`Bulk ${action} executed successfully!`, "success");
+            selectedIds.clear();
+            document.getElementById('brand-bulk-action').value = '';
+            renderBrandsGrid();
+          } else {
+            if (window.showToast) window.showToast(res.message || `Bulk ${action} failed`, "danger");
+          }
+        }
+      }
+    }
+
+    async function executeBulkDeleteBrands(force = false) {
+      const ids = Array.from(selectedIds);
+      const res = await window.API.bulkBrands(ids, 'DELETE', undefined, force);
+      if (res && res.requiresConfirmation) {
+        openDeleteImpactModal({
+          title: 'Selected Brands In Use',
+          productCount: res.productCount,
+          onSoftDelete: () => executeBulkDeleteBrands(true)
+        });
+      } else if (res && res.success) {
+        if (window.showToast) window.showToast("Brands deleted successfully.", "success");
+        closeDeleteImpactModal();
+        selectedIds.clear();
+        document.getElementById('brand-bulk-action').value = '';
+        renderBrandsGrid();
+      } else {
+        if (window.showToast) window.showToast(res.message || "Cannot delete selected Brands.", "danger");
+      }
+    }
+
+    // Modal Helpers for Delete Impact
+    let currentImpactSoftDeleteCallback = null;
+    function openDeleteImpactModal({ title, productCount, onSoftDelete }) {
+      document.getElementById('delete-impact-title').textContent = title || "Cannot Delete Directly";
+      document.getElementById('impact-product-count').textContent = productCount || 0;
+      currentImpactSoftDeleteCallback = onSoftDelete;
+
+      const modal = document.getElementById('delete-impact-modal');
+      modal.classList.remove('opacity-0', 'pointer-events-none');
+    }
+
+    function closeDeleteImpactModal() {
+      const modal = document.getElementById('delete-impact-modal');
+      if (modal) modal.classList.add('opacity-0', 'pointer-events-none');
+      currentImpactSoftDeleteCallback = null;
+    }
+
+    document.getElementById('btn-confirm-soft-delete')?.addEventListener('click', () => {
+      if (typeof currentImpactSoftDeleteCallback === 'function') {
+        currentImpactSoftDeleteCallback();
+      }
+    });
+
+    function openImportModal() {
+      document.getElementById('import-modal').classList.remove('opacity-0', 'pointer-events-none');
+      document.getElementById('import-errors').classList.add('hidden');
+      document.getElementById('csv-textarea').value = '';
+    }
+
+    function closeImportModal() {
+      document.getElementById('import-modal').classList.add('opacity-0', 'pointer-events-none');
+    }
+
+    async function handleExecuteImport() {
+      const csvText = document.getElementById('csv-textarea').value.trim();
+      if (!csvText) {
+        if (window.showToast) window.showToast("Please enter CSV content", "warning");
+        return;
+      }
+      const res = await window.API.importBrandsCSV(csvText);
+      if (res && res.success) {
+        if (window.showToast) window.showToast(`Imported ${res.imported} brands!`, "success");
+        if (res.errors && res.errors.length > 0) {
+          const errDiv = document.getElementById('import-errors');
+          errDiv.classList.remove('hidden');
+          errDiv.innerHTML = res.errors.map(e => `<div>• ${e}</div>`).join('');
+        } else {
+          closeImportModal();
+        }
+        await loadInitialData();
+      } else {
+        if (window.showToast) window.showToast(res.message || "CSV Import failed", "danger");
+      }
+    }
+  </script>
+
+  <!-- Delete Impact Modal -->
+  <div id="delete-impact-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm opacity-0 pointer-events-none transition-all duration-200">
+    <div class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl border border-slate-200 dark:border-slate-700 w-full max-w-lg p-6 relative">
+      <button onclick="closeDeleteImpactModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 text-lg">
+        <i class="ri-close-line"></i>
+      </button>
+      <div class="flex items-center space-x-3 mb-4 text-amber-500 dark:text-amber-400">
+        <div class="w-12 h-12 rounded-full bg-amber-100 dark:bg-amber-900/40 flex items-center justify-center text-2xl font-bold">
+          <i class="ri-alert-line"></i>
+        </div>
+        <div>
+          <h3 class="text-lg font-bold text-slate-900 dark:text-white" id="delete-impact-title">Cannot Delete Directly</h3>
+          <p class="text-xs text-slate-500 dark:text-slate-400">Item is referenced by active products</p>
+        </div>
+      </div>
+      
+      <div class="bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/60 rounded-lg p-3.5 mb-5 text-sm text-amber-800 dark:text-amber-200">
+        This item is currently used by <strong id="impact-product-count">0</strong> products. Deleting it will affect those products.
+      </div>
+
+      <div class="space-y-3 mb-6">
+        <div class="p-3.5 border border-blue-200 dark:border-blue-900/60 bg-blue-50/50 dark:bg-blue-950/30 rounded-lg">
+          <div class="font-semibold text-blue-900 dark:text-blue-300 text-sm mb-1 flex items-center">
+            <i class="ri-checkbox-circle-fill text-blue-600 dark:text-blue-400 mr-2"></i>
+            Option A (Recommended): Soft Delete
+          </div>
+          <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+            Hides item from storefront filters and product creation dropdowns (`status = HIDDEN`, `deletedAt`). Preserves existing product records.
+          </p>
+        </div>
+
+        <div class="p-3.5 border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/50 rounded-lg opacity-75">
+          <div class="font-semibold text-slate-700 dark:text-slate-300 text-sm mb-1 flex items-center">
+            <i class="ri-delete-bin-line mr-2"></i>
+            Option B: Hard Delete
+          </div>
+          <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+            Only allowed if NO products reference this item.
+          </p>
+        </div>
+      </div>
+
+      <div class="flex justify-end space-x-3">
+        <button onclick="closeDeleteImpactModal()" class="px-4 py-2 rounded-lg text-sm font-medium border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700">
+          Cancel
+        </button>
+        <button id="btn-confirm-soft-delete" class="px-4 py-2 rounded-lg text-sm font-medium bg-amber-600 hover:bg-amber-700 text-white shadow-sm flex items-center">
+          <i class="ri-eye-off-line mr-1.5"></i> Proceed with Soft Delete
+        </button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

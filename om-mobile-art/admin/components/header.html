@@ -1,0 +1,52 @@
+<div class="flex items-center gap-4">
+  <button id="sidebar-toggle-btn" class="material-symbols-outlined text-[#03045E] hover:text-[#0077B6] transition-all duration-200 cursor-pointer">menu</button>
+  <!-- Logo -->
+  <a href="dashboard.html" class="flex items-center gap-2 mr-1">
+    <img src="../../assets/logos/logo.png" alt="OM Mobile Art Logo" class="w-6 h-6 object-contain" />
+  </a>
+  <h2 class="font-bold text-lg text-[#03045E]" id="admin-header-title">Admin Dashboard</h2>
+</div>
+
+<!-- Center Search Bar -->
+<div class="relative w-64 md:w-80" id="admin-search-container">
+  <div class="flex items-center bg-[#F8FAFC] border border-[#E5E7EB] rounded-lg px-3 py-1.5 gap-2 focus-within:border-[#0077B6] focus-within:ring-1 focus-within:ring-[#0077B6] transition-colors">
+    <span class="material-symbols-outlined text-gray-400 text-sm">search</span>
+    <input type="text" id="admin-search-input" placeholder="Search orders, products, customers..." class="bg-transparent border-none focus:ring-0 text-xs w-full p-0 outline-none placeholder-gray-400 text-[#111827]" autocomplete="off" />
+  </div>
+  <div id="admin-search-dropdown" class="absolute left-0 right-0 mt-2 bg-white border border-[#E5E7EB] rounded-lg shadow-xl py-2 hidden max-h-60 overflow-y-auto z-50"></div>
+</div>
+
+<div class="flex items-center gap-4">
+  <span class="text-gray-500 text-sm hidden sm:block font-mono" id="admin-time">--:--</span>
+
+  <!-- Quick Actions -->
+  <button onclick="window.openQuickActionsModal()" class="flex items-center gap-1 px-3 py-1.5 bg-[#03045E]/10 hover:bg-[#03045E]/20 text-[#03045E] rounded-lg text-xs font-bold transition-all cursor-pointer">
+    <span class="material-symbols-outlined text-sm">bolt</span> Actions
+  </button>
+  
+  <!-- Settings Shortcut -->
+  <a href="settings.html" class="p-1.5 hover:bg-[#90E0EF]/30 text-[#03045E] hover:text-[#0077B6] rounded-full transition-all cursor-pointer flex items-center justify-center">
+    <span class="material-symbols-outlined text-[20px]">settings</span>
+  </a>
+  
+  <!-- Notification Bell Dropdown -->
+  <div class="relative" id="admin-notification-container">
+    <button id="admin-notification-bell" class="relative p-1.5 hover:bg-[#90E0EF]/30 rounded-full transition-all cursor-pointer">
+      <span class="material-symbols-outlined text-[#03045E] hover:text-[#0077B6]">notifications</span>
+      <span id="admin-notification-badge" class="absolute top-1 right-1 w-2.5 h-2.5 bg-[#0077B6] rounded-full ring-2 ring-white hidden"></span>
+    </button>
+    <div id="admin-notification-dropdown" class="absolute right-0 mt-2 w-80 bg-white border border-[#E5E7EB] rounded-lg shadow-xl py-2 hidden z-50"></div>
+  </div>
+  
+  <!-- Profile Dropdown -->
+  <div class="relative" id="admin-profile-container">
+    <button id="admin-profile-trigger" class="flex items-center gap-2 cursor-pointer p-1 rounded-lg hover:bg-[#90E0EF]/30 transition-all">
+      <div class="w-8 h-8 rounded-full bg-[#03045E] flex items-center justify-center text-white text-xs font-bold" id="admin-initials">AD</div>
+      <div class="hidden sm:block text-left">
+        <p class="text-xs font-bold leading-tight text-[#111827]" id="admin-name">Administrator</p>
+        <p class="text-[10px] text-gray-500 font-semibold">Admin</p>
+      </div>
+    </button>
+    <div id="admin-profile-dropdown" class="absolute right-0 mt-2 w-48 bg-white border border-[#E5E7EB] rounded-lg shadow-xl py-2 hidden z-50"></div>
+  </div>
+</div>

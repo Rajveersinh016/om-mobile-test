@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <meta name="description" content="Review your OM Mobile Art cart. Premium 3M mobile skins ready for checkout."/>
+  <title>Cart — OM Mobile Art</title>
+  <link rel="icon" type="image/png" href="../../assets/logos/logo.png?v=2.0"/>
+  <link rel="apple-touch-icon" href="../../assets/logos/logo.png?v=2.0"/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script src="../../shared/js/tailwind-config-shop.js"></script>
+  <style>
+    body { background-color: #F8FAFC; color: #111827; -webkit-font-smoothing: antialiased; }
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    .cart-table th { padding-bottom: 16px; text-align: left; border-bottom: 1px solid #E5E7EB; }
+    .cart-table td { padding: 20px 0; border-bottom: 1px solid #E5E7EB; vertical-align: middle; }
+    .stepper-btn:active { transform: scale(0.9); }
+  </style>
+  <link rel="stylesheet" href="../../shared/css/shop-scrollbar.css?v=1.1"/>
+</head>
+<body class="font-body-main text-body-main bg-[#F8FAFC]">
+
+  <!-- Header -->
+  <header></header>
+
+  <main class="store-container py-12">
+    <h1 class="text-3xl font-extrabold text-[#111827] mb-8">Your Shopping Cart</h1>
+    
+    <div class="flex flex-col lg:flex-row gap-10">
+      
+      <!-- Cart Table / Items -->
+      <div class="w-full lg:w-[65%]">
+        <div class="overflow-x-auto bg-white rounded-2xl p-6 border border-[#E5E7EB] shadow-sm">
+          <table class="w-full cart-table">
+            <thead class="text-xs font-bold text-[#6B7280] uppercase tracking-wider">
+              <tr>
+                <th>PRODUCT</th>
+                <th>PRICE</th>
+                <th>QUANTITY</th>
+                <th class="text-right">TOTAL</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Dynamic Cart Rows Rendered by cart.js -->
+            </tbody>
+          </table>
+        </div>
+
+        <div class="mt-6">
+          <a class="inline-flex items-center gap-2 text-[#0077B6] font-bold text-sm hover:gap-3 transition-all" href="shop.html">
+            <span class="material-symbols-outlined">arrow_back</span>
+            CONTINUE SHOPPING
+          </a>
+        </div>
+      </div>
+
+      <!-- Order Summary -->
+      <div class="w-full lg:w-[35%]">
+        <div class="sticky top-[100px] border border-[#E5E7EB] rounded-2xl bg-white p-6 shadow-sm">
+          <h2 class="text-xl font-bold text-[#111827] mb-6 border-b pb-4">Order Summary</h2>
+          
+          <div class="space-y-3 mb-6 text-sm">
+            <div class="flex justify-between items-center">
+              <span class="text-gray-600">Subtotal</span>
+              <span id="cart-summary-subtotal" class="font-semibold text-gray-900">₹0</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-gray-600">Shipping</span>
+              <span id="cart-summary-shipping" class="text-[#0077B6] font-bold">FREE</span>
+            </div>
+          </div>
+
+          <!-- Coupon Code Input -->
+          <div class="mb-6">
+            <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">APPLY COUPON</label>
+            <div class="flex gap-2">
+              <input class="flex-grow h-10 px-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:border-[#0077B6]" placeholder="Enter code" type="text" id="coupon-code-input"/>
+              <button onclick="applyCouponCode(document.getElementById('coupon-code-input').value)" class="px-4 h-10 bg-[#03045E] hover:bg-[#0077B6] text-white rounded-lg text-xs font-bold transition-colors">Apply</button>
+            </div>
+          </div>
+
+          <!-- Total -->
+          <div class="border-t border-gray-200 pt-4 mb-6">
+            <div class="flex justify-between items-center mb-1">
+              <span class="text-lg font-extrabold text-[#111827]">Total</span>
+              <span id="cart-summary-total" class="text-2xl font-extrabold text-[#03045E]">₹0</span>
+            </div>
+          </div>
+
+          <a href="checkout.html" class="w-full h-12 bg-[#0077B6] hover:bg-[#03045E] text-white rounded-[10px] font-bold text-sm transition-all duration-200 active:scale-[0.98] shadow-md flex items-center justify-center gap-2">
+            PROCEED TO CHECKOUT
+            <span class="material-symbols-outlined text-lg">arrow_forward</span>
+          </a>
+
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer></footer>
+
+  <!-- DB and Main scripts -->
+  <script src="../../shared/js/storage.js"></script>
+  <script src="../../shared/js/settings-manager.js"></script>
+  <script src="../../shared/js/api.js"></script>
+  <script src="../../shared/js/pricing.js"></script>
+  <script src="../../shared/js/utils.js"></script>
+  <script src="../../shared/js/notifications.js"></script>
+  <script src="../../shared/components/navbar.js"></script>
+  <script src="../../shared/components/productCard.js"></script>
+  <script src="../../shared/components/loader.js"></script>
+  
+  <!-- Page script -->
+  <script src="../../shop/js/cart.js"></script>
+</body>
+</html>

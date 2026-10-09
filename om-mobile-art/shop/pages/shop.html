@@ -1,0 +1,315 @@
+<!DOCTYPE html><html class="scroll-smooth" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Shop All Skins | OM Mobile Art</title>
+<link rel="icon" type="image/png" href="../../assets/logos/logo.png?v=2.0"/>
+<link rel="apple-touch-icon" href="../../assets/logos/logo.png?v=2.0"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        
+        /* List View Overrides */
+        #shop-products-grid.list-view {
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 1.5rem !important;
+        }
+        #shop-products-grid.list-view .product-card {
+            display: flex !important;
+            flex-direction: row !important;
+            height: auto !important;
+            min-height: 200px !important;
+            width: 100% !important;
+            text-align: left !important;
+        }
+        #shop-products-grid.list-view .product-card > div:first-child {
+            width: 200px !important;
+            height: 200px !important;
+            flex-shrink: 0 !important;
+            border-radius: 1rem 0 0 1rem !important;
+        }
+        #shop-products-grid.list-view .product-card .quick-add-btn {
+            display: none !important;
+        }
+
+        /* Collapsible Filter Panel Transitions */
+        /* Floating Filter Panel & Mobile Drawer Transitions */
+        #filter-panel-wrapper {
+            transition: opacity 200ms cubic-bezier(0, 0, 0.2, 1);
+        }
+        #filter-panel-wrapper.open {
+            opacity: 1 !important;
+            pointer-events: auto !important;
+        }
+
+        #filter-sheet-container {
+            transition: transform 200ms cubic-bezier(0, 0, 0.2, 1), opacity 200ms cubic-bezier(0, 0, 0.2, 1);
+        }
+
+        @media (min-width: 768px) {
+            #filter-sheet-container {
+                transform: scale(0.95);
+                opacity: 0;
+            }
+            #filter-panel-wrapper.open #filter-sheet-container {
+                transform: scale(1) !important;
+                opacity: 1 !important;
+            }
+        }
+
+        @media (max-width: 767px) {
+            #filter-panel-wrapper {
+                align-items: flex-start !important;
+                justify-content: flex-start !important;
+                padding: 0 !important;
+            }
+            #filter-sheet-container {
+                width: 90% !important;
+                max-width: 360px !important;
+                height: 100% !important;
+                max-height: 100vh !important;
+                border-radius: 0 20px 20px 0 !important;
+                transform: translateX(-100%) !important;
+            }
+            #filter-panel-wrapper.open #filter-sheet-container {
+                transform: translateX(0) !important;
+                opacity: 1 !important;
+            }
+        }
+    </style>
+<script src="../../shared/js/tailwind-config-shop.js"></script>
+<link rel="stylesheet" href="../../shared/css/shop-scrollbar.css?v=1.1"/>
+</head>
+<body class="bg-background font-body-main text-on-surface">
+<!-- TopNavBar -->
+<header></header>
+
+<main class="store-container py-12">
+<section class="">
+    <!-- Toolbar and Filter Panel Section -->
+    <div class="relative mb-6">
+        <!-- Device Category Filter Pills Bar -->
+        <div class="mb-4 flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none" id="shop-device-filter-bar">
+            <button type="button" onclick="window.setShopDeviceFilter('all')" id="btn-device-filter-all" class="px-5 py-2 rounded-full text-xs font-bold transition-all border border-[#0077B6] bg-[#0077B6] text-white shadow-sm cursor-pointer flex items-center gap-1.5 whitespace-nowrap active:scale-95">
+                <span class="material-symbols-outlined text-[16px]">grid_view</span> ALL
+            </button>
+            <button type="button" onclick="window.setShopDeviceFilter('mobile')" id="btn-device-filter-mobile" class="px-5 py-2 rounded-full text-xs font-bold transition-all border border-gray-300 bg-white hover:bg-gray-50 text-gray-700 shadow-sm cursor-pointer flex items-center gap-1.5 whitespace-nowrap active:scale-95">
+                <span class="material-symbols-outlined text-[16px]">smartphone</span> MOBILE
+            </button>
+            <button type="button" onclick="window.setShopDeviceFilter('laptop')" id="btn-device-filter-laptop" class="px-5 py-2 rounded-full text-xs font-bold transition-all border border-gray-300 bg-white hover:bg-gray-50 text-gray-700 shadow-sm cursor-pointer flex items-center gap-1.5 whitespace-nowrap active:scale-95">
+                <span class="material-symbols-outlined text-[16px]">laptop_mac</span> LAPTOP
+            </button>
+            <button type="button" onclick="window.setShopDeviceFilter('camera')" id="btn-device-filter-camera" class="px-5 py-2 rounded-full text-xs font-bold transition-all border border-gray-300 bg-white hover:bg-gray-50 text-gray-700 shadow-sm cursor-pointer flex items-center gap-1.5 whitespace-nowrap active:scale-95">
+                <span class="material-symbols-outlined text-[16px]">photo_camera</span> CAMERA
+            </button>
+        </div>
+
+        <!-- Top Toolbar -->
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-gray-200 z-20 relative">
+            <p class="text-body-main text-on-surface-variant">Showing <span class="font-bold text-on-surface" id="shop-results-count">0</span> products</p>
+            
+            <div class="flex items-center gap-3 sm:gap-4 flex-wrap">
+                <!-- Filters Toggle Button -->
+                <button id="filters-toggle-btn" class="flex items-center gap-2 px-5 py-2 border border-gray-300 rounded-full bg-white hover:bg-gray-50 text-sm font-semibold transition-all shadow-sm">
+                    <span class="material-symbols-outlined text-[18px]">settings</span>
+                    <span>Filters</span>
+                    <span id="active-filter-count-badge" class="hidden bg-[#0077B6] text-white text-xs font-bold px-2 py-0.5 rounded-full">0</span>
+                </button>
+                
+                <!-- Sort Dropdown in Toolbar -->
+                <div class="relative">
+                    <select id="toolbar-sort" class="appearance-none bg-white border border-gray-300 h-10 pl-4 pr-10 rounded-full text-sm font-semibold focus:outline-none focus:border-[#0077B6] cursor-pointer shadow-sm">
+                        <option value="newest">Sort: Newest</option>
+                        <option value="price_asc">Price: Low to High</option>
+                        <option value="price_desc">Price: High to Low</option>
+                        <option value="best_seller">Best Seller</option>
+                        <option value="trending">Trending</option>
+                        <option value="rating">Customer Rating</option>
+                    </select>
+                    <span class="material-symbols-outlined absolute right-3.5 top-2.5 pointer-events-none text-gray-500 text-[18px]">expand_more</span>
+                </div>
+
+                <!-- Grid/List View switcher -->
+                <div class="flex items-center gap-1 border border-gray-200 p-0.5 rounded-lg bg-gray-50 shadow-sm">
+                    <button id="view-grid-btn" class="p-1.5 rounded-md bg-white shadow-sm text-[#0077B6] flex items-center justify-center transition-all" title="Grid View">
+                        <span class="material-symbols-outlined text-[18px]">grid_view</span>
+                    </button>
+                    <button id="view-list-btn" class="p-1.5 rounded-md text-gray-500 hover:text-gray-900 flex items-center justify-center transition-all" title="List View">
+                        <span class="material-symbols-outlined text-[18px]">format_list_bulleted</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Floating Filter Panel / Slide-Over Drawer Wrapper -->
+        <div id="filter-panel-wrapper" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-md flex items-center justify-center p-4 md:p-6 opacity-0 pointer-events-none transition-opacity duration-200 hidden">
+            
+            <!-- Filter Panel Box (Floating Modal on Desktop / Slide-over Drawer on Mobile) -->
+            <div id="filter-sheet-container" class="w-full max-w-[680px] bg-white rounded-[20px] shadow-2xl flex flex-col max-h-[90vh] md:max-h-[85vh] overflow-hidden transform scale-95 transition-all duration-200
+              mobile-drawer-style">
+                
+                <!-- Header -->
+                <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100 bg-gray-50/50">
+                    <div class="flex items-center gap-3">
+                        <span class="material-symbols-outlined text-[#0077B6] text-xl">tune</span>
+                        <h3 class="text-base font-extrabold text-[#03045E]">Filter Products</h3>
+                    </div>
+                    <button id="close-filters-btn" class="p-1.5 text-gray-400 hover:text-gray-700 hover:bg-gray-200/50 rounded-lg transition-colors flex items-center justify-center cursor-pointer">
+                        <span class="material-symbols-outlined text-[20px]">close</span>
+                    </button>
+                </div>
+
+                <!-- Scrollable Filter Sections -->
+                <div class="flex-1 overflow-y-auto p-6 space-y-5">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                        
+                        <!-- Device Type -->
+                        <div class="relative">
+                            <label class="block text-[10px] font-extrabold uppercase tracking-wider text-gray-500 mb-1.5">Device Type</label>
+                            <select id="filter-device-type" class="w-full appearance-none bg-white border border-gray-200 h-10 pl-3 pr-9 rounded-xl text-xs font-bold text-gray-900 focus:outline-none focus:border-[#0077B6] cursor-pointer">
+                                <option value="">All Device Types</option>
+                            </select>
+                            <span class="material-symbols-outlined absolute right-3 bottom-2.5 pointer-events-none text-gray-400 text-sm">expand_more</span>
+                        </div>
+
+                        <!-- Brand -->
+                        <div class="relative">
+                            <label class="block text-[10px] font-extrabold uppercase tracking-wider text-gray-500 mb-1.5">Brand</label>
+                            <select id="filter-brand" class="w-full appearance-none bg-white border border-gray-200 h-10 pl-3 pr-9 rounded-xl text-xs font-bold text-gray-900 focus:outline-none focus:border-[#0077B6] cursor-pointer" disabled>
+                                <option value="">All Brands</option>
+                            </select>
+                            <span class="material-symbols-outlined absolute right-3 bottom-2.5 pointer-events-none text-gray-400 text-sm">expand_more</span>
+                        </div>
+
+                        <!-- Model -->
+                        <div class="relative">
+                            <label class="block text-[10px] font-extrabold uppercase tracking-wider text-gray-500 mb-1.5">Model</label>
+                            <select id="filter-model" class="w-full appearance-none bg-white border border-gray-200 h-10 pl-3 pr-9 rounded-xl text-xs font-bold text-gray-900 focus:outline-none focus:border-[#0077B6] cursor-pointer" disabled>
+                                <option value="">All Models</option>
+                            </select>
+                            <span class="material-symbols-outlined absolute right-3 bottom-2.5 pointer-events-none text-gray-400 text-sm">expand_more</span>
+                        </div>
+
+                        <!-- Product Type -->
+                        <div class="relative">
+                            <label class="block text-[10px] font-extrabold uppercase tracking-wider text-gray-500 mb-1.5">Product Type</label>
+                            <select id="filter-product-type" class="w-full appearance-none bg-white border border-gray-200 h-10 pl-3 pr-9 rounded-xl text-xs font-bold text-gray-900 focus:outline-none focus:border-[#0077B6] cursor-pointer">
+                                <option value="">All Product Types</option>
+                            </select>
+                            <span class="material-symbols-outlined absolute right-3 bottom-2.5 pointer-events-none text-gray-400 text-sm">expand_more</span>
+                        </div>
+
+                        <!-- Material -->
+                        <div class="relative">
+                            <label class="block text-[10px] font-extrabold uppercase tracking-wider text-gray-500 mb-1.5">Material</label>
+                            <select id="filter-material" class="w-full appearance-none bg-white border border-gray-200 h-10 pl-3 pr-9 rounded-xl text-xs font-bold text-gray-900 focus:outline-none focus:border-[#0077B6] cursor-pointer">
+                                <option value="">All Materials</option>
+                            </select>
+                            <span class="material-symbols-outlined absolute right-3 bottom-2.5 pointer-events-none text-gray-400 text-sm">expand_more</span>
+                        </div>
+
+                        <!-- Finish -->
+                        <div class="relative">
+                            <label class="block text-[10px] font-extrabold uppercase tracking-wider text-gray-500 mb-1.5">Finish</label>
+                            <select id="filter-finish" class="w-full appearance-none bg-white border border-gray-200 h-10 pl-3 pr-9 rounded-xl text-xs font-bold text-gray-900 focus:outline-none focus:border-[#0077B6] cursor-pointer">
+                                <option value="">All Finishes</option>
+                            </select>
+                            <span class="material-symbols-outlined absolute right-3 bottom-2.5 pointer-events-none text-gray-400 text-sm">expand_more</span>
+                        </div>
+
+                        <!-- Price Slider -->
+                        <div class="space-y-1.5 p-3 bg-gray-50 rounded-xl border border-gray-100">
+                            <div class="flex justify-between items-center">
+                                <label class="block text-[10px] font-extrabold uppercase tracking-wider text-gray-500">Price Range</label>
+                                <span id="price-range-label" class="text-xs font-extrabold text-[#0077B6]">₹0 - ₹2000</span>
+                            </div>
+                            <input type="range" id="filter-price-slider" min="0" max="2000" value="2000" class="w-full accent-[#0077B6] h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                        </div>
+
+                        <!-- Availability -->
+                        <div class="relative">
+                            <label class="block text-[10px] font-extrabold uppercase tracking-wider text-gray-500 mb-1.5">Availability</label>
+                            <select id="filter-availability" class="w-full appearance-none bg-white border border-gray-200 h-10 pl-3 pr-9 rounded-xl text-xs font-bold text-gray-900 focus:outline-none focus:border-[#0077B6] cursor-pointer">
+                                <option value="">All Statuses</option>
+                                <option value="in_stock">In Stock Only</option>
+                                <option value="out_of_stock">Out of Stock</option>
+                            </select>
+                            <span class="material-symbols-outlined absolute right-3 bottom-2.5 pointer-events-none text-gray-400 text-sm">expand_more</span>
+                        </div>
+
+                        <!-- Promotion -->
+                        <div class="relative">
+                            <label class="block text-[10px] font-extrabold uppercase tracking-wider text-gray-500 mb-1.5">Promotion</label>
+                            <select id="filter-promotion" class="w-full appearance-none bg-white border border-gray-200 h-10 pl-3 pr-9 rounded-xl text-xs font-bold text-gray-900 focus:outline-none focus:border-[#0077B6] cursor-pointer">
+                                <option value="">All Promotions</option>
+                                <option value="best_seller">Best Seller</option>
+                                <option value="new_arrival">New Arrival</option>
+                                <option value="featured">Featured</option>
+                            </select>
+                            <span class="material-symbols-outlined absolute right-3 bottom-2.5 pointer-events-none text-gray-400 text-sm">expand_more</span>
+                        </div>
+
+                        <!-- Sort (mobile view) -->
+                        <div class="relative md:hidden">
+                            <label class="block text-[10px] font-extrabold uppercase tracking-wider text-gray-500 mb-1.5">Sort By</label>
+                            <select id="filter-sort" class="w-full appearance-none bg-white border border-gray-200 h-10 pl-3 pr-9 rounded-xl text-xs font-bold text-gray-900 focus:outline-none focus:border-[#0077B6] cursor-pointer">
+                                <option value="newest">Newest</option>
+                                <option value="price_asc">Price: Low to High</option>
+                                <option value="price_desc">Price: High to Low</option>
+                                <option value="best_seller">Best Seller</option>
+                                <option value="trending">Trending</option>
+                                <option value="rating">Customer Rating</option>
+                            </select>
+                            <span class="material-symbols-outlined absolute right-3 bottom-2.5 pointer-events-none text-gray-400 text-sm">expand_more</span>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Sticky Footer Actions -->
+                <div class="flex items-center justify-between border-t border-gray-100 px-6 py-4 bg-gray-50/90">
+                    <button id="clear-all-filters-btn" class="text-xs font-bold text-red-500 hover:text-red-700 flex items-center gap-1 cursor-pointer">
+                        <span class="material-symbols-outlined text-[16px]">clear_all</span> Clear Filters
+                    </button>
+                    <button id="apply-filters-btn" class="px-6 py-2.5 bg-[#0077B6] hover:bg-[#03045E] text-white font-extrabold text-xs rounded-xl transition-all shadow-md cursor-pointer active:scale-95">
+                        Apply Filters
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter Backdrop overlay for desktop outside click -->
+        <div id="filter-backdrop" class="fixed inset-0 bg-transparent z-40 hidden"></div>
+    </div>
+
+    <!-- Active Filters Chips -->
+    <div id="active-filters-chips-container" class="flex flex-wrap items-center gap-2 mb-6 hidden">
+        <!-- Dynamic chips go here -->
+    </div>
+
+    <!-- Product Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-gutter" id="shop-products-grid">
+        <!-- Dynamic products are rendered here by JavaScript -->
+    </div>
+</section>
+</main>
+
+<!-- Footer -->
+<footer></footer>
+
+<!-- DB and Main scripts -->
+<script src="../../shared/js/storage.js"></script>
+<script src="../../shared/js/api.js"></script>
+<script src="../../shared/js/utils.js"></script>
+<script src="../../shared/js/notifications.js"></script>
+<script src="../../shared/components/navbar.js"></script>
+<script src="../../shared/components/productCard.js"></script>
+<script src="../../shared/components/loader.js"></script>
+
+<!-- Page script -->
+<script src="../../shop/js/shop.js"></script>
+</body></html>

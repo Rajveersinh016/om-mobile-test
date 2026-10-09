@@ -1,0 +1,105 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8"/><meta content="width=device-width,initial-scale=1.0" name="viewport"/>
+<title>Banners | OM Admin</title>
+<meta name="description" content="Manage storefront banners in OM Mobile Art admin panel."/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<style>body{font-family:'DM Sans',sans-serif;background:#f9f9f9;}.material-symbols-outlined{font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24;vertical-align:middle;}</style>
+<script src="../../shared/js/tailwind-config-admin.js"></script>
+
+  <link rel="stylesheet" href="../../shared/css/admin-scrollbar.css?v=1.1"/>
+</head><body class="bg-surface text-on-surface">
+<aside></aside>
+<div class="ml-[240px] min-h-screen flex flex-col">
+  <header></header>
+  <main class="flex-1 p-6"><div class="space-y-6">
+  <div class="flex justify-between items-center">
+    <p class="text-secondary text-sm" id="banners-count">Loading...</p>
+    <button onclick="openBannerModal()" class="flex items-center gap-2 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:opacity-90 bg-primary"><span class="material-symbols-outlined text-[18px]">add</span> Add Banner</button>
+  </div>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-5" id="banners-grid"></div>
+  <div id="banner-modal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-xl shadow-2xl p-6 w-full max-w-md space-y-4">
+      <div class="flex justify-between items-center"><h3 class="font-bold text-lg" id="banner-modal-title">Add Banner</h3><button onclick="closeBannerModal()" class="material-symbols-outlined text-gray-400 hover:text-gray-700">close</button></div>
+      <form id="banner-form" class="space-y-4">
+        <input type="hidden" id="banner-edit-id">
+        <div><label class="block text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1">Title</label><input type="text" id="banner-title" required class="w-full h-10 px-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:border-primary"></div>
+        <div><label class="block text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1">Subtitle</label><input type="text" id="banner-subtitle" class="w-full h-10 px-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:border-primary"></div>
+        <div id="banner-uploader-container">
+          <input type="hidden" id="banner-image">
+        </div>
+        <div><label class="block text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1">Link</label><input type="text" id="banner-link" class="w-full h-10 px-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:border-primary"></div>
+        <div class="flex items-center gap-3"><input type="checkbox" id="banner-active" checked class="accent-primary"><label for="banner-active" class="text-sm">Active</label></div>
+        <div class="flex gap-3 pt-2"><button type="button" onclick="closeBannerModal()" class="flex-1 h-10 border border-gray-300 rounded-lg text-sm hover:bg-gray-50">Cancel</button><button type="submit" class="flex-1 h-10 text-white rounded-lg text-sm font-semibold hover:opacity-90 bg-primary">Save</button></div>
+      </form>
+    </div>
+  </div>
+</div>
+<script src="../../shared/js/storage.js"></script>
+<script src="../../shared/js/api.js"></script>
+<script src="../../admin/js/uploader.js"></script>
+<script>
+let bannerUploader = null;
+function renderBanners(){
+  const banners=window.DB.getBanners();
+  document.getElementById('banners-count').textContent=banners.length+' banners';
+  document.getElementById('banners-grid').innerHTML=banners.map(b=>`<div class="bg-surface-container-lowest border border-outline rounded-xl overflow-hidden shadow-sm">
+    ${b.image?`<img src="${b.image}" class="w-full h-36 object-cover">`:'<div class="w-full h-36 bg-gray-100 flex items-center justify-center text-gray-400"><span class="material-symbols-outlined text-4xl">image</span></div>'}
+    <div class="p-4">
+      <div class="flex justify-between items-start">
+        <div><h3 class="font-semibold">${b.title}</h3><p class="text-xs text-secondary mt-0.5">${b.subtitle||''}</p></div>
+        <span class="text-[10px] px-2 py-0.5 rounded font-bold uppercase ${b.active?'bg-green-100 text-green-800':'bg-gray-100 text-gray-800'}">${b.active?'Active':'Inactive'}</span>
+      </div>
+      <div class="flex gap-3 mt-3"><button onclick="editBanner(${b.id})" class="text-primary hover:underline text-xs font-medium">Edit</button><button onclick="deleteBanner(${b.id})" class="text-red-500 hover:underline text-xs font-medium">Delete</button></div>
+    </div>
+  </div>`).join('');
+}
+function openBannerModal(id){
+  document.getElementById('banner-modal').classList.remove('hidden');
+  if(id){
+    const b=window.DB.getBanners().find(x=>x.id===id);
+    document.getElementById('banner-modal-title').textContent='Edit Banner';
+    document.getElementById('banner-edit-id').value=b.id;
+    document.getElementById('banner-title').value=b.title;
+    document.getElementById('banner-subtitle').value=b.subtitle||'';
+    document.getElementById('banner-link').value=b.link||'';
+    document.getElementById('banner-active').checked=b.active!==false;
+    if(bannerUploader) bannerUploader.setValue(b.image || '');
+  }else{
+    document.getElementById('banner-form').reset();
+    document.getElementById('banner-modal-title').textContent='Add Banner';
+    if(bannerUploader) bannerUploader.setValue('');
+  }
+}
+function editBanner(id){openBannerModal(id);}
+function closeBannerModal(){document.getElementById('banner-modal').classList.add('hidden');}
+function deleteBanner(id){
+  window.showConfirm('Delete Banner','Delete this banner?',()=>{window.DB.deleteBanner(id);window.showToast('Deleted.','info');renderBanners();});
+}
+document.getElementById('banner-form').addEventListener('submit',(e)=>{
+  e.preventDefault();
+  const title=document.getElementById('banner-title').value.trim();
+  const subtitle=document.getElementById('banner-subtitle').value.trim();
+  const image=document.getElementById('banner-image').value.trim();
+  const link=document.getElementById('banner-link').value.trim();
+  const active=document.getElementById('banner-active').checked;
+  const editId=document.getElementById('banner-edit-id').value;
+  if(editId){window.DB.updateBanner(parseInt(editId),{title,subtitle,image,link,active});}else{window.DB.addBanner({title,subtitle,image,link,active});}
+  closeBannerModal();renderBanners();window.showToast('Banner saved.','success');
+});
+document.addEventListener('DOMContentLoaded', () => {
+  bannerUploader = window.AdminUploader.create({
+    container: 'banner-uploader-container',
+    input: 'banner-image',
+    label: 'Banner Image',
+    folder: 'banners'
+  });
+  renderBanners();
+});
+</script></main>
+</div>
+<script src="../../shared/js/utils.js" defer></script>
+<script src="../../admin/js/admin.js" defer></script>
+</body>
+</html>

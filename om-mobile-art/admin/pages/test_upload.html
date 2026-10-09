@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cloudinary Upload Diagnostic Tool</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+</head>
+<body class="bg-gray-50 p-8 font-['Plus_Jakarta_Sans'] text-gray-900">
+  <div class="max-w-2xl mx-auto bg-white p-6 rounded-2xl border border-gray-200 shadow-md space-y-6">
+    <div class="border-b border-gray-100 pb-4">
+      <h1 class="text-xl font-black text-[#03045E]">Cloudinary Upload Diagnostic Tool</h1>
+      <p class="text-xs text-gray-500 font-medium">Test direct Cloudinary uploads, response metadata, and asset deletion.</p>
+    </div>
+
+    <!-- Upload Input Box -->
+    <div class="space-y-3">
+      <label class="block text-xs font-extrabold uppercase tracking-wider text-gray-700">Select Image to Upload</label>
+      <input type="file" id="test-file-input" accept="image/*" class="w-full p-2 border border-gray-300 rounded-xl text-xs bg-gray-50"/>
+      <button onclick="runDiagnosticUpload()" class="px-5 py-2.5 bg-[#0077B6] hover:bg-[#03045E] text-white rounded-xl text-xs font-bold transition-all shadow-sm flex items-center gap-2 cursor-pointer">
+        <span class="material-symbols-outlined text-sm">cloud_upload</span> Upload to Cloudinary
+      </button>
+    </div>
+
+    <!-- Status Output -->
+    <div id="status-box" class="hidden p-4 rounded-xl text-xs font-bold"></div>
+
+    <!-- Results Box -->
+    <div id="results-box" class="hidden space-y-4 pt-4 border-t border-gray-100">
+      <h3 class="text-sm font-black text-gray-900">Cloudinary Response Metadata</h3>
+      <div class="p-3 bg-gray-50 border border-gray-200 rounded-xl font-mono text-[11px] space-y-1">
+        <p><strong>secure_url:</strong> <a id="res-url" href="#" target="_blank" class="text-blue-600 underline"></a></p>
+        <p><strong>public_id:</strong> <span id="res-public-id" class="text-purple-600"></span></p>
+        <p><strong>Dimensions:</strong> <span id="res-dims"></span></p>
+        <p><strong>Format & Size:</strong> <span id="res-format"></span></p>
+      </div>
+
+      <div>
+        <label class="block text-xs font-bold text-gray-600 mb-1">Uploaded Asset Live Preview</label>
+        <div class="p-2 bg-gray-100 rounded-xl border border-gray-200 text-center">
+          <img id="res-img" src="" alt="Preview" class="max-h-48 rounded-lg mx-auto shadow-xs"/>
+        </div>
+      </div>
+
+      <button onclick="runDiagnosticDelete()" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-bold transition-all flex items-center gap-1 cursor-pointer">
+        <span class="material-symbols-outlined text-sm">delete</span> Delete Asset from Cloudinary
+      </button>
+    </div>
+  </div>
+
+  <script src="../../shared/js/api.js"></script>
+  <script>
+    let currentUploadedPublicId = '';
+
+    async function runDiagnosticUpload() {
+      const input = document.getElementById('test-file-input');
+      const statusBox = document.getElementById('status-box');
+      const resultsBox = document.getElementById('results-box');
+
+      if (!input.files || !input.files[0]) {
+        alert('Please select an image file first.');
+        return;
+      }
+
+      const file = input.files[0];
+      statusBox.className = 'p-4 rounded-xl text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200 flex items-center gap-2';
+      statusBox.innerHTML = '<span class="animate-spin material-symbols-outlined text-base">sync</span> Uploading file ' + file.name + ' (' + Math.round(file.size/1024) + ' KB) to Cloudinary...';
+      statusBox.classList.remove('hidden');
+      resultsBox.classList.add('hidden');
+
+      try {
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('folder', 'diagnostic_tests');
+
+        const res = await fetch('http://localhost:3000/api/v1/media/upload', {
+          method: 'POST',
+          body: formData
+        });
+
+        const json = await res.json();
+
+        if (res.ok && json.success && json.data) {
+          const d = json.data;
+          currentUploadedPublicId = d.publicId;
+
+          statusBox.className = 'p-4 rounded-xl text-xs font-bold bg-emerald-50 text-emerald-800 border border-emerald-200';
+          statusBox.textContent = '✓ Upload Successful! Cloudinary response received.';
+
+          document.getElementById('res-url').href = d.url;
+          document.getElementById('res-url').textContent = d.url;
+          document.getElementById('res-public-id').textContent = d.publicId;
+          document.getElementById('res-dims').textContent = `${d.width} x ${d.height} px`;
+          document.getElementById('res-format').textContent = `${d.format.toUpperCase()} (${Math.round(d.bytes/1024)} KB)`;
+          document.getElementById('res-img').src = d.url;
+
+          resultsBox.classList.remove('hidden');
+        } else {
+          throw new Error(json.message || json.error || 'Server error ' + res.status);
+        }
+      } catch (err) {
+        statusBox.className = 'p-4 rounded-xl text-xs font-bold bg-red-50 text-red-800 border border-red-200';
+        statusBox.textContent = '❌ Upload Failed: ' + err.message;
+      }
+    }
+
+    async function runDiagnosticDelete() {
+      if (!currentUploadedPublicId) return;
+
+      const statusBox = document.getElementById('status-box');
+      if (!confirm(`Delete asset '${currentUploadedPublicId}' from Cloudinary?`)) return;
+
+      try {
+        const res = await fetch('http://localhost:3000/api/v1/media/delete', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ publicId: currentUploadedPublicId })
+        });
+        const json = await res.json();
+        if (json.success) {
+          alert('Asset deleted from Cloudinary successfully!');
+          document.getElementById('results-box').classList.add('hidden');
+          statusBox.classList.add('hidden');
+        } else {
+          alert('Delete failed: ' + json.message);
+        }
+      } catch (err) {
+        alert('Delete error: ' + err.message);
+      }
+    }
+  </script>
+</body>
+</html>
